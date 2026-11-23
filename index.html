@@ -206,6 +206,7 @@ body.studying #tabs{display:none}
       </header>
       <div class="card">
         <h2>Hoy</h2>
+        <div class="seg" id="h-blk"><button data-v="esp">Específico</button><button data-v="com">Común</button><button data-v="rnd">Aleatorio</button></div>
         <div class="stats">
           <div class="stat"><b id="s-due">0</b><span>repasos</span></div>
           <div class="stat"><b id="s-new">0</b><span>nuevas</span></div>
@@ -1546,7 +1547,7 @@ const ROUTE=T.map(t=>t.id).sort((a,b)=>a-b);
 // ---------- estado ----------
 const KEY='tbm-v1';
 const CL={doc:null,busy:false,dirty:false,t:0};
-const DEF={at:0,cards:{},qs:{},daily:{d:0,nw:0,extra:0},streak:{last:0,n:0},set:{npd:8,cur:ROUTE[0],mode:'tema',theme:'auto',vf:1},tests:[]};
+const DEF={at:0,cards:{},qs:{},daily:{d:0,nw:0,extra:0},streak:{last:0,n:0},set:{npd:8,cur:ROUTE[0],mode:'tema',theme:'auto',vf:1,blk:'esp',cb:{}},tests:[]};
 let S=load();
 function load(){try{const j=JSON.parse(localStorage.getItem(KEY));if(j&&j.cards)return deep(DEF,j)}catch(e){}return JSON.parse(JSON.stringify(DEF))}
 function deep(d,j){const o=JSON.parse(JSON.stringify(d));for(const k in j){o[k]=(j[k]&&typeof j[k]==='object'&&!Array.isArray(j[k])&&d[k]&&typeof d[k]==='object'&&!Array.isArray(d[k]))?Object.assign(o[k],j[k]):j[k]}return o}
@@ -1567,16 +1568,23 @@ function unseenOf(tid){return CARDS.filter(c=>c.tema===tid&&!cs(c.id))}
 function nextNew(n){
   const out=[];
   if(S.set.mode==='mix'){
-    const lists=ROUTE.map(unseenOf).filter(l=>l.length);
-    let i=Math.max(0,ROUTE.filter(id=>unseenOf(id).length).indexOf(S.set.cur));
+    const P=blkPool(),lists=P.map(unseenOf).filter(l=>l.length);
+    let i=Math.max(0,P.filter(id=>unseenOf(id).length).indexOf(blkCur()));
     // bloques de 3 tarjetas por tema para no fragmentar demasiado
     while(out.length<n&&lists.some(l=>l.length)){const l=lists[i%lists.length];out.push(...l.splice(0,Math.min(3,n-out.length)));i++}
     return out;
   }
-  const ci=Math.max(0,ROUTE.indexOf(S.set.cur));const order=ROUTE.slice(ci).concat(ROUTE.slice(0,ci));
+  const pool=blkPool(),cur=blkCur();const order=[cur,...pool.filter(id=>id!==cur)];
   for(const id of order){for(const c of unseenOf(id)){if(out.length>=n)return out;out.push(c)}}
   return out;
 }
+function blkPool(){const b=S.set.blk;return ROUTE.filter(id=>b==='rnd'||TM[id].b===(b==='com'?1:2))}
+function blkCur(){const b=S.set.blk||'esp';S.set.cb=S.set.cb||{};const pool=blkPool();let c=S.set.cb[b];
+  if(c&&pool.includes(c)&&unseenOf(c).length)return c;
+  const open=pool.filter(id=>unseenOf(id).length);if(!open.length)return c||pool[0];
+  const started=open.filter(id=>CARDS.some(k=>k.tema===id&&cs(k.id)));
+  c=b==='rnd'?open[Math.floor(Math.random()*open.length)]:(started[0]||open[0]);
+  S.set.cb[b]=c;S.set.cur=c;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}return c}
 function newLeft(){return Math.max(0,S.set.npd+S.daily.extra-S.daily.nw)}
 
 // ---------- preguntas ----------
@@ -1695,6 +1703,7 @@ function confetti(){const cv=$('#cele-c'),x=cv.getContext('2d');const W=cv.width
 
 // ---------- pantalla Hoy ----------
 function renderHome(){
+  $$('#h-blk button').forEach(b=>{b.classList.toggle('on',b.dataset.v===(S.set.blk||'esp'));b.onclick=()=>{S.set.blk=b.dataset.v;save();renderHome()}});
   rollDay();
   const due=dueCards().length,nl=Math.min(newLeft(),CARDS.filter(c=>!cs(c.id)).length);
   $('#s-due').textContent=due;$('#s-new').textContent=nl;
@@ -1719,7 +1728,7 @@ function renderHome(){
   $('#p-sub').textContent=`${cnt[4]} dominadas · ${cnt[3]} bien · ${cnt[2]} empezadas · ${cnt[1]} recién vistas. Hay contenido de ${T.length} de 35 temas.`;
   // ruta
   $('#route').innerHTML=ROUTE.map(id=>routeRow(id)).join('');
-  $$('#route .zone').forEach(b=>b.onclick=()=>{S.set.cur=+b.dataset.t;save();renderHome();toast('Tema '+b.dataset.t+' será lo siguiente que estudies')});
+  $$('#route .zone').forEach(b=>b.onclick=()=>{{const id=+b.dataset.t;S.set.cur=id;S.set.blk=TM[id].b===1?'com':'esp';S.set.cb=S.set.cb||{};S.set.cb[S.set.blk]=id}save();renderHome();toast('Tema '+b.dataset.t+' será lo siguiente que estudies')});
 }
 function temaStats(id){const cs_=CARDS.filter(c=>c.tema===id);const cnt=[0,0,0,0,0];cs_.forEach(c=>cnt[mastery(c.id)]++);return{n:cs_.length,cnt,q:cs_.reduce((a,c)=>a+c.q.length,0)}}
 function routeRow(id){const t=TM[id],s=temaStats(id);const cur=S.set.mode==='tema'&&id===curTema();
@@ -1811,7 +1820,7 @@ function renderTemario(){
     <div class="card full" style="gap:0">${t.L.map((l,li)=>{const cc=CARDS.filter(c=>c.tema===t.id&&c.li===li);const sv=cc.filter(c=>cs(c.id)).length;
       return `<details class="lesson"${li===0?' open':''}><summary><span class="tag n${l.nv}">N${l.nv}</span>${esc(l.t)}<span class="ct">${sv}/${cc.length}</span></summary><div class="cards">${cc.map(c=>{const m=mastery(c.id);return `<div class="ficha mini" style="border-left-color:var(--m${m||0})"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div><span class="note">${['Sin ver todavía','Recién vista','Empezada','Bien','Dominada'][m]}</span></div>`}).join('')}</div></details>`}).join('')}</div>`;
     $('#tm-back').onclick=()=>{TMV=null;renderTemario()};
-    $('#tm-go').onclick=()=>{S.set.cur=t.id;save();TMV=null;showView('home');renderHome();toast('Tema '+t.id+' será lo siguiente que estudies')};
+    $('#tm-go').onclick=()=>{S.set.cur=t.id;S.set.blk=t.b===1?'com':'esp';S.set.cb=S.set.cb||{};S.set.cb[S.set.blk]=t.id;save();TMV=null;showView('home');renderHome();toast('Tema '+t.id+' será lo siguiente que estudies')};
     el.scrollTop=0;return}
   const row=t=>{const has=TM[t.id];if(!has)return `<div class="zone off"><span class="num">${t.id}</span><span class="nm">${esc(t.n)}</span><span class="ct">pendiente</span></div>`;const s=temaStats(t.id);
     return `<button class="zone" data-t="${t.id}"><span class="num">${t.id}</span><span class="nm">${esc(t.n)}</span><span class="ct">${s.n} tarjetas</span><div class="bar mk">${[4,3,2,1].map(m=>`<i style="width:${100*s.cnt[m]/s.n}%;background:var(--m${m})"></i>`).join('')}</div></button>`};
@@ -1824,7 +1833,7 @@ function renderTemario(){
 // ---------- ajustes ----------
 function renderSet(){
   $$('#set-mode button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.set.mode));
-  $('#set-mode-n').textContent=S.set.mode==='tema'?'Terminas un tema (nivel 1 → 3) antes de pasar al siguiente de tu ruta.':'Vas alternando bloques de 3 tarjetas de cada tema de tu ruta.';
+  $('#set-mode-n').textContent=S.set.mode==='tema'?'Sigues un tema, en el orden del temario, hasta terminarlo; luego pasa a otro del bloque que elijas en Hoy.':'Vas alternando bloques de 3 tarjetas de los temas del bloque que elijas en Hoy, cada uno en su orden.';
   $$('#set-theme button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.set.theme));
   $$('#set-vf button').forEach(b=>b.classList.toggle('on',+b.dataset.v===+S.set.vf));
   $('#npd').textContent=$('#npd2').textContent=S.set.npd;
