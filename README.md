@@ -2,7 +2,7 @@
 
 App web de estudio para preparar la oposición de bombero/a conductor/a especialista del Ayuntamiento de Madrid (bases publicadas en el BOAM n.º 9.919, de 11 de julio de 2025).
 
-> **Aviso:** esta es una herramienta de estudio personal y **no oficial**. No está hecha, revisada ni respaldada por el Ayuntamiento de Madrid ni por su Cuerpo de Bomberos. El escudo se usa solo como icono identificativo; pertenece a sus titulares. El contenido es un resumen propio del temario y puede contener errores: la referencia válida son siempre las bases de la convocatoria y la normativa y los manuales oficiales.
+> **Aviso:** esta es una herramienta de estudio personal y **no oficial**. No está hecha, revisada ni respaldada por el Ayuntamiento de Madrid ni por su Cuerpo de Bomberos. El icono (casco con libro) es un diseño propio de esta app; el escudo de la Villa de Madrid que aparece en él pertenece a su titular. El contenido es un resumen propio del temario y puede contener errores: la referencia válida son siempre las bases de la convocatoria y la normativa y los manuales oficiales.
 
 ## Qué hace
 
