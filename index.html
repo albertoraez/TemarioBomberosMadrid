@@ -1541,7 +1541,7 @@ T.forEach(t=>t.L.forEach((l,li)=>l.c.forEach((c,ci)=>{
   CARDS.push(o);CM[id]=o;
 })));
 const QS=[];CARDS.forEach(c=>c.q.forEach((q,qi)=>QS.push({...q,qi,card:c})));
-const ROUTE=[9,10,11,12,13,1,2].filter(id=>TM[id]).concat(T.map(t=>t.id).filter(id=>![9,10,11,12,13,1,2].includes(id)));
+const ROUTE=T.map(t=>t.id).sort((a,b)=>a-b);
 
 // ---------- estado ----------
 const KEY='tbm-v1';
@@ -1573,7 +1573,7 @@ function nextNew(n){
     while(out.length<n&&lists.some(l=>l.length)){const l=lists[i%lists.length];out.push(...l.splice(0,Math.min(3,n-out.length)));i++}
     return out;
   }
-  const order=[S.set.cur,...ROUTE.filter(id=>id!==S.set.cur)];
+  const ci=Math.max(0,ROUTE.indexOf(S.set.cur));const order=ROUTE.slice(ci).concat(ROUTE.slice(0,ci));
   for(const id of order){for(const c of unseenOf(id)){if(out.length>=n)return out;out.push(c)}}
   return out;
 }
@@ -1873,6 +1873,7 @@ document.addEventListener('keydown',e=>{
     if(k==='enter'&&TR.mode==='now'&&TR.items[TR.i].a!==null){($('#tq-next')||$('#tq-end')).click();e.preventDefault()}
     if(k==='arrowright'&&$('#tq-next'))$('#tq-next').click();if(k==='arrowleft'&&$('#tq-prev'))$('#tq-prev').click()}
 });
+if(!S.set.r2){S.set.r2=1;S.set.cur=ROUTE.find(id=>unseenOf(id).length)||ROUTE[0]}
 if(!TM[S.set.cur])S.set.cur=ROUTE[0];
 applyTheme();renderHome();
 // ---------- sincronización con tu cuenta (si la página la ofrece) ----------
