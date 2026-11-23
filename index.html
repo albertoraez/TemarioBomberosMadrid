@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Temario Bomberos Madrid</title>
+<meta name="theme-color" content="#b3121f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f3f0ef; --surface:#ffffff; --ink:#1f1a1a; --muted:#6b6262; --line:#e0d8d6;
+  --accent:#b3121f; --accent-ink:#ffffff; --accent-soft:#fbe6e7; --accent-2:#e2231a;
+  --ok:#1c7f47; --ok-soft:#dff3e7; --bad:#c22a2a; --bad-soft:#fbe3e1; --warn:#a8690a; --warn-soft:#fbefd6;
+  --m0:#cfc6c4; --m1:#f97316; --m2:#f59e0b; --m3:#84cc16; --m4:#16a34a;
+  --f-display:"Barlow Condensed","Arial Narrow",Arial,sans-serif;
+  --f-body:"Barlow",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --bg:#141011; --surface:#1e1819; --ink:#efe8e7; --muted:#a89c9b; --line:#352b2c;
+    --accent:#ff5a5f; --accent-ink:#2a0607; --accent-soft:#3d1a1d; --accent-2:#ff7a6e;
+    --ok:#56c184; --ok-soft:#173526; --bad:#f07a72; --bad-soft:#3d1d1b; --warn:#e3ad4d; --warn-soft:#3a2c12;
+    --m0:#4a3f40;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#141011; --surface:#1e1819; --ink:#efe8e7; --muted:#a89c9b; --line:#352b2c;
+  --accent:#ff5a5f; --accent-ink:#2a0607; --accent-soft:#3d1a1d; --accent-2:#ff7a6e;
+  --ok:#56c184; --ok-soft:#173526; --bad:#f07a72; --bad-soft:#3d1d1b; --warn:#e3ad4d; --warn-soft:#3a2c12;
+  --m0:#4a3f40;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.4;overflow:hidden}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#app{padding-top:env(safe-area-inset-top,0);height:100%;display:flex;flex-direction:column;max-width:600px;margin:0 auto;background:var(--bg)}
+.view{flex:1;min-height:0;display:none;flex-direction:column}
+.view.on{display:flex}
+.scroll{overflow-y:auto;padding:18px 16px 28px;display:flex;flex-direction:column;gap:14px;flex:1;min-height:0}
+h1{font-family:var(--f-display);font-weight:700;font-size:34px;line-height:1;margin:0;letter-spacing:.2px;text-wrap:balance}
+h2{font-family:var(--f-display);font-weight:600;font-size:20px;margin:0;letter-spacing:.3px;text-transform:uppercase;color:var(--muted)}
+h3{font-size:16px;margin:0}
+.brand{display:flex;gap:12px;align-items:center}
+.brand svg{flex:none;width:44px;height:44px}
+.sub{color:var(--muted);font-size:14px;margin:4px 0 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.row{display:flex;gap:10px;align-items:center}
+.between{justify-content:space-between}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--bg);border-radius:8px;padding:8px 10px}
+.stat b{display:block;font-family:var(--f-display);font-size:28px;line-height:1.05;font-variant-numeric:tabular-nums}
+.stat span{font-size:12.5px;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:12px 14px;font-weight:600;min-height:46px;text-align:center}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.block{width:100%}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.small{min-height:38px;padding:7px 12px;font-size:14px}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+.bar{height:8px;background:var(--line);border-radius:4px;overflow:hidden;display:flex}
+.bar i{display:block;height:100%;background:var(--accent)}
+.bar.mk i{border-radius:0}
+.note{font-size:13.5px;color:var(--muted);margin:0}
+.today-b{margin:0;font-size:14px;color:var(--muted)}.today-b b{color:var(--ink)}
+.npd-row{display:flex;align-items:center;justify-content:space-between;font-size:14px;color:var(--muted)}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper b{font-family:var(--f-display);font-size:24px;min-width:40px;text-align:center;font-variant-numeric:tabular-nums}
+.stepper button{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface);font-size:20px;font-weight:600}
+.zone{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;align-items:center;padding:10px 0;border-top:1px solid var(--line);background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;width:100%}
+.zone:first-of-type{border-top:0}
+.zone .num{grid-row:1 / span 2;width:34px;height:34px;border-radius:8px;background:var(--accent-soft);color:var(--accent);font-family:var(--f-display);font-weight:700;font-size:18px;display:grid;place-items:center}
+.zone .nm{font-weight:600;font-size:15px;line-height:1.2}
+.zone .ct{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.zone .bar{grid-column:2 / -1}
+.zone.cur .nm::after{content:"En curso";margin-left:8px;font-size:11.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);padding:2px 7px;border-radius:10px;vertical-align:1px}
+.zone.off{opacity:.55;cursor:default}
+.zone.off .num{background:var(--bg);color:var(--muted)}
+.mk-legend{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:12px;color:var(--muted)}.mk-legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;border-left:1px solid var(--line);background:var(--surface);padding:9px 6px;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button:first-child{border-left:0}
+.seg button.on{background:var(--accent-soft);color:var(--accent)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:18px;padding:6px 12px;font-size:13.5px;font-weight:600;color:var(--muted)}
+.chip.on{background:var(--accent-soft);color:var(--accent);border-color:var(--accent)}
+.chip b{font-family:var(--f-display);margin-right:4px}
+.lbl{font-size:13px;font-weight:600;color:var(--muted);margin:0 0 -4px}
+.toggle{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:15px;border:0;background:none;padding:0;text-align:left;width:100%}
+.toggle i{flex:none;width:42px;height:24px;border-radius:12px;background:var(--line);position:relative;transition:.15s}
+.toggle i::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.3)}
+.toggle.on i{background:var(--accent)}.toggle.on i::after{left:21px}
+/* estudio */
+.topbar{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--line)}
+.topbar .x{border:0;background:none;font-size:15px;font-weight:600;color:var(--muted);padding:8px 6px}
+.topbar .bar{flex:1}
+.topbar .left{font-size:13.5px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:42px;text-align:right}
+.tag{font-size:11.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:3px 8px;border-radius:10px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+.tag.new{background:var(--warn-soft);color:var(--warn)}
+.tag.rev{background:var(--ok-soft);color:var(--ok)}
+.tag.n1{background:var(--ok-soft);color:var(--ok)}.tag.n2{background:var(--warn-soft);color:var(--warn)}.tag.n3{background:var(--bad-soft);color:var(--bad)}
+.stage{flex:1;min-height:0;overflow-y:auto;padding:16px 16px 8px;display:flex;flex-direction:column;gap:12px}
+.stage-in{width:100%;max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+.panel{background:var(--surface);border-top:1px solid var(--line);padding:10px 14px calc(12px + env(safe-area-inset-bottom,0));}
+.panel-in{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.ctx{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ficha{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:12px;padding:16px 16px 18px;display:flex;flex-direction:column;gap:10px}
+.ficha h3{font-family:var(--f-display);font-size:26px;line-height:1.05;font-weight:700;color:var(--accent);text-wrap:balance}
+.ficha .tx{font-size:17px;line-height:1.5}
+.ficha .tx b{background:linear-gradient(transparent 60%,var(--accent-soft) 60%);font-weight:700}
+.ficha.mini{border-left-width:4px;padding:12px 14px}.ficha.mini h3{font-size:19px}.ficha.mini .tx{font-size:15px}
+.qq{font-size:19px;font-weight:600;line-height:1.35;text-wrap:pretty}
+.prop{border:2px dashed var(--line);border-radius:12px;padding:12px 14px;font-size:17px;font-weight:600}
+.opt{display:flex;gap:10px;align-items:flex-start;width:100%;border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:12px 13px;min-height:50px;text-align:left;font-size:16px;line-height:1.35}
+.opt .k{flex:none;width:24px;height:24px;border-radius:6px;border:1px solid var(--line);display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--muted)}
+.opt.good{background:var(--ok-soft);border-color:var(--ok);color:var(--ok);font-weight:600}.opt.good .k{border-color:var(--ok);color:var(--ok)}
+.opt.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}.opt.wrong .k{border-color:var(--bad);color:var(--bad)}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}.opt.sel .k{border-color:var(--accent);color:var(--accent)}
+.opt.dim{opacity:.6}
+.vf{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.fb{font-weight:700;font-size:15.5px;padding:9px 12px;border-radius:9px}
+.fb.ok{background:var(--ok-soft);color:var(--ok)} .fb.bad{background:var(--bad-soft);color:var(--bad)} .fb.warn{background:var(--warn-soft);color:var(--warn)}
+.hint{font-size:13px;color:var(--muted);margin:0;text-align:center}
+.hint.keys{display:none}
+.res-big{font-family:var(--f-display);font-size:52px;font-weight:700;line-height:1}
+.res-big.ok{color:var(--ok)}.res-big.warn{color:var(--warn)}.res-big.bad{color:var(--bad)}
+.rv{border-top:1px solid var(--line);padding:12px 0;display:flex;flex-direction:column;gap:6px;font-size:14.5px}
+.rv:first-child{border-top:0}
+.rv .q{font-weight:600}
+.rv .a{color:var(--ok);font-weight:600}.rv .y{color:var(--bad)}.rv .y.blank{color:var(--muted)}
+.rv details summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:13.5px}
+.lesson{border-top:1px solid var(--line);padding:10px 0}
+.lesson:first-child{border-top:0}
+.lesson > summary{cursor:pointer;display:flex;gap:8px;align-items:center;font-weight:600;list-style:none}
+.lesson > summary::-webkit-details-marker{display:none}
+.lesson > summary .ct{margin-left:auto;font-size:13px;color:var(--muted);font-weight:500}
+.lesson .cards{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;flex:none}
+.timer{font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;color:var(--muted)}
+.timer.low{color:var(--bad)}
+.back{border:0;background:none;color:var(--accent);font-weight:600;padding:4px 0;align-self:flex-start;font-size:15px}
+textarea{width:100%;min-height:80px;font:12px/1.3 ui-monospace,Menlo,monospace;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:8px}
+/* tabs */
+#tabs{display:flex;border-top:1px solid var(--line);background:var(--surface);padding-bottom:env(safe-area-inset-bottom,0)}
+#tabs button{flex:1;border:0;background:none;padding:8px 4px 9px;font-size:12.5px;font-weight:600;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+#tabs button.on{color:var(--accent)}
+#tabs svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+body.studying #tabs{display:none}
+/* celebración */
+#cele{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;background:rgba(20,8,8,.55);animation:cfade .3s ease}
+#cele[hidden]{display:none}
+#cele-c{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.cele-card{position:relative;width:min(92vw,380px);background:var(--surface);border-radius:20px;padding:22px 20px 18px;text-align:center;display:flex;flex-direction:column;gap:10px;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:cpop .55s cubic-bezier(.2,1.6,.4,1)}
+.cele-card h2{margin:0;font-family:var(--f-display);font-size:28px;color:var(--ink);text-transform:none}.cele-card p{margin:0;color:var(--muted);font-size:14.5px}
+.cele-ok{width:78px;height:78px;margin:0 auto;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.cele-ok circle{stroke:var(--ok);stroke-width:3;stroke-dasharray:151;stroke-dashoffset:151;animation:cdraw .6s .15s ease forwards;fill:var(--ok-soft)}
+.cele-ok path{stroke:var(--ok);stroke-width:4.5;stroke-dasharray:40;stroke-dashoffset:40;animation:cdraw .4s .65s ease forwards}
+.cele-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.cele-stats div{background:var(--bg);border-radius:12px;padding:8px 4px;display:flex;flex-direction:column}
+.cele-stats b{font-size:24px;font-variant-numeric:tabular-nums;color:var(--accent);font-family:var(--f-display)}.cele-stats span{font-size:12px;color:var(--muted)}
+@keyframes cdraw{to{stroke-dashoffset:0}}@keyframes cpop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}@keyframes cfade{from{opacity:0}}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.03)}100%{transform:scale(1)}}
+.pop{animation:pop .25s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.shake{animation:shake .25s ease}
+#toast{position:fixed;left:50%;bottom:84px;transform:translate(-50%,20px);opacity:0;transition:.25s;background:var(--ink);color:var(--surface);padding:9px 14px;border-radius:10px;font-size:14px;z-index:70;pointer-events:none;max-width:90vw}#toast.on{opacity:1;transform:translate(-50%,0)}
+@media (min-width:900px){
+  #app{max-width:none;flex-direction:row}
+  #tabs{order:-1;flex-direction:column;justify-content:flex-start;gap:6px;width:96px;border-top:0;border-right:1px solid var(--line);padding:16px 8px}
+  #tabs button{flex:0 0 auto;padding:12px 4px;border-radius:10px;font-size:13px}
+  #tabs button.on{background:var(--accent-soft)}
+  body.studying #tabs{display:flex}
+  h1{font-size:44px}
+  .scroll{padding:32px 40px 40px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-content:start;align-items:start;max-width:1120px;width:100%;margin:0 auto}
+  .scroll>header,.scroll>.full{grid-column:1 / -1}
+  #v-home .scroll>.c-route{grid-column:2;grid-row:2 / span 3}
+  .stage{padding:32px 24px 12px}
+  .ficha h3{font-size:32px}.ficha .tx{font-size:18.5px}
+  .qq{font-size:22px}
+  .opt{font-size:17px;min-height:56px}
+  .hint.keys{display:block}
+  .topbar{padding:10px 24px}
+}
+@media (prefers-reduced-motion: no-preference){ .opt,.btn{transition:background-color .12s,border-color .12s} }
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+</style>
+</head>
+<body>
+<div id="cele" hidden><canvas id="cele-c"></canvas><div class="cele-card" role="dialog" aria-live="polite">
+  <svg class="cele-ok" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-17"/></svg>
+  <h2 id="cele-h">¡Día completado!</h2><p id="cele-sub"></p>
+  <div class="cele-stats"><div><b id="cele-a">0</b><span>aciertos</span></div><div><b id="cele-new">0</b><span>tarjetas nuevas</span></div><div><b id="cele-st">0</b><span>días seguidos 🔥</span></div></div>
+  <button class="btn primary block" id="cele-x">¡Genial!</button></div></div>
+<div id="toast" role="status"></div>
+<div id="app">
+
+  <section class="view on" id="v-home">
+    <div class="scroll">
+      <header class="brand">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" rx="11" fill="var(--accent)"/><path d="M24 9c2 5 8 8 8 16a8 8 0 0 1-16 0c0-4 2-6 3-8 0 3 1 5 3 5 0-5 0-9 2-13z" fill="#fff"/></svg>
+        <div><h1>Temario Bomberos</h1><p class="sub">Bombero/a conductor/a especialista · Ayuntamiento de Madrid</p></div>
+      </header>
+      <div class="card">
+        <h2>Hoy</h2>
+        <div class="stats">
+          <div class="stat"><b id="s-due">0</b><span>repasos</span></div>
+          <div class="stat"><b id="s-new">0</b><span>nuevas</span></div>
+          <div class="stat"><b id="s-streak">0</b><span>días seguidos</span></div>
+        </div>
+        <p class="today-b" id="today-b"></p>
+        <button class="btn primary block" id="b-study">Estudiar ahora</button>
+        <div class="npd-row"><span>Tarjetas nuevas al día</span><div class="stepper"><button data-npd="-1" aria-label="Menos">−</button><b id="npd">8</b><button data-npd="1" aria-label="Más">+</button></div></div>
+        <button class="btn block small" id="b-more" hidden>Añadir 5 nuevas más hoy</button>
+        <button class="btn block small" id="b-free" hidden>Repaso extra de lo ya visto</button>
+      </div>
+      <div class="card">
+        <h2>Progreso</h2>
+        <div class="row between"><b id="p-txt" style="font-variant-numeric:tabular-nums"></b><span class="note" id="p-eta"></span></div>
+        <div class="bar mk" id="p-bar"></div>
+        <div class="mk-legend"><span><i style="background:var(--m4)"></i>Dominada</span><span><i style="background:var(--m3)"></i>Bien</span><span><i style="background:var(--m2)"></i>Empezada</span><span><i style="background:var(--m1)"></i>Recién vista</span><span><i style="background:var(--m0)"></i>Sin ver</span></div>
+        <p class="note" id="p-sub"></p>
+      </div>
+      <div class="card c-route" style="gap:0">
+        <h2 style="margin-bottom:6px">Tu ruta</h2>
+        <p class="note" style="margin-bottom:8px">Cada tema va de lo básico (nivel 1) a lo técnico (nivel 3). Lo que aprendes vuelve en repasos cada vez más espaciados. Toca un tema para estudiarlo a continuación.</p>
+        <div id="route"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="v-study">
+    <div class="topbar"><button class="x" id="st-exit">Salir</button><div class="bar" id="st-bar"><i style="width:0%"></i></div><span class="left" id="st-left"></span></div>
+    <div class="stage"><div class="stage-in" id="st-stage"></div></div>
+    <div class="panel"><div class="panel-in" id="st-panel"></div></div>
+  </section>
+
+  <section class="view" id="v-test">
+    <div class="scroll" id="test-setup">
+      <header><h1>Modo test</h1><p class="sub">Tres opciones, una correcta. Como en el examen: cada fallo resta un tercio de acierto.</p></header>
+      <div class="card">
+        <div class="row between"><h2>Temas</h2><div class="row"><button class="chip" id="tt-all">Todos</button><button class="chip" id="tt-none">Ninguno</button></div></div>
+        <p class="lbl">Bloque I · Conocimientos comunes</p><div class="chips" id="tt-b1"></div>
+        <p class="lbl">Bloque II · Conocimientos específicos</p><div class="chips" id="tt-b2"></div>
+        <p class="note" id="tt-av"></p>
+      </div>
+      <div class="card">
+        <h2>Opciones</h2>
+        <p class="lbl">Preguntas</p>
+        <div class="seg" id="tt-src"><button data-v="all" class="on">Todas</button><button data-v="seen">Ya estudiadas</button><button data-v="fail">Las que más fallo</button></div>
+        <div class="npd-row"><span>Número de preguntas</span><div class="stepper"><button data-tn="-5" aria-label="Menos">−</button><b id="tt-n">20</b><button data-tn="5" aria-label="Más">+</button></div></div>
+        <p class="lbl">Corrección</p>
+        <div class="seg" id="tt-mode"><button data-v="end" class="on">Al final, como en el examen</button><button data-v="now">Al momento</button></div>
+        <button class="toggle" id="tt-time"><span>Con tiempo: 1 minuto por pregunta</span><i></i></button>
+        <button class="btn primary block" id="tt-go">Empezar test</button>
+      </div>
+      <div class="card">
+        <h2>Simulacro</h2>
+        <p class="note">Examen completo con los temas que ya tienen contenido: hasta 90 preguntas, 80 % del bloque específico, 1 minuto por pregunta y corrección al final.</p>
+        <button class="btn block" id="tt-sim">Hacer simulacro</button>
+      </div>
+      <div class="card full" id="tt-hist-c" hidden>
+        <h2>Últimos tests</h2>
+        <div id="tt-hist"></div>
+      </div>
+    </div>
+    <div class="view" id="test-run" style="display:none">
+      <div class="topbar"><button class="x" id="tr-exit">Salir</button><div class="bar" id="tr-bar"><i style="width:0%"></i></div><span class="timer" id="tr-timer"></span><span class="left" id="tr-left"></span></div>
+      <div class="stage"><div class="stage-in" id="tr-stage"></div></div>
+      <div class="panel"><div class="panel-in" id="tr-panel"></div></div>
+    </div>
+  </section>
+
+  <section class="view" id="v-temario">
+    <div class="scroll" id="tm-list"></div>
+  </section>
+
+  <section class="view" id="v-set">
+    <div class="scroll">
+      <header><h1>Ajustes</h1></header>
+      <div class="card">
+        <h2>Estudio</h2>
+        <div class="npd-row"><span>Tarjetas nuevas al día</span><div class="stepper"><button data-npd="-1" aria-label="Menos">−</button><b id="npd2">8</b><button data-npd="1" aria-label="Más">+</button></div></div>
+        <p class="lbl">Cómo avanzar</p>
+        <div class="seg" id="set-mode"><button data-v="tema">Tema a tema</button><button data-v="mix">Alternar temas</button></div>
+        <p class="note" id="set-mode-n"></p>
+        <p class="lbl">Tipo de preguntas en Hoy</p>
+        <div class="seg" id="set-vf"><button data-v="1">Test y verdadero/falso</button><button data-v="0">Solo test</button></div>
+      </div>
+      <div class="card">
+        <h2>Apariencia</h2>
+        <div class="seg" id="set-theme"><button data-v="auto">Automático</button><button data-v="light">Claro</button><button data-v="dark">Oscuro</button></div>
+      </div>
+      <div class="card">
+        <h2>Tu progreso</h2>
+        <p class="note" id="sync-n">Se guarda en este navegador. Para pasarlo a otro dispositivo, copia la copia de seguridad aquí y pégala allí.</p>
+        <div class="row"><button class="btn small" id="set-exp">Copiar copia de seguridad</button><button class="btn small" id="set-imp">Pegar copia</button></div>
+        <textarea id="set-box" placeholder="Aquí aparece o se pega la copia de seguridad" hidden></textarea>
+        <button class="btn small" id="set-imp-ok" hidden>Restaurar esta copia</button>
+        <button class="btn small danger" id="set-reset">Borrar todo el progreso</button>
+      </div>
+      <div class="card">
+        <h2>Cómo funciona Hoy</h2>
+        <p class="note">1. Lees una tarjeta corta con los datos clave en resaltado. 2. Te pregunto por ella al momento. 3. Cada tres tarjetas mezclo preguntas de las tres, con otra forma de preguntarlo. 4. Si fallas, vuelve a salir en la misma sesión hasta que la aciertes. 5. Lo que aciertas vuelve en repasos: al día siguiente, a los 3 días, a la semana, a las 2 semanas, al mes… Cada fallo acorta el intervalo.</p>
+        <p class="note">Los fallos del modo test también hacen que esa tarjeta vuelva hoy a tus repasos.</p>
+      </div>
+    </div>
+  </section>
+
+  <nav id="tabs">
+    <button class="on" data-tab="home"><svg viewBox="0 0 24 24"><path d="M12 3c1.5 3.5 5.5 5.5 5.5 11a5.5 5.5 0 0 1-11 0c0-3 1.5-4.5 2-6 .5 2 1 3.5 2.5 3.5 0-3.5 0-6 1-8.5z"/></svg>Hoy</button>
+    <button data-tab="test"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Test</button>
+    <button data-tab="temario"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg>Temario</button>
+    <button data-tab="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Ajustes</button>
+  </nav>
+</div>
+
+<script>
+const T=[];
+T.push({id:1,b:1,n:'Constitución y Estatuto de Autonomía',s:'CE 1978: arts. 1, 2, 7, 9, 10, 14, 17, 18, 20, 24, 25, 28, 33 y 137–143. Estatuto de la Comunidad de Madrid: arts. 8, 9, 22, 34 y 35',L:[
+{nv:1,t:'Título Preliminar',c:[
+{t:'Art. 1: el Estado',x:'España es un <b>Estado social y democrático de Derecho</b>. Valores superiores: <b>libertad, justicia, igualdad y pluralismo político</b>.<br>La <b>soberanía nacional</b> reside en el <b>pueblo español</b>. Forma política: <b>Monarquía parlamentaria</b>.',q:[
+['Según el art. 1.1 CE, ¿qué valores superiores propugna España en su ordenamiento jurídico?',['La libertad, la justicia, la igualdad y el pluralismo político','El mérito, la capacidad, la transparencia y la publicidad','La libertad de asociación, la propiedad privada y la herencia'],0],
+['¿Dónde reside la soberanía nacional según el art. 1.2 CE?',['En el pueblo español','En las Cortes Generales','En el Rey'],0],
+['¿Cuál es la forma política del Estado español?',['Monarquía parlamentaria','Monarquía constitucional','República federal'],0]]},
+{t:'Art. 2: unidad y autonomía',x:'La Constitución se fundamenta en la <b>indisoluble unidad</b> de la Nación española, patria común e indivisible, y <b>reconoce y garantiza</b> el derecho a la <b>autonomía</b> de las nacionalidades y regiones y la <b>solidaridad</b> entre todas ellas.',q:[
+['Según el art. 2 CE, la Constitución reconoce y garantiza el derecho a la autonomía de…',['Las nacionalidades y regiones','Las provincias y municipios','Los pueblos y territorios forales'],0]]},
+{t:'Art. 7: sindicatos y patronal',x:'Los <b>sindicatos de trabajadores</b> y las <b>asociaciones empresariales</b> contribuyen a la defensa y promoción de sus intereses económicos y sociales. Creación y actividad <b>libres</b> dentro de la Constitución y la ley. Estructura y funcionamiento <b>democráticos</b>.',q:[
+['¿Qué exige el art. 7 CE a la estructura interna de sindicatos y asociaciones empresariales?',['Que sea democrática','Que esté inscrita en el Ministerio de Trabajo','Que sea aprobada por las Cortes'],0]]},
+{t:'Art. 9: sujeción y garantías',x:'9.1 Ciudadanos y poderes públicos están <b>sujetos a la Constitución</b> y al resto del ordenamiento.<br>9.2 Los poderes públicos deben <b>promover</b> que la libertad e igualdad sean <b>reales y efectivas</b> y <b>remover los obstáculos</b>.<br>9.3 Garantiza: <b>legalidad, jerarquía normativa, publicidad</b> de las normas, <b>irretroactividad</b> de las sancionadoras no favorables, <b>seguridad jurídica, responsabilidad</b> e <b>interdicción de la arbitrariedad</b>.',q:[
+['¿Qué artículo de la CE encomienda a los poderes públicos promover que la libertad y la igualdad sean reales y efectivas?',['Art. 9.2','Art. 14','Art. 1.1'],0],
+['¿Cuál de estos principios NO aparece en el art. 9.3 CE?',['Principio de eficacia','Interdicción de la arbitrariedad','Jerarquía normativa'],0]]}
+]},
+{nv:1,t:'Derechos fundamentales I',c:[
+{t:'Art. 10: dignidad',x:'La <b>dignidad</b> de la persona, los derechos inviolables, el <b>libre desarrollo de la personalidad</b>, el respeto a la ley y a los derechos de los demás son <b>fundamento del orden político y de la paz social</b>.<br>Los derechos se interpretan conforme a la <b>Declaración Universal de Derechos Humanos</b> y los tratados ratificados por España.',q:[
+['Según el art. 10.2 CE, las normas sobre derechos fundamentales se interpretarán de conformidad con…',['La Declaración Universal de Derechos Humanos y los tratados ratificados por España','La jurisprudencia del Tribunal Supremo','El Código Civil'],0]]},
+{t:'Art. 14: igualdad',x:'Los españoles son <b>iguales ante la ley</b>, sin discriminación por <b>nacimiento, raza, sexo, religión, opinión</b> o cualquier otra condición o circunstancia personal o social.<br>Está en el Capítulo II, pero <b>antes</b> de la Sección 1.ª.',q:[
+['¿Qué artículo de la CE consagra la igualdad ante la ley sin discriminación?',['Art. 14','Art. 9','Art. 10'],0]]},
+{t:'Art. 17: libertad y detención',x:'Toda persona tiene derecho a la libertad y a la seguridad.<br>La detención preventiva: el tiempo estrictamente necesario y como <b>máximo 72 horas</b>.<br>El detenido debe ser informado de forma inmediata de sus derechos, no puede ser obligado a declarar y tiene <b>asistencia de abogado</b>. Procedimiento de <b>habeas corpus</b> ante detenciones ilegales.',q:[
+['¿Cuál es el plazo máximo de la detención preventiva antes de poner al detenido en libertad o a disposición judicial?',['72 horas','48 horas','24 horas'],0],
+['¿Qué procedimiento regula la inmediata puesta a disposición judicial de una persona detenida ilegalmente?',['Habeas corpus','Recurso de amparo','Habeas data'],0]]},
+{t:'Art. 18: honor, intimidad, domicilio',x:'Derecho al <b>honor, intimidad personal y familiar y propia imagen</b>.<br>El <b>domicilio es inviolable</b>: no se puede entrar sin <b>consentimiento del titular</b> o <b>resolución judicial</b>, salvo <b>flagrante delito</b>.<br><b>Secreto de las comunicaciones</b>, salvo resolución judicial. La ley limitará el uso de la informática.',q:[
+['Según el art. 18.2 CE, ¿en qué casos puede entrarse en un domicilio?',['Con consentimiento del titular, resolución judicial o flagrante delito','Solo con resolución judicial','Con autorización del Alcalde'],0]]},
+{t:'Art. 20: expresión e información',x:'Se reconocen: expresar y difundir pensamientos; <b>producción y creación literaria, artística, científica y técnica</b>; <b>libertad de cátedra</b>; comunicar o recibir <b>información veraz</b> (con cláusula de conciencia y secreto profesional).<br><b>Sin censura previa</b>. El <b>secuestro</b> de publicaciones solo por <b>resolución judicial</b>.',q:[
+['Según el art. 20 CE, ¿cómo puede acordarse el secuestro de publicaciones?',['Solo en virtud de resolución judicial','Por decisión del Gobierno','Mediante censura previa'],0]]}
+]},
+{nv:2,t:'Derechos fundamentales II',c:[
+{t:'Art. 24: tutela judicial',x:'Derecho a la <b>tutela efectiva</b> de jueces y tribunales, <b>sin indefensión</b>.<br>Derecho al <b>juez ordinario predeterminado</b>, defensa y asistencia de letrado, ser informado de la acusación, proceso público <b>sin dilaciones indebidas</b>, medios de prueba, <b>no declarar contra sí mismo</b>, no confesarse culpable y <b>presunción de inocencia</b>.',q:[
+['¿En qué artículo de la CE se recoge la presunción de inocencia?',['Art. 24','Art. 17','Art. 25'],0]]},
+{t:'Art. 25: legalidad penal',x:'Nadie puede ser condenado o sancionado por acciones u omisiones que <b>no fueran delito, falta o infracción</b> cuando se cometieron.<br>Las penas privativas de libertad se orientan a la <b>reeducación y reinserción</b> y no pueden ser trabajos forzados.<br>La <b>Administración civil no puede imponer sanciones que impliquen privación de libertad</b>.',q:[
+['Según el art. 25.3 CE, la Administración civil…',['No podrá imponer sanciones que, directa o subsidiariamente, impliquen privación de libertad','Podrá imponer arrestos de hasta 72 horas','Podrá imponer trabajos en beneficio de la comunidad'],0]]},
+{t:'Art. 28: sindicación y huelga',x:'Todos tienen derecho a <b>sindicarse libremente</b>; la ley puede limitarlo o exceptuarlo a <b>Fuerzas o Institutos armados</b> y cuerpos con disciplina militar, y regular peculiaridades para <b>funcionarios</b>. <b>Nadie puede ser obligado a afiliarse</b>.<br>Derecho a la <b>huelga</b>, con garantías para mantener los <b>servicios esenciales</b>.',q:[
+['Según el art. 28 CE, la ley podrá limitar o exceptuar el derecho de sindicación a…',['Las Fuerzas o Institutos armados y cuerpos sometidos a disciplina militar','Todos los funcionarios públicos','Los trabajadores de servicios esenciales'],0]]},
+{t:'Art. 33: propiedad',x:'Se reconoce el derecho a la <b>propiedad privada y a la herencia</b>; su <b>función social</b> delimita su contenido.<br>Nadie puede ser privado de sus bienes sino por <b>causa justificada de utilidad pública o interés social</b>, con la correspondiente <b>indemnización</b>.<br>Ojo: está en la Sección 2.ª, no es derecho fundamental de la Sección 1.ª.',q:[
+['¿Qué delimita el contenido del derecho a la propiedad privada según el art. 33 CE?',['Su función social','El interés general del Estado','El Código Civil'],0]]}
+]},
+{nv:2,t:'Organización territorial (Título VIII)',c:[
+{t:'Art. 137: entidades',x:'El Estado se organiza territorialmente en <b>municipios, provincias y Comunidades Autónomas</b>. Todas gozan de <b>autonomía para la gestión de sus respectivos intereses</b>.',q:[
+['Según el art. 137 CE, ¿en qué se organiza territorialmente el Estado?',['Municipios, provincias y Comunidades Autónomas','Municipios, comarcas y regiones','Provincias, islas y nacionalidades'],0]]},
+{t:'Arts. 138 y 139: solidaridad e igualdad',x:'138: el Estado garantiza la <b>solidaridad</b> (art. 2), con atención al <b>hecho insular</b>. Las diferencias entre Estatutos no pueden implicar <b>privilegios económicos o sociales</b>.<br>139: todos los españoles tienen los <b>mismos derechos y obligaciones</b> en cualquier parte del territorio; ninguna autoridad puede obstaculizar la libre circulación de personas y bienes.',q:[
+['¿A qué circunstancia presta atención particular el art. 138 CE al garantizar la solidaridad?',['Al hecho insular','A la despoblación rural','A las regiones fronterizas'],0]]},
+{t:'Art. 140: municipios',x:'La Constitución garantiza la <b>autonomía de los municipios</b>, con <b>personalidad jurídica plena</b>. Gobierno y administración: <b>Ayuntamientos</b> (Alcaldes y Concejales).<br>Concejales: sufragio universal, igual, libre, directo y secreto. Alcaldes: elegidos <b>por los Concejales o por los vecinos</b>. La ley regulará el <b>concejo abierto</b>.',q:[
+['Según el art. 140 CE, ¿quién elige a los Alcaldes?',['Los Concejales o los vecinos','Solo los vecinos por sufragio directo','El Pleno de la Diputación'],0]]},
+{t:'Art. 141: provincia',x:'Entidad local con <b>personalidad jurídica propia</b>, agrupación de municipios y división territorial para las actividades del Estado. Alterar sus límites requiere <b>ley orgánica</b> de las Cortes.<br>Gobierno: <b>Diputaciones</b> u otras corporaciones representativas. En los archipiélagos, <b>Cabildos o Consejos</b>.',q:[
+['¿Qué norma se requiere para alterar los límites provinciales?',['Ley orgánica aprobada por las Cortes Generales','Ley de la Comunidad Autónoma','Real Decreto del Gobierno'],0]]},
+{t:'Arts. 142 y 143: haciendas y autonomía',x:'142: las Haciendas locales se nutren fundamentalmente de <b>tributos propios</b> y de <b>participación en los del Estado y las CC.AA.</b><br>143: la iniciativa autonómica corresponde a las Diputaciones y a <b>dos tercios de los municipios</b> que representen la mayoría del censo de cada provincia, en <b>6 meses</b>. Si no prospera, puede reiterarse pasados <b>5 años</b>.',q:[
+['Si la iniciativa del proceso autonómico del art. 143 no prospera, ¿cuándo puede reiterarse?',['Pasados cinco años','Pasados dos años','Pasados seis meses'],0],
+['Según el art. 142 CE, las Haciendas locales se nutren fundamentalmente de…',['Tributos propios y participación en los del Estado y de las CC.AA.','Precios públicos y multas','Transferencias de la Unión Europea'],0]]}
+]},
+{nv:3,t:'Estatuto de la Comunidad de Madrid',c:[
+{t:'Art. 8: instituciones',x:'Ley Orgánica <b>3/1983, de 25 de febrero</b>.<br>Los poderes de la Comunidad se ejercen a través de sus instituciones de autogobierno: <b>la Asamblea, el Gobierno y el Presidente</b> de la Comunidad.',q:[
+['¿Cuáles son las instituciones de la Comunidad de Madrid?',['La Asamblea, el Gobierno y el Presidente','El Pleno, el Gobierno y el Presidente','El Gobierno y el Presidente'],0]]},
+{t:'Art. 9: la Asamblea',x:'La Asamblea <b>representa al pueblo de Madrid</b>, ejerce la <b>potestad legislativa</b>, aprueba y controla el <b>Presupuesto</b>, impulsa, orienta y <b>controla la acción del Gobierno</b>.',q:[
+['¿Qué institución ejerce la potestad legislativa de la Comunidad de Madrid?',['La Asamblea','El Gobierno','El Presidente'],0]]},
+{t:'Art. 22: el Gobierno',x:'Órgano <b>colegiado</b> que dirige la política de la Comunidad, con funciones <b>ejecutivas y administrativas</b> y la <b>potestad reglamentaria</b> en materias no reservadas a la Asamblea.<br>Lo componen el <b>Presidente, Vicepresidentes</b> (en su caso) y <b>Consejeros</b>, nombrados y cesados por el Presidente. <b>No hace falta ser Diputado</b> para ser Vicepresidente o Consejero.',q:[
+['¿Es necesario ser Diputado de la Asamblea para ser Consejero del Gobierno de la Comunidad de Madrid?',['No','Sí, siempre','Solo para ser Vicepresidente'],0],
+['¿Quién nombra y cesa a los miembros del Gobierno de la Comunidad de Madrid?',['El Presidente','La Asamblea','El Rey'],0]]},
+{t:'Arts. 34 y 35: régimen jurídico',x:'34: las competencias se refieren a su <b>territorio</b>. La <b>Asamblea</b> tiene la potestad <b>legislativa</b>; el <b>Consejo de Gobierno</b>, la <b>reglamentaria y la función ejecutiva</b>.<br>35: la Administración de la Comunidad, como ente de derecho público, tiene <b>personalidad jurídica y plena capacidad de obrar</b>. Su responsabilidad se exige según la <b>legislación del Estado</b>.',q:[
+['Según el art. 34 del Estatuto, ¿a quién corresponde la potestad reglamentaria?',['Al Consejo de Gobierno','A la Asamblea','Al Presidente de la Asamblea'],0],
+['Según el art. 35 del Estatuto, la responsabilidad de la Administración madrileña se exige conforme a…',['La legislación del Estado','Las leyes de la Asamblea','El propio Estatuto'],0]]}
+]}
+]});
+
+T.push({id:2,b:1,n:'Régimen local y Ley de Capitalidad',s:'Ley 7/1985 de Bases de Régimen Local (arts. 11, 12, 15, 16, 18–23, 25, 26, 54 y 92) y Ley 22/2006 de Capitalidad y Régimen Especial de Madrid (arts. 7, 9, 11, 14–17, 19, 21 y 22)',L:[
+{nv:1,t:'El municipio',c:[
+{t:'Art. 11 LBRL',x:'El Municipio es la <b>entidad local básica</b> de la organización territorial del Estado, con personalidad jurídica y plena capacidad.<br>Elementos: <b>territorio, población y organización</b>.',q:[
+['Según el art. 11 LBRL, ¿cuáles son los elementos del Municipio?',['El territorio, la población y la organización','El territorio, el Alcalde y el Pleno','La población, el padrón y el presupuesto'],0]]},
+{t:'Art. 12: término municipal',x:'El <b>término municipal</b> es el territorio en el que el ayuntamiento ejerce sus competencias.<br>Cada municipio pertenece a <b>una sola provincia</b>.',q:[
+['¿A cuántas provincias puede pertenecer un municipio?',['A una sola','A dos como máximo','A las que determine la Comunidad Autónoma'],0]]},
+{t:'Art. 15: empadronamiento',x:'Toda persona que viva en España debe inscribirse en el <b>Padrón</b> del municipio donde resida habitualmente. Si vive en varios, en el que habite <b>más tiempo al año</b>.<br>Los inscritos son los <b>vecinos</b>; la condición se adquiere <b>en el momento de la inscripción</b>.',q:[
+['Si una persona vive en varios municipios, ¿dónde debe empadronarse?',['Únicamente en el que habite durante más tiempo al año','En todos ellos','En el que elija libremente'],0],
+['¿Cuándo se adquiere la condición de vecino?',['En el momento de la inscripción en el Padrón','Al año de residir en el municipio','Al votar en las elecciones municipales'],0]]},
+{t:'Art. 16: el Padrón',x:'Registro administrativo de los vecinos. Sus datos <b>prueban la residencia</b> y el domicilio; sus certificaciones son <b>documento público y fehaciente</b>.<br>Extranjeros no comunitarios sin residencia de larga duración: <b>renovación cada 2 años</b>, si no caduca (sin audiencia previa).<br>Datos obligatorios: nombre y apellidos, sexo, domicilio, nacionalidad, lugar y fecha de nacimiento, DNI o NIE, título académico y datos para el censo electoral.',q:[
+['¿Cada cuánto deben renovar su inscripción padronal los extranjeros no comunitarios sin autorización de residencia de larga duración?',['Cada dos años','Cada cinco años','Cada año'],0],
+['¿Qué carácter tienen las certificaciones de los datos del Padrón?',['Documento público y fehaciente para todos los efectos administrativos','Documento privado','Simple información estadística'],0]]},
+{t:'Art. 18: derechos y deberes',x:'Ser elector y elegible; participar en la gestión municipal; usar los servicios públicos y aprovechamientos comunales; <b>contribuir</b> con prestaciones económicas y personales; ser informado; pedir la <b>consulta popular</b>; exigir los servicios obligatorios; ejercer la <b>iniciativa popular</b>.<br>El empadronamiento de extranjeros <b>no prueba su residencia legal</b>.',q:[
+['¿Prueba la inscripción en el padrón la residencia legal de un extranjero en España?',['No, ni le atribuye derechos que no le confiera la legislación','Sí, siempre','Sí, si lleva más de dos años inscrito'],0]]}
+]},
+{nv:1,t:'Organización municipal (LBRL)',c:[
+{t:'Art. 19: el Ayuntamiento',x:'El gobierno y la administración municipal corresponde al <b>Ayuntamiento</b>, integrado por el <b>Alcalde y los Concejales</b>, salvo en régimen de <b>Concejo Abierto</b>.<br>Concejales: sufragio universal, igual, libre, directo y secreto. Alcalde: elegido por los Concejales o por los vecinos.',q:[
+['¿Por quién está integrado el Ayuntamiento?',['Por el Alcalde y los Concejales','Por el Pleno y la Junta de Gobierno','Por el Alcalde y los Tenientes de Alcalde'],0]]},
+{t:'Art. 20: órganos',x:'En <b>todos</b>: Alcalde, Tenientes de Alcalde, Pleno y <b>Comisión Especial de Cuentas</b>.<br><b>Junta de Gobierno Local</b>: en municipios de <b>más de 5.000 habitantes</b> (y en los de menos si lo dice su reglamento o lo acuerda el Pleno).<br>Comisión Especial de Sugerencias y Reclamaciones: en los municipios de gran población (título X).',q:[
+['¿A partir de qué población existe obligatoriamente la Junta de Gobierno Local?',['Más de 5.000 habitantes','Más de 20.000 habitantes','Más de 50.000 habitantes'],0],
+['¿Qué órgano existe en todos los municipios según el art. 20 LBRL?',['La Comisión Especial de Cuentas','La Junta de Gobierno Local','La Comisión de Sugerencias y Reclamaciones'],0]]},
+{t:'Art. 21: el Alcalde',x:'<b>Presidente de la Corporación</b>. Dirige el gobierno y la administración, representa al ayuntamiento, convoca y preside Pleno y Junta, decide empates con <b>voto de calidad</b>, dicta <b>bandos</b>, jefe superior del personal, <b>jefatura de la Policía Municipal</b>.<br>En <b>catástrofe o grave riesgo</b> adopta personalmente las medidas necesarias, dando cuenta inmediata al Pleno. Nombra a los Tenientes de Alcalde.',q:[
+['¿Quién adopta personalmente las medidas necesarias en caso de catástrofe o infortunio público en el municipio?',['El Alcalde, dando cuenta inmediata al Pleno','El Pleno, por mayoría absoluta','La Junta de Gobierno Local'],0],
+['¿Quién ejerce la jefatura de la Policía Municipal según la LBRL?',['El Alcalde','El Concejal de Seguridad','El Pleno'],0]]},
+{t:'Art. 22: el Pleno',x:'Integrado por <b>todos los Concejales</b> y presidido por el Alcalde. Le corresponde: el <b>control y la fiscalización de los órganos de gobierno</b>; reglamento orgánico y ordenanzas; presupuestos; plantilla y RPT; bandera y escudo; alteración del término municipal…<br>Vota la <b>moción de censura</b> y la <b>cuestión de confianza</b>, públicas y por llamamiento nominal.',q:[
+['¿A qué órgano corresponde el control y la fiscalización de los órganos de gobierno municipales?',['Al Pleno','A la Junta de Gobierno Local','Al Alcalde'],0]]},
+{t:'Art. 23: Junta de Gobierno y Tenientes',x:'Junta de Gobierno Local: el Alcalde y un número de Concejales <b>no superior al tercio</b> del número legal, nombrados y separados libremente por él. Asiste al Alcalde.<br><b>Tenientes de Alcalde</b>: sustituyen al Alcalde <b>por orden de nombramiento</b> en vacante, ausencia o enfermedad.',q:[
+['¿Cuántos Concejales como máximo pueden formar parte de la Junta de Gobierno Local además del Alcalde?',['No más de un tercio del número legal','La mitad','Dos tercios'],0]]}
+]},
+{nv:2,t:'Competencias y servicios',c:[
+{t:'Art. 25: competencias propias',x:'Entre otras: urbanismo; medio ambiente urbano; agua potable y aguas residuales; infraestructura viaria; atención a la exclusión social; <b>policía local, protección civil, prevención y extinción de incendios</b>; tráfico y transporte colectivo urbano; ferias y mercados; salubridad; <b>cementerios</b>; deporte; cultura; igualdad y violencia de género.',q:[
+['¿Es la prevención y extinción de incendios una competencia propia del municipio según el art. 25 LBRL?',['Sí','No, es de la Comunidad Autónoma','Solo en municipios de más de 50.000 habitantes'],0]]},
+{t:'Art. 26: servicios en todos los municipios',x:'<b>Todos</b>: alumbrado público, <b>cementerio</b>, recogida de residuos, limpieza viaria, agua potable, alcantarillado, acceso a los núcleos y pavimentación.',q:[
+['¿Cuál de estos servicios debe prestarse obligatoriamente en un municipio de menos de 5.000 habitantes?',['Cementerio','Biblioteca pública','Transporte colectivo urbano de viajeros'],0]]},
+{t:'Art. 26: por tramos de población',x:'<b>&gt;5.000</b>: parque público, <b>biblioteca</b> y tratamiento de residuos.<br><b>&gt;20.000</b>: protección civil, servicios sociales, <b>prevención y extinción de incendios</b> e instalaciones deportivas.<br><b>&gt;50.000</b>: <b>transporte colectivo urbano</b> y medio ambiente urbano.',q:[
+['¿A partir de qué población es obligatorio el servicio de prevención y extinción de incendios?',['Más de 20.000 habitantes','Más de 5.000 habitantes','Más de 50.000 habitantes'],0],
+['¿A partir de qué población debe prestarse el transporte colectivo urbano de viajeros?',['Más de 50.000 habitantes','Más de 20.000 habitantes','Más de 5.000 habitantes'],0]]},
+{t:'Arts. 54 y 92',x:'54: las entidades locales responden <b>directamente</b> de los daños causados por el funcionamiento de los servicios públicos o por sus autoridades, funcionarios o agentes.<br>92: con carácter general, los puestos se desempeñan por <b>funcionarios</b>. Las funciones que impliquen <b>potestades públicas</b> o <b>ejercicio de autoridad</b> quedan reservadas a <b>funcionarios de carrera</b>.',q:[
+['¿A quién reserva el art. 92 LBRL las funciones que impliquen ejercicio de autoridad?',['A los funcionarios de carrera','Al personal laboral fijo','Al personal eventual'],0],
+['Según el art. 54 LBRL, las entidades locales responden de los daños causados por sus servicios públicos de forma…',['Directa','Subsidiaria','Solidaria con el funcionario'],0]]}
+]},
+{nv:2,t:'Ley de Capitalidad: el Pleno',c:[
+{t:'Art. 7: órganos de gobierno',x:'Ley <b>22/2006, de 4 de julio</b>.<br><b>Deliberante</b> de representación política: el <b>Pleno</b>.<br><b>Ejecutivos</b>: Alcalde, <b>Junta de Gobierno</b>, Tenientes de Alcalde, Concejales con responsabilidades de gobierno y miembros no electos de la Junta de Gobierno.',q:[
+['Según la Ley 22/2006, ¿cuál es el órgano deliberante de representación política del Ayuntamiento de Madrid?',['El Pleno','La Junta de Gobierno','El Alcalde'],0]]},
+{t:'Art. 9: el Pleno',x:'Órgano de <b>máxima representación política</b> de los ciudadanos, formado por el Alcalde y los Concejales.<br>Sesiones <b>públicas</b>; pueden ser secretos el debate y votación de asuntos que afecten al <b>art. 18.1 CE</b> (honor, intimidad), si se acuerda por <b>mayoría absoluta</b>. Puede funcionar en <b>Comisiones</b>.',q:[
+['¿Cuándo pueden ser secretos el debate y votación en el Pleno del Ayuntamiento de Madrid?',['Cuando afecten al derecho del art. 18.1 CE y así se acuerde por mayoría absoluta','Siempre que lo decida el Alcalde','Nunca, las sesiones son siempre públicas'],0]]},
+{t:'Art. 11: atribuciones del Pleno',x:'Entre otras: <b>control y fiscalización de los órganos de gobierno</b>; moción de censura y cuestión de confianza; reglamentos orgánicos (incluida la <b>división en distritos</b>); ordenanzas; recursos tributarios; <b>presupuestos</b> y cuenta general; bandera y escudo; régimen retributivo de sus miembros.',q:[
+['Según la Ley 22/2006, ¿a qué órgano del Ayuntamiento de Madrid se atribuye el control y la fiscalización de los órganos de gobierno?',['Al Pleno','A la Junta de Gobierno','Al Alcalde'],0]]},
+{t:'Art. 11: mayorías y delegación',x:'<b>Mayoría absoluta</b> para: reglamentos orgánicos (c), término municipal y bandera (e), organizaciones supramunicipales (f), transferencia de funciones (k) y planeamiento general. El resto, <b>mayoría simple</b>.<br>Las delegaciones del Pleno solo pueden hacerse <b>en sus Comisiones</b>.',q:[
+['¿En quién puede delegar el Pleno del Ayuntamiento de Madrid sus competencias delegables?',['Solo en sus Comisiones','En el Alcalde','En la Junta de Gobierno'],0]]}
+]},
+{nv:3,t:'Ley de Capitalidad: órganos ejecutivos',c:[
+{t:'Art. 14: el Alcalde',x:'Impulsa la política municipal, dirige los órganos ejecutivos, ejerce la superior dirección de la Administración y <b>responde ante el Pleno</b>. Ostenta la <b>máxima representación de la ciudad</b>.<br>Nombra y cesa a miembros de la Junta, Tenientes de Alcalde y <b>Presidentes de Distrito</b>; dicta bandos, decretos e instrucciones; superior jefatura de la policía municipal; nombra al personal; ordena pagos.',q:[
+['Según la Ley 22/2006, ¿quién nombra y cesa a los Presidentes de los Distritos?',['El Alcalde','El Pleno','La Junta de Gobierno'],0]]},
+{t:'Art. 14.4: delegación del Alcalde',x:'Puede delegar por decreto, salvo: convocar y presidir Pleno y Junta (b), <b>voto de calidad</b> (c), nombrar y cesar a Junta, Tenientes y Presidentes de Distrito (d), <b>bandos</b> (e) y medidas de <b>extraordinaria y urgente necesidad</b> (f).<br>El programa político (a) y la estructura de áreas (h) solo son delegables en la <b>Junta de Gobierno</b>.',q:[
+['¿Puede el Alcalde de Madrid delegar la adopción de bandos?',['No, es indelegable','Sí, en la Junta de Gobierno','Sí, en cualquier Concejal'],0]]},
+{t:'Art. 15: Tenientes de Alcalde',x:'El Alcalde puede nombrarlos de entre los miembros de la Junta de Gobierno <b>que sean Concejales</b>. Le sustituyen por <b>orden de nombramiento</b> en vacante, ausencia o enfermedad.',q:[
+['¿Entre quiénes nombra el Alcalde de Madrid a los Tenientes de Alcalde?',['Entre los miembros de la Junta de Gobierno que sean Concejales','Entre cualquier miembro de la Junta de Gobierno','Entre los Presidentes de Distrito'],0]]},
+{t:'Art. 16: Junta de Gobierno',x:'Órgano <b>ejecutivo de dirección política y administrativa</b>. Miembros nombrados por el Alcalde, <b>no más de un tercio</b> del número legal del Pleno, además del Alcalde. Puede incluir <b>no concejales</b>.<br>Responde ante el Pleno de forma <b>solidaria</b>. Sus sesiones son <b>secretas</b> (salvo acuerdo de la propia Junta).',q:[
+['¿Cómo son, como regla general, las sesiones de la Junta de Gobierno de Madrid?',['Secretas','Públicas','Públicas solo si lo pide un tercio de los Concejales'],0],
+['¿Puede el Alcalde de Madrid nombrar miembros de la Junta de Gobierno que no sean concejales?',['Sí','No','Solo uno'],0]]},
+{t:'Art. 17: atribuciones de la Junta',x:'Aprueba los <b>proyectos</b> de ordenanzas y reglamentos y el <b>proyecto de presupuesto</b>; gestión de contratos y patrimonio; organización de la Administración ejecutiva; <b>potestad sancionadora y licencias</b>; personal: RPT, oferta de empleo, bases de convocatorias, separación del servicio y régimen disciplinario.',q:[
+['Según la Ley 22/2006, ¿a quién corresponde aprobar el proyecto de presupuesto?',['A la Junta de Gobierno','Al Pleno','Al Alcalde'],0]]},
+{t:'Arts. 19, 21 y 22',x:'19: la Administración se rige por <b>jerarquía, eficacia, descentralización funcional, desconcentración, coordinación y servicio al ciudadano</b>.<br>21: la Junta de Gobierno puede crear <b>órganos directivos</b>, nombrados por competencia profesional y experiencia.<br>22: el Pleno <b>debe crear Distritos</b> para la participación ciudadana; su Presidencia corresponde <b>siempre a un Concejal</b>.',q:[
+['¿Quién debe ostentar la Presidencia de un Distrito en Madrid?',['En todo caso un Concejal','Un funcionario de carrera','Un vecino elegido por el distrito'],0],
+['¿Qué órgano crea los Distritos según la Ley 22/2006?',['El Pleno','El Alcalde','La Junta de Gobierno'],0]]}
+]}
+]});
+
+T.push({id:9,b:2,n:'Teoría del fuego',s:'Combustión, triángulo y tetraedro, clases de fuego, transmisión, extinción y agentes extintores',L:[
+{nv:1,t:'Qué es el fuego',c:[
+{t:'Fuego y combustión (UNE 23026)',x:'La norma <b>UNE 23026</b> define el <b>fuego</b> como una combustión caracterizada por la emisión de <b>calor, humo y llamas</b>.<br>La <b>combustión</b> es una reacción química <b>exotérmica de oxidación</b> entre un combustible y un comburente (normalmente el O₂), con desprendimiento de calor, luz, humo y gases.',q:[
+['Según la UNE 23026, el fuego es una combustión caracterizada por la emisión de…',['Calor, humo y llamas','Luz, gases y cenizas','Calor, vapor de agua y brasas'],0],
+['La combustión es una reacción química…',['Exotérmica de oxidación','Endotérmica de reducción','Física de cambio de estado'],0]]},
+{t:'Fuego vs. incendio',x:'<b>DRAE</b>: el fuego es calor y luz producidos por la combustión; el <b>incendio</b> es un fuego grande que destruye lo que no debería quemarse.<br><b>ISO 13943</b>: el fuego es una combustión <b>autosoportada, deliberada y controlada</b> en duración y extensión; el incendio es una combustión que se propaga <b>incontroladamente en el tiempo y en el espacio</b>.',q:[
+['Según la ISO 13943, ¿qué es un incendio?',['Una combustión que se propaga incontroladamente en el tiempo y en el espacio','Una combustión autosoportada y controlada en su duración','Cualquier combustión con emisión de llamas'],0],
+['Según la ISO 13943, el fuego es una combustión…',['Autosoportada, puesta en marcha deliberadamente y controlada','Que destruye lo que no debería quemarse','Sin llama y con emisión de humo'],0]]},
+{t:'La atmósfera',x:'El aire es la mezcla de gases que alimenta casi todos los fuegos: <b>oxígeno ≈21 %</b>, <b>nitrógeno ≈79 %</b> y otros gases (CO₂, neón, criptón…).<br>Los <b>gases inertes</b> (nitrógeno y gases nobles) no reaccionan en condiciones normales.',q:[
+['¿Qué porcentaje aproximado de oxígeno contiene la atmósfera en volumen?',['21 %','15 %','79 %'],0],
+['¿Cuál es el gas inerte más abundante del aire?',['Nitrógeno','Argón','Dióxido de carbono'],0]]},
+{t:'Tipos de reacciones',x:'<b>Física</b>: cambia el estado pero no la sustancia (hielo → vapor, sigue siendo H₂O).<br><b>Química</b>: cambia la composición y forma sustancias nuevas (2C + O₂ → 2CO₂).<br><b>Nuclear</b>: cambia el núcleo del átomo; puede ser <b>fisión</b> (núcleo pesado se rompe) o <b>fusión</b> (dos núcleos ligeros se unen). Libera enormes cantidades de energía.',q:[
+['El agua que pasa de hielo a vapor es un ejemplo de reacción…',['Física','Química','Nuclear'],0],
+['¿Cómo se llama la reacción nuclear en la que dos núcleos ligeros se unen para formar uno más pesado?',['Fusión','Fisión','Pirólisis'],0],
+['En la fisión nuclear, un núcleo pesado bombardeado con neutrones…',['Se divide en dos núcleos de tamaño similar y emite 2 o 3 neutrones','Se une con otro núcleo ligero','Capta electrones y se reduce'],0]]},
+{t:'Endotérmica, exotérmica y redox',x:'<b>Exotérmica</b>: desprende calor (disminuye la energía interna). <b>Endotérmica</b>: absorbe calor (ej. disolver sal en agua).<br><b>Redox</b>: el <b>reductor cede electrones y se oxida</b>; el <b>oxidante capta electrones y se reduce</b>.<br>En el fuego: <b>combustible = reductor</b>, <b>comburente = oxidante</b>.',q:[
+['En la reacción redox del fuego, el combustible actúa como…',['Reductor: cede electrones y se oxida','Oxidante: capta electrones y se reduce','Catalizador'],0],
+['Una reacción en la que aumenta la energía interna del sistema porque absorbe energía es…',['Endotérmica','Exotérmica','Redox'],0]]}
+]},
+{nv:1,t:'Triángulo y tetraedro',c:[
+{t:'Triángulo del fuego',x:'Para que haya fuego deben coincidir, en las proporciones correctas: <b>combustible</b>, <b>comburente</b> y <b>energía de activación (calor)</b>.<br>Si se suprime uno de los tres lados, el fuego no se produce o se extingue.',q:[
+['¿Cuáles son los tres lados del triángulo del fuego?',['Combustible, comburente y energía de activación','Combustible, humo y llamas','Oxígeno, nitrógeno y calor'],0]]},
+{t:'Tetraedro del fuego',x:'Se añade un cuarto factor: la <b>reacción en cadena</b>. Se dibuja como tetraedro (no cuadrado) para expresar que cada cara se relaciona con todas las demás.<br>La reacción en cadena <b>solo aparece en combustiones con llama</b>. Las combustiones sin llama (incandescentes) se representan con el triángulo.',q:[
+['¿Qué cuarto factor añade el tetraedro del fuego?',['La reacción en cadena','Los agentes pasivos','La pirólisis'],0],
+['Una combustión incandescente (sin llama) se representa con…',['El triángulo del fuego, porque no hay reacción en cadena','El tetraedro del fuego','El pentágono del fuego'],0]]},
+{t:'Reacción en cadena',x:'Consiste en el <b>automantenimiento de la combustión</b> gracias a los <b>radicales libres</b>. Se asegura cuando la energía de un grupo de moléculas activa a un número igual o mayor de ellas.<br>Su velocidad <b>se duplica con +10 ºC</b> y puede multiplicarse por un millón con +200 ºC.',q:[
+['La velocidad de la reacción en cadena se duplica con un aumento de temperatura de…',['10 ºC','50 ºC','100 ºC'],0],
+['¿Qué partículas mantienen la reacción en cadena?',['Los radicales libres','Los neutrones','Los iones de nitrógeno'],0]]},
+{t:'Agentes pasivos',x:'Están presentes en la combustión pero <b>no participan en la reacción</b>; absorben calor y así afectan al fuego.<br>Ejemplos: gases no inflamables (<b>CO₂ y vapor de agua</b>), <b>hollín</b>, <b>agua</b> (humedad) y <b>nitrógeno</b>.',q:[
+['¿Cuál de estos es un agente pasivo de la combustión?',['El nitrógeno del aire','El oxígeno','Los radicales libres'],0]]},
+{t:'Energía de activación',x:'Es la <b>energía mínima</b> necesaria para iniciar la reacción. La aportan los focos de ignición: llamas, chispas, superficies calientes, brasas.<br>Orígenes: <b>químico, mecánico, eléctrico, térmico, biológico</b> (fermentación) y <b>natural</b> (rayos).',q:[
+['El calor que desprende la fermentación es una energía de activación de origen…',['Biológico','Químico','Mecánico'],0],
+['Los choques o roces entre metales que generan chispas son una energía de activación de origen…',['Mecánico','Eléctrico','Natural'],0]]}
+]},
+{nv:1,t:'Clases de fuego',c:[
+{t:'Clasificación EN 2',x:'<b>A</b> sólidos con brasas (madera, papel, tela).<br><b>B</b> líquidos y sólidos licuables (gasolina, alcohol, ceras).<br><b>C</b> gases (butano, propano, metano, acetileno).<br><b>D</b> metales (magnesio, sodio, potasio, aluminio en polvo).<br><b>F</b> aceites y grasas de cocina (equivale a la clase K americana).',q:[
+['Un fuego de aceite de cocina en una freidora es de clase…',['F','B','K según la norma europea'],0],
+['Un fuego de magnesio es de clase…',['D','C','A'],0],
+['Las ceras y parafinas arden como fuego de clase…',['B','A','C'],0]]},
+{t:'La antigua clase E',x:'La clase <b>E (fuegos eléctricos) ya no existe</b> en la normativa: la electricidad no es un combustible.<br>Si se corta la corriente, la clase la define el combustible (normalmente pasa a ser <b>clase A</b>).',q:[
+['¿Por qué ya no se reconoce la clase E de fuegos eléctricos?',['Porque la electricidad no es un combustible','Porque se agrupó con la clase D','Porque es la actual clase F'],0]]},
+{t:'Clase A: superficiales y profundos',x:'Los combustibles sólidos <b>no arden directamente</b>: arden los gases que desprenden por <b>pirólisis</b> (descomposición por calor sin intervención del oxígeno).<br>Los fuegos de clase A que penetran en el material y forman brasa se denominan <b>fuegos profundos</b>.',q:[
+['¿Qué es la pirólisis?',['La descomposición química de una materia por calor, sin reacción con el oxígeno','La oxidación lenta de un metal','La combustión de un líquido'],0]]},
+{t:'Clase D: metales',x:'Fuego muy especial y peligroso. Muchos metales <b>desplazan el hidrógeno del agua</b> y provocan explosiones, por eso el agua está <b>prohibida en casi todos los casos</b>.<br>Necesitan <b>polvos especiales</b>. En algunas clasificaciones se llaman clase <b>M</b>.',q:[
+['¿Por qué no se usa agua en la mayoría de fuegos de metales?',['Porque el metal desplaza el hidrógeno del agua y puede provocar explosiones','Porque el agua no enfría los metales','Porque el agua se congela al contacto'],0]]}
+]},
+{nv:1,t:'Productos de la combustión',c:[
+{t:'Los cuatro productos',x:'La combustión produce <b>humo, llama, calor y gases</b>. La materia ni se crea ni se destruye: los productos pesan lo mismo que los reactivos.<br>El <b>humo es el principal factor de riesgo</b>: irrita, quita visibilidad y puede ser inflamable o explosivo.',q:[
+['¿Cuál es el principal factor de riesgo en el desarrollo de un incendio según el manual?',['El humo','La llama','La radiación luminosa'],0]]},
+{t:'Color del humo',x:'<b>Blanco</b>: arde libremente con mucho O₂, sobre todo vapor de agua (vegetales, forraje).<br><b>Negro</b>: gran carga térmica y poco oxígeno (plásticos, caucho, derivados del petróleo).<br><b>Amarillo</b>: azufre. <b>Amarillo verdoso</b>: cloro. <b>Violeta</b>: yodo. <b>Azul</b>: hidrocarburos.',q:[
+['Un humo amarillo verdoso indica sustancias que contienen…',['Cloro','Yodo','Azufre'],0],
+['Un humo negro y denso suele indicar…',['Gran carga térmica, poco oxígeno y derivados del petróleo','Combustión libre con mucho oxígeno','Presencia de yodo'],0],
+['Un humo de color violeta se asocia a…',['Yodo','Cloro','Hidrocarburos'],0]]},
+{t:'Zonas de la llama',x:'<b>Interna</b>: fría y oscura, no hay combustión por falta de oxígeno.<br><b>Media</b>: muy luminosa, combustión incompleta.<br><b>Externa</b>: poco luminosa, donde se alcanzan las <b>temperaturas máximas</b>.<br>Las llamas se producen siempre en <b>fase gaseosa</b>.',q:[
+['¿En qué zona de la llama se alcanzan las temperaturas máximas?',['Zona externa, poco luminosa','Zona media, muy luminosa','Zona interna, oscura'],0]]},
+{t:'Calor y temperatura',x:'El <b>calor</b> es energía que se transfiere por diferencia de temperatura; la <b>temperatura</b> es la energía cinética <b>media</b> de las moléculas. Los cuerpos no tienen calor, sino temperatura.<br><b>1 cal = 4,18 J</b>; 1 J ≈ 0,24 cal. El <b>vatio</b> (1 W = 1 J/s) mide potencia.',q:[
+['¿A cuántos julios equivale aproximadamente una caloría?',['4,18 J','0,24 J','1.000 J'],0],
+['La temperatura de un cuerpo es…',['La energía cinética media de sus moléculas','La suma de la energía cinética de todas sus moléculas','La cantidad de calor que contiene'],0]]},
+{t:'Escalas de temperatura',x:'Celsius 0–100; Fahrenheit 32–212; Kelvin 273–373; Réaumur 0–80.<br><b>ºF = ºC × 1,8 + 32</b>. <b>K = ºC + 273,15</b>.<br>Ejemplo: 27 ºC = 80,6 ºF.',q:[
+['¿Cuántos ºF son 27 ºC?',['80,6 ºF','59 ºF','300 ºF'],0],
+['¿Cuántos kelvin son 100 ºC?',['373,15 K','212 K','173,15 K'],0]]}
+]},
+{nv:2,t:'Gases de la combustión',c:[
+{t:'Monóxido de carbono (CO)',x:'Gas incoloro, <b>más ligero que el aire</b>, arde con llama azul. Inflamable entre <b>12,5 % y 74 %</b>.<br>Se forma en la <b>combustión incompleta</b>. Se une a la hemoglobina formando <b>carboxihemoglobina</b> (afinidad <b>260 veces</b> mayor que el O₂) y provoca hipoxia.',q:[
+['¿Cuántas veces mayor es la afinidad del CO por la hemoglobina que la del oxígeno?',['260 veces','26 veces','2.600 veces'],0],
+['El monóxido de carbono, respecto al aire, es…',['Más ligero','Más pesado','Igual de denso'],0]]},
+{t:'Dióxido de carbono (CO₂)',x:'Se forma en la combustión completa. Incoloro, inodoro, no inflamable.<br><b>Más pesado que el aire</b> (densidad relativa 1,52). <b>No es tóxico pero sí asfixiante</b>.',q:[
+['El CO₂ es…',['No tóxico pero asfixiante, y más pesado que el aire','Tóxico y más ligero que el aire','Inflamable y muy tóxico'],0]]},
+{t:'Ácido cianhídrico (HCN)',x:'También llamado cianuro de hidrógeno o ácido prúsico. Olor característico a <b>almendras amargas</b>. Explosivo entre el <b>5 % y el 40 %</b>.<br>Inhibe la citocromooxidasa y provoca una <b>anoxia química</b> (los tejidos no reciben O₂).',q:[
+['¿Qué gas de la combustión tiene un olor característico a almendras amargas?',['Ácido cianhídrico','Sulfuro de hidrógeno','Formaldehído'],0]]},
+{t:'Sulfuro de hidrógeno (H₂S)',x:'Ácido sulfhídrico o "gas de alcantarilla". Olor a <b>huevos podridos</b>; a <b>100 ppm o más paraliza el olfato</b>.<br>Más pesado que el aire. Por toxicidad está justo por debajo del HCN. Inflamable entre 4,5 % y 45 %.',q:[
+['¿A partir de qué concentración el sulfuro de hidrógeno paraliza el olfato?',['100 ppm','30 ppm','1.000 ppm'],0],
+['¿Qué gas huele a huevos podridos?',['Sulfuro de hidrógeno','Amoniaco','Fosgeno'],0]]},
+{t:'Otros gases tóxicos',x:'<b>Fosgeno</b> (COCl₂): por llamas sobre productos clorados como el <b>PVC</b>; en baja concentración huele a <b>heno recién cortado</b>; no es inflamable pero es comburente.<br><b>Dióxido de azufre</b> (SO₂): "gas amigo" porque se delata enseguida al irritar.<br><b>Ácido fluorhídrico</b>: ataca el vidrio; es el ácido de laboratorio más temido.<br><b>Cloro</b>: amarillo verdoso, 2,5 veces más pesado que el aire.',q:[
+['¿Qué gas se produce por el contacto de las llamas con PVC y huele a heno recién cortado en bajas concentraciones?',['Fosgeno','Amoniaco','Acroleína'],0],
+['¿Por qué se llama "gas amigo" al dióxido de azufre?',['Porque se delata enseguida al ser irritante','Porque no es tóxico','Porque extingue el fuego'],0]]}
+]},
+{nv:2,t:'Inflamabilidad',c:[
+{t:'Punto de inflamación (flash point)',x:'Temperatura mínima a la que un combustible emite vapores suficientes para inflamarse <b>si hay una fuente de ignición</b>. Si se retira la fuente, no sigue ardiendo.<br>El <b>punto de ignición o de incendio</b> está unos grados por encima: los vapores se inflaman y <b>mantienen la llama</b> aunque se retire la fuente.',q:[
+['¿Qué diferencia al punto de ignición del punto de inflamación?',['En el de ignición la combustión se mantiene aunque se retire la fuente','En el de ignición no hace falta fuente de ignición','El de ignición está siempre por debajo del de inflamación'],0]]},
+{t:'Autoinflamación',x:'<b>Punto de autoinflamación</b>: temperatura mínima a la que los vapores arden <b>sin aporte de fuente de ignición</b>.<br>Ejemplos (inflamación / autoinflamación): gasolina −39 / 285 ºC; gasoil 60 / 330 ºC; madera 225 / 280 ºC; butano −60 / 287 ºC.',q:[
+['¿Cuál es el punto de inflamación aproximado del gasoil?',['60 ºC','−39 ºC','225 ºC'],0],
+['¿Cuál es el punto de inflamación aproximado de la gasolina?',['−39 ºC','60 ºC','285 ºC'],0]]},
+{t:'Límites de inflamabilidad',x:'<b>LII</b>: concentración mínima de vapor en aire que puede arder; por debajo falta combustible (mezcla pobre).<br><b>LSI</b>: concentración máxima; por encima falta comburente (mezcla rica).<br>Entre ambos está el <b>rango de inflamabilidad</b>, con el <b>punto ideal de combustión</b> y el <b>punto estequiométrico</b> (velocidad máxima, explosión).',q:[
+['Por encima del límite superior de inflamabilidad la mezcla no arde por falta de…',['Comburente','Combustible','Energía de activación'],0],
+['¿En qué punto del rango de inflamabilidad la velocidad de reacción es máxima?',['Punto estequiométrico','Punto ideal de combustión','Límite inferior de inflamabilidad'],0]]},
+{t:'Oxígeno mínimo',x:'Por <b>debajo del 15 % de oxígeno</b> generalmente el fuego se apaga. La proporción mínima se determina con el <b>índice crítico de oxígeno</b>.<br>Algunos compuestos, como la <b>nitrocelulosa</b>, llevan oxidante y reductor y arden sin oxígeno externo.',q:[
+['¿Por debajo de qué porcentaje de oxígeno se apaga generalmente el fuego?',['15 %','21 %','5 %'],0]]}
+]},
+{nv:2,t:'Tipos de combustión',c:[
+{t:'Aportación y propagación',x:'<b>Combustiones de aportación</b>: la masa reactiva se va incorporando al frente de reacción. Pueden ser con llama, latente, incandescente o espontánea.<br><b>Combustiones de propagación</b> o de <b>premezcla</b>: combustible y comburente ya están mezclados.',q:[
+['¿Cómo se llaman también las combustiones de propagación?',['De premezcla','De aportación','Latentes'],0]]},
+{t:'Latente, incandescente y espontánea',x:'<b>Latente</b>: oxidación lenta <b>sin luz</b>; se nota por calor o humo; se propaga en combustibles porosos (carbón, algodón, poliuretano).<br><b>Incandescente</b>: sin llama pero <b>con luz</b> (ascuas).<br><b>Espontánea</b>: se inicia <b>sin aporte de calor externo</b>.',q:[
+['¿Qué combustión no tiene llama pero sí emite luz visible en forma de ascuas?',['Incandescente','Latente','Espontánea'],0],
+['La combustión latente se caracteriza por…',['No apreciarse luz, revelándose por aumento de temperatura o humo','Desarrollarse íntegramente en fase gaseosa','Iniciarse sin aporte de calor externo'],0]]},
+{t:'Velocidad de reacción',x:'<b>Lenta</b>: oxidación sin reacción en cadena (hierro oxidándose).<br><b>Normal</b>: frente visible, <b>menos de 1 m/s</b>; es la de los incendios normales.<br><b>Deflagración</b>: más de 1 m/s pero <b>subsónica</b> (&lt;340 m/s); sobrepresión de 5 a 10 veces.<br><b>Detonación</b>: <b>supersónica</b> (&gt;340 m/s), con onda de choque; sobrepresión de 20 a 40 veces (hasta 100).',q:[
+['Una combustión cuyo frente avanza a más de 340 m/s es una…',['Detonación','Deflagración','Combustión normal'],0],
+['¿Qué sobrepresión genera aproximadamente una deflagración?',['Entre 5 y 10 veces la presión inicial','Entre 20 y 40 veces','Más de 100 veces'],0]]},
+{t:'Completa e incompleta',x:'<b>Completa</b>: oxígeno abundante (21 %), produce <b>CO₂ y H₂O</b>, humo blanco o gris pálido.<br><b>Incompleta</b>: falta oxígeno, produce <b>CO</b>, humo negro y muy caliente. El CO es ávido de oxígeno: riesgo de explosión si se ventila de golpe.',q:[
+['¿Qué gas característico produce la combustión incompleta?',['Monóxido de carbono','Dióxido de carbono','Nitrógeno'],0]]}
+]},
+{nv:2,t:'Clasificación y evolución',c:[
+{t:'Por la forma del foco',x:'<b>Foco plano</b>: predomina el plano horizontal y se ve desde cualquier punto (charcos de líquido).<br><b>Foco vertical</b>: varios planos o zonas ocultas (pacas de paja, apilamientos).<br><b>Foco alimentado</b>: mantenido por aportación desde depósitos o tuberías (escapes de gas).',q:[
+['Un incendio en apilamientos de pacas de paja, con zonas ocultas a la observación, es de foco…',['Vertical','Plano','Alimentado'],0],
+['Un escape de gas que mantiene el incendio desde una tubería es un foco…',['Alimentado','Plano','Vertical'],0]]},
+{t:'Por la superficie afectada',x:'Grado I hasta 4 m² (<b>pequeño</b>); II de 4 a 10 m² (<b>mediano</b>); III de 10 a 100 m² (<b>grande</b>); desde 100 m² <b>de envergadura</b>, siempre que la altura de las llamas supere la diagonal media de la superficie. Si no, se considera grande.',q:[
+['Un fuego de 50 m² de superficie en llamas se clasifica como…',['Grande','Mediano','De envergadura'],0],
+['¿Hasta cuántos m² se considera un incendio pequeño?',['4 m²','10 m²','100 m²'],0]]},
+{t:'Por su magnitud',x:'<b>Conato</b>: pequeño, se sofoca con extintores estándar.<br><b>Incendio parcial</b>: afecta a parte del edificio; ya no sirven los extintores.<br><b>Incendio total</b>: fuera de control; se intenta que no pase a edificios colindantes.',q:[
+['¿Cómo se llama un pequeño incendio que puede sofocarse rápidamente con extintores estándar?',['Conato','Incendio parcial','Foco plano'],0]]},
+{t:'Evolución: 4 fases',x:'<b>Inicio</b> → <b>Desarrollo</b> (el oxígeno permite combustión completa; en el techo se pueden superar 700 ºC) → <b>Propagación</b> (el calor se transmite por todos los medios; la radiación es relevante) → <b>Extinción</b>.',q:[
+['¿En qué orden evoluciona un incendio?',['Inicio, desarrollo, propagación y extinción','Inicio, propagación, desarrollo y extinción','Ignición, flashover, decaimiento y extinción'],0]]},
+{t:'Exteriores e interiores',x:'<b>Fuegos exteriores</b>: visibles desde fuera, se alimentan del aire exterior y se propagan rápido. Unos <b>2/3 del calor</b> pasan al ambiente y <b>1/3 por radiación</b>.<br><b>Fuegos interiores</b>: no se manifiestan fuera; consumen el oxígeno interior y crean brasas y alta presión de gases tóxicos y combustibles.',q:[
+['En un fuego exterior, ¿qué fracción aproximada del calor se transmite por radiación?',['Una tercera parte','Dos terceras partes','La mitad'],0]]}
+]},
+{nv:2,t:'Transmisión del calor',c:[
+{t:'Conducción',x:'Transferencia por <b>contacto molecular directo</b>, sobre todo en sólidos. Necesita materia: <b>no hay conducción en el vacío</b>.<br>El calor se conduce mejor en sólidos que en líquidos, y en líquidos mejor que en gases. Influyen la superficie de contacto, la diferencia de temperatura, el espesor y la conductividad térmica.',q:[
+['¿Por qué mecanismo no puede transmitirse el calor en el vacío?',['Conducción','Radiación','Ninguno: todos necesitan materia'],0]]},
+{t:'Convección',x:'Se da en <b>fluidos</b> (líquidos y gases): el fluido caliente se expande, pierde densidad y <b>asciende</b>; el frío baja.<br>Es la que más influye en la estrategia de intervención. En pendiente acelera el fuego <b>cuesta arriba</b>; cuesta abajo solo actúa la radiación y el fuego avanza más lento.',q:[
+['¿Qué mecanismo de transmisión probablemente tiene más influencia al definir la estrategia de intervención?',['Convección','Conducción','Radiación'],0]]},
+{t:'Radiación',x:'Transmisión mediante <b>ondas electromagnéticas</b>; no necesita medio material (calor del sol).<br>Se propaga en línea recta a la velocidad de la luz y en todas direcciones. En la combustión las emisiones son sobre todo <b>infrarrojas</b>.',q:[
+['La radiación térmica de una combustión ocupa principalmente la región del…',['Infrarrojo','Ultravioleta','Visible'],0]]}
+]},
+{nv:2,t:'Mecanismos de extinción',c:[
+{t:'Los cuatro mecanismos',x:'Cada uno ataca un componente del tetraedro:<br><b>Desalimentación</b> → combustible.<br><b>Sofocación</b> → comburente.<br><b>Enfriamiento</b> → calor.<br><b>Inhibición</b> → reacción en cadena.',q:[
+['¿Qué mecanismo de extinción actúa sobre la reacción en cadena?',['Inhibición','Sofocación','Desalimentación'],0],
+['Cerrar la llave de paso de una tubería de gas en llamas es un ejemplo de…',['Desalimentación directa','Sofocación','Inhibición'],0]]},
+{t:'Desalimentación',x:'<b>Directa</b>: separar físicamente el combustible o cerrar llaves de paso.<br><b>Indirecta</b>: refrigerar combustibles cercanos o interponer elementos incombustibles.<br><b>Dilución del combustible</b>: solo en líquidos <b>polares</b> (miscibles en agua), para bajar los vapores por debajo del LII.',q:[
+['La dilución del combustible con agua solo es posible en líquidos…',['Polares, que se mezclan con el agua','Apolares, como la gasolina','Con punto de inflamación inferior a 0 ºC'],0]]},
+{t:'Sofocación',x:'Eliminar o desplazar el comburente, o bajar el oxígeno <b>por debajo del 15 %</b>.<br><b>Separación completa</b>: cubrir con arena, espuma, polvo o una tapa.<br><b>Dilución del oxígeno (inertización)</b>: CO₂, nitrógeno o vapor de agua; 1 litro de agua genera unos <b>1.700 litros de vapor</b> que desplazan el aire.',q:[
+['¿Cómo se llama la sofocación por dilución del oxígeno con gases inertes?',['Inertización','Inhibición','Desalimentación'],0]]},
+{t:'Enfriamiento',x:'Bajar la temperatura del combustible por debajo de su punto de ignición. Es el <b>método más empleado</b>.<br>El agua es el agente que más enfría: absorbe <b>540 cal por gramo</b> al pasar a vapor.',q:[
+['¿Cuántas calorías absorbe cada gramo de agua al vaporizarse?',['540 cal','80 cal','100 cal'],0]]},
+{t:'Inhibición',x:'También llamada <b>acción catalítica negativa</b>: el agente ocupa los <b>radicales libres</b> antes que el oxígeno y rompe la reacción en cadena.<br>Se usan <b>polvo químico seco y halones</b>. Muy eficaz, pero <b>no sirve en fuegos sin llama</b> (brasas).',q:[
+['¿Por qué la inhibición no es eficaz en fuegos de brasas?',['Porque en los fuegos sin llama no hay reacción en cadena','Porque el polvo no llega a las brasas','Porque las brasas no tienen oxígeno'],0],
+['¿Qué otro nombre recibe la inhibición?',['Acción catalítica negativa','Inertización','Desalimentación indirecta'],0]]}
+]},
+{nv:3,t:'El agua como agente',c:[
+{t:'Propiedades del agua',x:'Densidad 1 kg/l. Calor latente de vaporización <b>540 cal/g</b>; de fusión 80 cal/g; calor específico 1 cal/g·ºC.<br>Al evaporarse aumenta su volumen <b>entre 1.500 y 1.700 veces</b>. Máximo volumen a 4 ºC. Temperatura crítica 374 ºC. Estable hasta unos 1.650 ºC.',q:[
+['¿Cuántas veces aumenta aproximadamente su volumen el agua al evaporarse?',['Entre 1.500 y 1.700 veces','Entre 150 y 170 veces','Unas 15.000 veces'],0],
+['¿Cuál es el calor latente de fusión del agua?',['80 cal/g','540 cal/g','1 cal/g'],0]]},
+{t:'Mecanismos del agua',x:'Principal: <b>enfriamiento</b>. Secundarios: <b>sofocación</b> (por el vapor) y <b>desalimentación</b> en líquidos hidrosolubles.<br>A menor tamaño de gota, más superficie y más enfriamiento. Solo es eficaz sobre líquidos con punto de inflamación <b>superior a 38 ºC</b>.',q:[
+['El agua solo es eficaz sobre líquidos inflamables cuyo punto de inflamación sea superior a…',['38 ºC','100 ºC','0 ºC'],0]]},
+{t:'Chorro y pulverizada',x:'<b>Chorro compacto</b>: el más usado y de mayor alcance, pero solo un <b>10–20 %</b> del agua participa en la extinción; solo para clase A.<br><b>Pulverizada o neblina</b>: el modo más eficaz; sirve en A y B, para dispersar nubes de gas y, con técnica y lanzas especiales, con tensión eléctrica.<br><b>Nebulizada</b>: gotas de niebla con presiones de <b>4 a 200 bar</b>.',q:[
+['¿Qué porcentaje del agua de un chorro compacto participa realmente en la extinción?',['Entre el 10 % y el 20 %','Entre el 50 % y el 60 %','Más del 90 %'],0],
+['¿Entre qué presiones trabajan los sistemas de agua nebulizada?',['4 y 200 bar','1 y 10 bar','200 y 400 bar'],0]]},
+{t:'Limitaciones del agua',x:'Es <b>conductora</b> de la electricidad. Más densa que muchos líquidos inflamables: se va al fondo y el combustible flota y se extiende.<br>Reacciona con Na o Al. Se congela por debajo de 4 ºC. A unos <b>3.222 ºC</b> se descompone en H₂ y O₂ y puede provocar explosiones.',q:[
+['¿Qué ocurre si se echa agua sobre gasolina en un recipiente?',['El agua se va al fondo y la gasolina flota y puede extender el fuego','El agua diluye la gasolina por debajo del LII','La gasolina se disuelve y se apaga'],0]]},
+{t:'Aditivos del agua',x:'<b>Humectantes</b> ("agua mojada"): bajan la tensión superficial y penetran mejor en sólidos.<br><b>Espesantes</b>: aumentan la viscosidad para que el agua se adhiera (forestales).<br><b>Modificadores de flujo</b> ("agua rápida", óxido de polietileno): reducen pérdidas por turbulencia; unos <b>70 % más de caudal</b>.<br><b>Boratos</b> (lechada): retardan la llama en forestales.',q:[
+['¿Qué aditivo reduce la tensión superficial del agua para que penetre mejor en combustibles sólidos?',['Humectante','Espesante','Modificador de flujo'],0],
+['¿Cómo se llama el agua con modificadores de flujo como el óxido de polietileno?',['Agua rápida','Agua mojada','Agua pesada'],0]]}
+]},
+{nv:3,t:'Espumas',c:[
+{t:'Espumógeno, espumante y espuma',x:'<b>Espumógeno</b>: concentrado tensoactivo.<br><b>Espumante</b>: espumógeno + agua.<br><b>Espuma</b>: espumante + aire.<br>Es el <b>principal agente para fuegos de clase B</b>. Actúa sobre todo por <b>sofocación</b> y además por enfriamiento.',q:[
+['¿Cómo se llama la mezcla de espumógeno y agua?',['Espumante','Espuma','Emulsor'],0],
+['¿Cuál es el mecanismo principal de extinción de las espumas?',['Sofocación','Inhibición','Desalimentación'],0]]},
+{t:'Expansión (UNE EN 1568)',x:'Coeficiente de expansión = volumen de espuma ÷ volumen de espumante.<br><b>Baja</b> &lt;20: densa, mismo alcance que el agua.<br><b>Media</b> 20–200: alcance de 5–6 m.<br><b>Alta</b> &gt;200: muy ligera, llena grandes espacios.',q:[
+['Según la UNE EN 1568, una espuma de media expansión tiene un coeficiente de…',['20 a 200','2 a 20','Más de 200'],0],
+['¿Qué alcance aproximado tiene la espuma de media expansión?',['5 a 6 metros','El mismo que el agua','Más de 20 metros'],0]]},
+{t:'Base proteínica y sintética',x:'<b>Base proteínica</b>: <b>proteínicas</b> (hidrólisis de proteínas animales, en desuso) y <b>fluoroproteicas (FFFP)</b>, compatibles con polvo pero no aptas para polares.<br><b>Base sintética</b>: sintéticos (alta expansión, como el B-330), fluorosintéticos y <b>AFFF</b>, que forman una <b>película acuosa</b> sobre el hidrocarburo.',q:[
+['¿Cuál de estos espumógenos tiene base proteínica?',['FFFP','AFFF','B-330'],0],
+['¿Qué espumógeno forma una delgada película acuosa sobre el hidrocarburo?',['AFFF','Proteínico','FFFP'],0]]},
+{t:'Uso de la espuma',x:'Proporción: media y alta expansión <b>1–3 %</b>; baja y media <b>3–6 %</b>. Temperatura ideal del agua <b>7–27 ºC</b>.<br>Presión en punta de lanza ideal <b>3,5 a 10 bar</b> (máximo 14).<br>Sobre <b>líquidos polares</b> la espuma se aplica <b>indirectamente</b> (suave). Es conductora: no usar con tensión. Incompatible con los polvos.',q:[
+['¿Cómo debe aplicarse la espuma sobre fuegos de líquidos polares?',['Indirectamente, de forma suave','Directamente sobre el líquido','Solo con espuma de alta expansión'],0],
+['¿Cuál es la presión ideal en punta de lanza para espuma?',['3,5 a 10 bar','1 a 2 bar','15 a 20 bar'],0]]}
+]},
+{nv:3,t:'Polvos y gases',c:[
+{t:'Polvo convencional BC',x:'Polvo químico seco a base de <b>bicarbonato sódico o potásico</b>. Actúa sobre todo por <b>inhibición</b>.<br>Para fuegos <b>B y C</b> y con tensión eléctrica <b>hasta 1.000 V</b>. No es eficaz en clase A. No se puede usar con espuma.',q:[
+['¿Hasta qué tensión eléctrica puede usarse el polvo BC?',['1.000 V','220 V','10.000 V'],0],
+['El polvo BC no es eficaz en fuegos de clase…',['A','B','C'],0]]},
+{t:'Polvo polivalente ABC',x:'También llamado <b>antibrasa</b>. Añade <b>fosfato monoamónico</b>, que con el calor forma una capa pegajosa (<b>ácido metafosfórico</b>) que sella las brasas y actúa por sofocación.<br>Partículas de 25–30 micras; estable por debajo de 50 ºC.',q:[
+['¿Qué componente diferencia al polvo ABC del polvo BC?',['El fosfato monoamónico','El bicarbonato sódico','El grafito'],0]]},
+{t:'Polvos especiales (D)',x:'Para fuegos de metales, cada uno adecuado a un tipo de metal. Compuestos de <b>grafito pulverizado</b> y carbón mineral. Actúan solo por <b>sofocación</b>.<br>Ejemplos: G1, Metal Guard, Met-L-X, Na-X, Lith-X.',q:[
+['Los polvos especiales para fuegos de metales actúan por…',['Sofocación','Inhibición','Enfriamiento'],0]]},
+{t:'Dióxido de carbono',x:'El agente gaseoso más usado. <b>Dieléctrico</b>, no corrosivo, no deja residuos. Pesa <b>1,5 veces</b> más que el aire.<br>Al expandirse se convierte en <b>nieve a −79 ºC</b> ("nieve carbónica").<br>Mecanismo primario: <b>sofocación</b>; secundario: enfriamiento.',q:[
+['¿A qué temperatura se convierte en nieve el CO₂ al expandirse?',['−79 ºC','−40 ºC','−161 ºC'],0],
+['El mecanismo primario de extinción del CO₂ es…',['Sofocación','Inhibición','Enfriamiento'],0]]},
+{t:'Halones y gases limpios',x:'<b>Halones</b>: el número indica átomos de C, F, Cl, Br (y I). 1211 y 1301; actúan por <b>inhibición</b> y sofocación. Muy contaminantes, en desuso.<br><b>Gases inertes</b>: <b>IG-01</b> argón 100 %; <b>IG-55</b> (Argonite) 50 % N₂ + 50 % Ar; <b>IG-541</b> (Inergen) 52 % N₂ + 40 % Ar + 8 % CO₂.',q:[
+['¿Cuál es la composición del Inergen (IG-541)?',['52 % nitrógeno, 40 % argón y 8 % CO₂','50 % nitrógeno y 50 % argón','100 % argón'],0],
+['En la nomenclatura de los halones, el primer dígito indica…',['El número de átomos de carbono','El número de átomos de flúor','El número de átomos de bromo'],0]]}
+]}
+]});
+
+T.push({id:10,b:2,n:'Hidráulica',s:'Propiedades de los fluidos, hidrostática, hidrodinámica, bombas centrífugas e instalación hidráulica',L:[
+{nv:1,t:'Propiedades básicas',c:[
+{t:'Masa, densidad y peso específico',x:'<b>Masa</b>: cantidad de materia (kg). Es <b>escalar</b>; el peso es <b>vectorial</b>.<br><b>Densidad (ρ)</b>: masa por volumen (kg/m³).<br><b>Peso específico (γ)</b>: peso por volumen (N/m³).',q:[
+['¿Qué diferencia a la masa del peso?',['La masa es una magnitud escalar y el peso es vectorial','La masa es vectorial y el peso escalar','Ambas son magnitudes vectoriales'],0],
+['¿En qué unidades se expresa el peso específico?',['N/m³','kg/m³','Pa'],0]]},
+{t:'Densidad relativa',x:'Se compara con una sustancia patrón: el <b>agua a 4 ºC y 1 atmósfera</b>.<br>Ejemplos: mercurio 13,6; hierro 7,8; grava 2,2; hielo 0,85; aceite 0,8; madera 0,5.',q:[
+['¿Qué sustancia patrón se usa para la densidad relativa de líquidos?',['El agua a 4 ºC y 1 atmósfera','El agua a 20 ºC','El aire a nivel del mar'],0],
+['¿Cuál es la densidad relativa del mercurio?',['13,6','7,8','1,36'],0]]},
+{t:'Viscosidad',x:'Oposición de un fluido a las deformaciones tangenciales; se debe a la <b>cohesión molecular</b>. Solo se manifiesta con el fluido <b>en movimiento</b>. Un <b>fluido ideal</b> no tiene viscosidad.<br>En líquidos la viscosidad <b>baja</b> con la temperatura; en gases <b>sube</b>. Un líquido más viscoso pierde más presión en las conducciones.',q:[
+['¿Cómo varía la viscosidad de los gases al aumentar la temperatura?',['Aumenta','Disminuye','No varía'],0],
+['¿Cómo se llama un fluido que carece de viscosidad?',['Fluido ideal','Fluido newtoniano','Fluido laminar'],0]]},
+{t:'Capa límite',x:'"Un fluido en contacto con una frontera sólida tiene la <b>misma velocidad que la frontera</b>" (Goldstein, 1939).<br>Por eso el rozamiento de un barco no es entre barco y agua, sino entre la capa de agua pegada al barco y la siguiente.',q:[
+['Según el principio de la capa límite, la lámina de fluido en contacto con un sólido…',['Tiene la misma velocidad que el sólido','Tiene la velocidad máxima del flujo','Se mueve en sentido contrario'],0]]},
+{t:'Presión de vapor',x:'Presión a la que líquido y vapor están en <b>equilibrio dinámico</b> a una temperatura dada.<br>Un líquido <b>hierve</b> cuando su presión de vapor iguala a la exterior: si baja la presión exterior, baja el punto de ebullición.<br>Hay que tenerla en cuenta al <b>aspirar con bombas</b> para evitar la <b>cavitación</b>.',q:[
+['En la aspiración con bombas centrífugas, ¿qué propiedad hay que tener en cuenta y por qué?',['La presión de vapor, para evitar la cavitación','La viscosidad, para evitar el golpe de ariete','La densidad, para evitar el golpe de ariete'],0],
+['Si disminuye la presión exterior, el punto de ebullición de un líquido…',['Disminuye','Aumenta','No cambia'],0]]},
+{t:'Tensión superficial',x:'Energía necesaria para <b>aumentar la superficie</b> de un líquido por unidad de área. Hace que la superficie se comporte como una lámina elástica y explica la forma de las <b>gotas</b> y la <b>capilaridad</b>.<br>La del agua es alta por los <b>puentes de hidrógeno</b>.',q:[
+['¿Por qué es alta la tensión superficial del agua?',['Por los puentes de hidrógeno','Por su baja densidad','Por su alta viscosidad'],0]]}
+]},
+{nv:1,t:'Presión y unidades',c:[
+{t:'Presión',x:'Fuerza perpendicular por unidad de superficie. Unidad SI: <b>pascal</b> (1 N/m²).<br><b>Absoluta</b>: referencia el cero absoluto. <b>Relativa</b>: referencia la presión atmosférica (es la que miden los manómetros).<br><b>Presión total</b> = estática + dinámica.',q:[
+['La presión relativa toma como referencia…',['La presión atmosférica','El cero absoluto','La presión de vapor'],0]]},
+{t:'Equivalencias',x:'<b>1 atm = 1,033 kg/cm² = 10,33 m.c.a. = 760 mm de Hg</b>.<br><b>1 bar = 100.000 Pa ≈ 1,019 kg/cm²</b>.<br>En la práctica: <b>10 m.c.a. ≈ 1 bar ≈ 1 kg/cm²</b>.',q:[
+['¿A cuántos metros de columna de agua equivale 1 atmósfera?',['10,33 m.c.a.','1,033 m.c.a.','100 m.c.a.'],0],
+['¿Cuántos pascales son 1 bar?',['100.000 Pa','1.013 Pa','10.000 Pa'],0]]},
+{t:'Ecuación fundamental de la hidrostática',x:'En un fluido en reposo la presión <b>aumenta con la profundidad</b>.<br>Todos los puntos a la misma profundidad tienen la misma presión (vasos comunicantes).<br>La presión solo depende de la profundidad, <b>no de la forma del recipiente</b>.',q:[
+['En un fluido en reposo, la presión en un punto depende de…',['La profundidad, no de la forma del recipiente','La forma y el volumen del recipiente','La superficie libre del líquido'],0]]},
+{t:'Principio de Pascal',x:'La presión ejercida sobre un fluido en equilibrio en un recipiente indeformable se transmite <b>con la misma intensidad en todas las direcciones</b>.<br>Aplicaciones: <b>prensa hidráulica</b>, elevadores, frenos y <b>equipos de corte y separación</b>.',q:[
+['¿En qué principio se basan los equipos hidráulicos de corte y separación?',['Principio de Pascal','Principio de Arquímedes','Efecto Venturi'],0]]},
+{t:'Principio de Arquímedes',x:'Un cuerpo sumergido recibe un <b>empuje vertical hacia arriba igual al peso del fluido que desaloja</b>.<br>El empuje se mide en newton y depende de la <b>densidad del líquido y del volumen sumergido</b>, no de la presión.',q:[
+['Según el principio de Arquímedes, el empuje sobre un cuerpo sumergido es igual a…',['El peso del volumen de fluido desalojado','El peso del cuerpo','La presión por la superficie del cuerpo'],0]]}
+]},
+{nv:2,t:'Hidrodinámica',c:[
+{t:'Laminar y turbulento',x:'<b>Laminar</b>: baja velocidad, partículas en capas paralelas. <b>Turbulento</b>: remolinos, por velocidad alta o cambios bruscos (codos, estrechamientos).<br>Número de <b>Reynolds</b>: laminar <b>&lt;2.000</b>; turbulento <b>&gt;4.000</b>; transición entre ambos.<br>Las instalaciones de bomberos funcionan casi siempre en <b>régimen turbulento</b>.',q:[
+['¿A partir de qué número de Reynolds el régimen es turbulento?',['4.000','2.000','10.000'],0],
+['¿En qué régimen funcionan la mayoría de instalaciones de bomberos?',['Turbulento','Laminar','De transición'],0]]},
+{t:'Caudal y continuidad',x:'<b>Caudal</b>: volumen que atraviesa una sección por unidad de tiempo (Q = S·v).<br><b>Ecuación de continuidad</b>: si no hay fuentes ni sumideros, el caudal es <b>constante</b> en cualquier punto. Si la sección baja, la velocidad sube. Se basa en la <b>incompresibilidad</b> de los líquidos.',q:[
+['Según la ecuación de continuidad, si una tubería se estrecha, la velocidad del agua…',['Aumenta','Disminuye','No cambia'],0]]},
+{t:'Bernoulli',x:'En un fluido ideal, la <b>energía total</b> (presión + velocidad + altura) es <b>constante</b> en todos los puntos.<br>En tubería horizontal: si baja la sección, <b>sube la velocidad y baja la presión</b>. Si se gana altura con sección constante, la energía potencial sube a costa de la presión.',q:[
+['En una tubería horizontal con un estrechamiento, en la zona estrecha…',['La velocidad aumenta y la presión disminuye','La velocidad disminuye y la presión aumenta','Velocidad y presión aumentan'],0]]},
+{t:'Torricelli',x:'Aplicación de Bernoulli: la velocidad de salida por un orificio de un depósito es la de un cuerpo en <b>caída libre</b> desde la superficie del líquido hasta el orificio (v = √2gh).<br>En la práctica sirve para calcular el <b>caudal en lanza</b>, con un factor K entre <b>0,9 y 0,98</b> por la contracción de la vena líquida.',q:[
+['¿Para qué se usa en la práctica el teorema de Torricelli?',['Para calcular el caudal de salida por una lanza en función de la presión','Para calcular el empuje hidrostático','Para evitar la cavitación'],0]]},
+{t:'Efecto Venturi',x:'Un fluido en un conducto <b>disminuye su presión al aumentar la velocidad</b> tras un estrechamiento. Si ahí se conecta otro conducto, se produce <b>aspiración</b>.<br>Es la base de <b>pulverizadores y dosificadores (premezcladores)</b> de espuma y del cebado por eyector de gases.',q:[
+['¿En qué fenómeno se basan los premezcladores de espumógeno?',['Efecto Venturi','Principio de Pascal','Golpe de ariete'],0]]},
+{t:'Golpe de ariete',x:'También llamado <b>pulso de Zhukowski</b>: sobrepresión y depresión al <b>variar bruscamente el caudal</b> (cierre rápido de una válvula). La onda puede superar la velocidad del sonido en el fluido y romper conductos.<br>Para el bombero aumenta de golpe la reacción en lanza: hay que <b>abrir y cerrar lenta y controladamente</b>.',q:[
+['¿Qué otro nombre recibe el golpe de ariete?',['Pulso de Zhukowski','Efecto Venturi','Cavitación'],0],
+['¿Cómo se minimiza el golpe de ariete?',['Abriendo y cerrando las llaves de forma lenta y controlada','Aumentando la presión de la bomba','Usando chorro sólido'],0]]}
+]},
+{nv:2,t:'Bombas centrífugas',c:[
+{t:'Funcionamiento',x:'Transforma la energía mecánica del motor en <b>energía hidráulica</b>: el rodete (álabes) acelera el agua y el <b>difusor</b> convierte la velocidad en presión.<br>El aumento de energía expresado como presión es la <b>altura manométrica (Hm)</b>. Rendimiento η = potencia útil ÷ potencia consumida.',q:[
+['¿Cómo se llama el aumento de energía del fluido en la bomba expresado en presión?',['Altura manométrica','Altura geométrica','Pérdida de carga'],0]]},
+{t:'Curva característica',x:'Eje X: <b>caudal</b>. Se representan altura manométrica, potencia y rendimiento.<br>La altura manométrica es <b>máxima con caudal nulo</b> (válvulas cerradas) y baja al aumentar el caudal.<br>El <b>punto óptimo</b> es el de mayor rendimiento; ahí se definen caudal y presión nominales. Las bombas de bomberos regulan revoluciones (normalmente &lt;5.000 rpm).',q:[
+['¿Cuándo es máxima la altura manométrica de una bomba centrífuga?',['Con caudal nulo, válvulas cerradas','Con caudal máximo','En el punto óptimo de rendimiento'],0]]},
+{t:'Aspiración',x:'El agua no sube por la "fuerza" de aspirar sino <b>empujada por la presión atmosférica</b>.<br>Altura máxima teórica: <b>10,33 m</b>. En la práctica, por altitud, pérdidas y temperatura, entre <b>7 y 8 m</b>. Para evitar la cavitación, la altura geométrica máxima suele fijarse en <b>8 a 8,5 m</b>.',q:[
+['¿Cuál es la altura máxima teórica de aspiración?',['10,33 m','8,5 m','7 m'],0],
+['¿Qué es lo que realmente hace subir el agua por el mangote de aspiración?',['La presión atmosférica exterior','La fuerza de succión de la bomba','El efecto Venturi del rodete'],0]]},
+{t:'Cebado',x:'La bomba centrífuga apenas aspira: hay que <b>inundarla</b> antes de arrancar. Sin cebar puede averiarse (el rodete gira sin lubricación ni refrigeración).<br>Sistemas: <b>eyector de gases</b> (Venturi con el escape), depresor de vacío, anillo de agua, autocebantes y bomba de pistones.<br>No hace falta si el agua está <b>por encima</b> de la bomba.',q:[
+['¿En qué caso no es necesario cebar la bomba?',['Cuando el agua a aspirar está por encima de la bomba','Cuando el caudal es bajo','Cuando la bomba gira a pocas revoluciones'],0],
+['El cebado por eyector de gases aprovecha…',['El efecto Venturi de los gases de escape del motor','Una bomba de vacío eléctrica','Un depósito de agua auxiliar'],0]]},
+{t:'Cavitación',x:'Formación de burbujas de vapor cuando la presión local baja <b>por debajo de la presión de vapor</b>, y su brusca implosión al llegar a zonas de más presión.<br>Genera presiones locales de hasta <b>1.000 kg/cm²</b>, picaduras en los álabes, ruido como de <b>grava</b> y vibraciones.<br>Se evita reduciendo la altura de aspiración y el caudal, o aumentando la sección del mangote.',q:[
+['¿Cómo se manifiesta la cavitación en una bomba?',['Ruidos como de grava golpeando y vibraciones','Aumento de la presión de salida','Calentamiento del agua'],0],
+['¿Qué medida ayuda a evitar la cavitación?',['Reducir la altura de aspiración o el caudal','Aumentar las revoluciones','Reducir el diámetro del mangote'],0]]},
+{t:'Acoplamiento de bombas',x:'<b>En paralelo</b>: misma altura manométrica, <b>se suman los caudales</b>.<br><b>En serie</b>: mismo caudal, <b>se suman las presiones</b>. Adecuado para impulsiones a <b>gran altura</b>.',q:[
+['Para impulsar agua a gran altura, ¿cómo conviene acoplar las bombas?',['En serie, para sumar presiones','En paralelo, para sumar caudales','En paralelo, para sumar presiones'],0]]}
+]},
+{nv:3,t:'Instalación hidráulica',c:[
+{t:'Ecuación de línea',x:'<b>PB = PL + HG + PC</b><br>PB presión en bomba; PL presión en punta de lanza; HG altura geométrica (desnivel, positiva si se sube); PC pérdidas de carga.<br>Instalación básica: <b>bomba, manguera y lanza</b>.',q:[
+['En la ecuación de línea PB = PL + HG + PC, ¿qué representa HG?',['El desnivel entre la bomba y la lanza','Las pérdidas de carga','La presión en punta de lanza'],0]]},
+{t:'Pérdidas de carga',x:'<b>Continuas</b> (lineales): por fricción a lo largo del conducto. <b>Locales</b>: codos, reducciones, bifurcaciones, válvulas (normalmente mucho menores).<br>La pérdida aumenta: con la <b>longitud</b> (lineal), con el <b>cuadrado del caudal o velocidad</b>, al <b>reducir el diámetro (quinta potencia)</b> y con la rugosidad y la viscosidad.',q:[
+['Señala la opción FALSA sobre las pérdidas de carga en una manguera:',['Son proporcionales al diámetro de la manguera','Son proporcionales al cuadrado de la velocidad','Aumentan con la rugosidad interna'],0],
+['Al reducir el diámetro de la manguera, la pérdida de carga aumenta según…',['La quinta potencia','El cuadrado','De forma lineal'],0]]},
+{t:'Desnivel',x:'Al subir: se pierde <b>1 kg/cm² (1 bar) por cada 10 m</b> verticales.<br>Al bajar: se gana 1 kg/cm² por cada 10 m de desnivel.',q:[
+['Para impulsar agua a una planta 30 m por encima de la bomba, ¿cuánta presión se pierde solo por el desnivel?',['3 bar','0,3 bar','30 bar'],0]]},
+{t:'Punto de funcionamiento',x:'Es la <b>intersección</b> entre la curva de la bomba y la curva de la instalación.<br>Para más caudal sin tocar la lanza, se <b>acelera la bomba</b> (sube la presión en punta de lanza). Si se abre más la lanza, sube el caudal y baja la presión.',q:[
+['¿Qué es el punto de funcionamiento de una instalación?',['La intersección entre la curva de la bomba y la curva de la instalación','El punto de máximo rendimiento de la bomba','El punto de caudal nulo'],0]]},
+{t:'Alcance',x:'Depende sobre todo del <b>diámetro de la lanza</b> y de la <b>presión a su entrada</b>.<br>Más presión → más alcance. A igual presión, <b>más diámetro → más alcance</b>. El máximo se logra con <b>chorro y apertura máxima</b> de caudal.',q:[
+['¿Con qué configuración se consigue el alcance máximo de una lanza?',['Efecto chorro y apertura máxima de caudal','Cono abierto a 90º','Caudal mínimo y presión máxima'],0]]},
+{t:'Reacción en lanza',x:'Por acción y reacción la lanza produce un <b>retroceso</b> sobre el portador. Aumenta con la presión y con el diámetro.<br>Con cono abierto el empuje baja hasta anularse hacia los <b>180º</b>. Un tendido en espera debe dejarse en <b>cortina de protección</b>.',q:[
+['¿Aproximadamente a qué apertura de cono se anula el empuje de la lanza?',['180º','90º','30º'],0],
+['¿En qué posición debe dejarse un tendido en espera?',['En cortina de protección','En chorro sólido','Con la lanza cerrada y la bomba a máxima presión'],0]]}
+]}
+]});
+
+T.push({id:11,b:2,n:'Incendios de interior y ventilación',s:'Desarrollo del incendio de interior, ILC e ILV, fenómenos de rápido desarrollo, combustible, recinto, riesgos, agua, ventilación y presurización',L:[
+{nv:1,t:'Fases del incendio de interior',c:[
+{t:'Tres fases',x:'El estudio clásico de laboratorio distingue <b>crecimiento</b>, <b>pleno desarrollo</b> y <b>decaimiento</b>.<br>Un <b>incendio confinado</b> es un incendio de interior sin aperturas al exterior.',q:[
+['¿Cuáles son las tres fases clásicas del desarrollo de un incendio de interior?',['Crecimiento, pleno desarrollo y decaimiento','Inicio, propagación y extinción','Ignición, flashover y backdraft'],0]]},
+{t:'Fase de crecimiento',x:'El incendio tiene oxígeno suficiente: su potencia la limita el <b>combustible</b> (cantidad, disposición, continuidad, naturaleza).<br>Se forman dos estratos: arriba los gases calientes (presión <b>superior</b> a la exterior) y abajo aire fresco (presión <b>inferior</b>). Los separa el <b>plano neutro</b>, donde la presión es igual a la exterior.',q:[
+['¿Cómo se llama el límite horizontal donde la presión interior es igual a la exterior?',['Plano neutro','Capa límite','Colchón de gases'],0],
+['En la fase de crecimiento, por encima del plano neutro la presión es…',['Superior a la exterior','Inferior a la exterior','Igual a la atmosférica'],0]]},
+{t:'Radiación del colchón',x:'El colchón de gases radia según la <b>ley de Stefan-Boltzmann</b>: depende de la <b>cuarta potencia</b> de la temperatura.<br>A <b>500 ºC</b> la energía radiada es unas <b>64 veces</b> mayor que a temperatura ambiente.<br>Si el colchón se inflama en zonas puntuales es un <b>rollover</b>; si se generaliza, un <b>flashover</b>.',q:[
+['La radiación del colchón de gases depende de la temperatura elevada a…',['La cuarta potencia','El cuadrado','La quinta potencia'],0],
+['¿Cómo se llama la inflamación de zonas puntuales del colchón de gases?',['Rollover','Flashover','Backdraft'],0]]},
+{t:'Pleno desarrollo',x:'El oxígeno comienza a escasear. La curva de temperatura alcanza su máximo y se estabiliza.<br>En esta fase la potencia del incendio <b>no la determina el combustible sino la falta de oxígeno</b>.<br>En incendios confinados el plano neutro <b>cae casi hasta el suelo</b> y la visibilidad es nula.',q:[
+['¿En qué etapa del incendio de interior la potencia no viene determinada por el combustible sino por la falta de oxígeno?',['Fase de pleno desarrollo','Fase de crecimiento','Fase de decaimiento'],0],
+['En un incendio confinado en pleno desarrollo, el plano neutro…',['Cae prácticamente hasta el suelo','Sube hasta el techo','Se mantiene a media altura'],0]]},
+{t:'Decaimiento',x:'El recinto pierde temperatura y el incendio decae, bien porque se <b>consume el combustible</b>, bien porque, sin ventilación, la potencia <b>no compensa las pérdidas de calor</b>.',q:[
+['¿Por qué decae un incendio de interior?',['Porque se consume el combustible o porque, sin ventilación, no compensa las pérdidas de calor','Solo porque se agota el combustible','Porque baja la presión de vapor'],0]]}
+]},
+{nv:1,t:'ILC e ILV',c:[
+{t:'Incendio limitado por el combustible (ILC)',x:'Su potencia la limitan la cantidad y distribución del combustible, con aire suficiente (NFPA 921).<br>Ejemplos: interiores en fase inicial, con amplia ventilación, con VPP tras el barrido, recintos de gran volumen (naves) y <b>todos los incendios de exterior</b>.<br>Potencia: Q = tasa de combustión × poder calorífico.',q:[
+['¿Cuál de estos es típicamente un incendio limitado por el combustible?',['Un incendio en una nave de gran volumen con un foco pequeño','Un incendio confinado en pleno desarrollo','Un incendio infraventilado'],0]]},
+{t:'Incendio limitado por la ventilación (ILV)',x:'Su crecimiento y potencia los limita el <b>oxígeno disponible</b>. Su potencia depende del <b>tamaño y geometría de la apertura</b> (ecuación de <b>Kawagoe</b>).<br><b>Regla de Thornton</b>: se liberan unos <b>13,1 kJ por gramo de oxígeno</b> consumido.',q:[
+['Según la regla de Thornton, ¿cuánta energía se libera por gramo de oxígeno consumido?',['13,1 kJ','1,31 kJ','131 kJ'],0],
+['¿Qué ecuación aproxima la potencia de un ILV con una sola apertura?',['Ecuación de Kawagoe','Ecuación de Bernoulli','Ley de Stefan-Boltzmann'],0]]},
+{t:'Diferencias ILC / ILV',x:'<b>ILC</b>: buena visibilidad, aire fresco en zonas bajas, gases tóxicos bajos, combustión completa, foco fácil de localizar.<br><b>ILV</b>: sin visibilidad, atmósfera no respirable y combustible, temperatura alta generalizada, <b>CO y HCN altos</b>, foco difícil de localizar.<br>El paso de ILC a ILV es crítico: las condiciones empeoran de golpe.',q:[
+['¿Qué caracteriza a un ILV frente a un ILC?',['Alta concentración de gases tóxicos y falta de visibilidad','Buena visibilidad y colchón de aire fresco','Combustión completa'],0]]}
+]},
+{nv:2,t:'Fenómenos de rápido desarrollo',c:[
+{t:'Flashover',x:'Fase transitoria en la que las superficies expuestas a la radiación alcanzan su temperatura de inflamación <b>casi simultáneamente</b> y el incendio se generaliza en el recinto (NFPA 921).<br>Indicadores: fin de la fase de crecimiento, colchón denso y muy oscuro, superficies pirolizando, incendio ventilado pero plano neutro casi a ras de suelo, <b>rollover</b>.',q:[
+['¿Cuál es un indicador de flashover inminente?',['Lenguas de gases inflamados (rollover) en el colchón','Humo blanco y escaso','Presiones negativas en el interior'],0]]},
+{t:'Cómo evitar el flashover',x:'Limitar el aporte de aire; <b>enfriar</b> el colchón de gases; <b>diluirlo con vapor</b> para sacarlo del rango de inflamabilidad; o <b>barrerlo</b> con ventilación forzada sin turbulencias.',q:[
+['¿Cuál de estas acciones ayuda a evitar un flashover con personal en el interior?',['Enfriar el colchón de gases y diluirlo con vapor de agua','Abrir todas las ventanas a la vez','Aplicar chorro sólido contra el techo'],0]]},
+{t:'Incendio infraventilado',x:'Incendio de interior que alcanza el estado <b>ILV sin pasar por flashover</b>. Sin flujo de aire, el <b>plano neutro desciende hasta el suelo</b>: visibilidad casi nula y sin colchón de aire fresco para las víctimas.<br>Por el aislamiento térmico y los combustibles sintéticos, hoy es <b>el escenario más frecuente</b> a la llegada de los bomberos. Tiene una <b>fracción de combustible</b> alta.',q:[
+['En un incendio infraventilado, sin flujo de aire continuo, el plano neutro…',['Desciende hasta el nivel del suelo','Sube y estabiliza la estratificación','Se sitúa a media altura'],0],
+['Un incendio infraventilado es el que alcanza el estado ILV…',['Sin pasar por una fase de flashover','Después de un flashover','Siempre tras un backdraft'],0]]},
+{t:'Flashover inducido por la ventilación',x:'Flashover provocado al <b>ventilar un incendio infraventilado</b>. La potencia sube de forma <b>paulatina</b>; los flujos pasan de casi laminares a rápidos y turbulentos.<br>Underwriters Laboratories: unos <b>2 minutos</b> desde la apertura hasta el flashover.',q:[
+['Según Underwriters Laboratories, ¿cuánto tiempo aproximado pasa desde la apertura de ventilación hasta el flashover inducido?',['Unos 2 minutos','Unos 10 segundos','Unos 10 minutos'],0]]},
+{t:'Backdraft',x:'<b>Deflagración</b> por un aporte <b>repentino</b> de aire a un incendio confinado con productos incompletos de combustión (NFPA 921). Parte de un infraventilado con fracción de combustible alta (<b>&gt;15 %</b>).<br>Entra una <b>corriente de gravedad</b> de aire por abajo, se mezcla y al llegar a una fuente de ignición deflagra.<br>No depende del CO: el CO rara vez supera el 5 % y su LII es del 12 %.',q:[
+['¿Cómo se llama la lámina de aire fresco que entra por la parte baja al abrir un recinto en un backdraft?',['Corriente de gravedad','Flujo bidireccional','Plano neutro'],0],
+['¿Qué fracción de combustible es necesaria, según algunos autores, para un backdraft?',['Mayor del 15 %','Mayor del 5 %','Mayor del 50 %'],0]]},
+{t:'Indicadores de backdraft',x:'Ninguno es inequívoco:<br>• Incendio <b>infraventilado en recinto confinado</b>.<br>• <b>Pulsaciones</b>: el incendio parece "respirar y exhalar".<br>• Colchón denso que en el exterior tiene tonos <b>anaranjados y amarillentos</b>.<br>Si es inminente, el personal debe quedar en el <b>exterior en posición defensiva</b>.',q:[
+['¿Cuál NO es un indicador de backdraft?',['Colchón de gases que al salir tiene un color blanco brillante','Pulsaciones: el incendio parece respirar','Incendio infraventilado en recinto confinado'],0]]},
+{t:'Explosión de humo',x:'Deflagración por una <b>fuente de ignición</b> en una mezcla de gases de incendio y aire <b>ya dentro de su rango de inflamabilidad</b>. Suele darse en espacios ocultos.<br>Diferencia con el backdraft: el desencadenante <b>no es la ventilación</b>, sino la ignición de una mezcla previa.<br>Indicadores: humo caliente no muy denso fuera de la zona de incendio; mezcla homogénea.',q:[
+['¿Qué desencadena una explosión de humo, a diferencia del backdraft?',['Una fuente de ignición en una mezcla ya en rango de inflamabilidad','La apertura repentina de una puerta','El aumento de la presión interior'],0]]}
+]},
+{nv:2,t:'Combustible y recinto',c:[
+{t:'Poder calorífico y carga',x:'La potencia es <b>directamente proporcional al poder calorífico</b>, tanto en ILC como en ILV.<br><b>Carga de combustible</b>: energía por superficie (kJ/m²). Determina la duración. Con <b>200 MJ/m²</b> ya se alcanzan estados ILV.',q:[
+['La carga de combustible se expresa en…',['kJ/m²','kJ/kg','kg/s'],0]]},
+{t:'Pirólisis y combustión',x:'<b>Tasa de pirólisis</b>: masa que piroliza por tiempo y superficie (volatilidad).<br><b>Tasa de combustión</b>: velocidad a la que se consume (kg/s).<br>Alta pirólisis + alta combustión = desarrollo <b>muy rápido</b>. El <b>factor de crecimiento</b> mide el tiempo hasta alcanzar <b>1 MW</b>.',q:[
+['El factor de crecimiento indica el tiempo necesario para que el incendio alcance…',['1 MW','100 kW','10 MW'],0]]},
+{t:'Combustibles modernos',x:'Los sintéticos tienen <b>más poder calorífico</b> y pirolizan con más facilidad. Junto a plantas abiertas y más aislamiento: el ILV llega antes, los confinados acaban <b>infraventilados</b>, más potencia, menos oxígeno y <b>reacción muy rápida a la ventilación</b>.<br>Escenario probable: infraventilado, sin visibilidad y con evolución brusca al abrir.',q:[
+['¿Cuál es el escenario más probable a la llegada a un incendio de vivienda actual?',['Incendio infraventilado, sin visibilidad y que reacciona bruscamente a la ventilación','Incendio limitado por el combustible con buena visibilidad','Incendio de estructura en madera'],0]]},
+{t:'Contenido vs. estructura',x:'<b>Incendio de contenido</b>: solo arden los contenidos; típico de obra de fábrica y forjados de hormigón; la propagación se da por los espacios que comunican.<br><b>Incendio de estructura</b>: el continente también arde (cubiertas y forjados de madera); la propia estructura propaga.',q:[
+['Un incendio en una vivienda con forjados de hormigón donde solo arde el mobiliario es un incendio de…',['Contenido','Estructura','Continente'],0]]},
+{t:'Superficie, altura y aislamiento',x:'Recintos <b>pequeños</b>: más potencia por m² (10 m² ≈ 440 kW/m²; 25 m² ≈ 224 kW/m²).<br>A <b>menor altura</b> de techo, desarrollo más rápido y ILV antes.<br>Más <b>aislamiento</b>: más temperatura, más velocidad, menos oxígeno. La <b>inercia térmica</b> alarga las fases.',q:[
+['¿Qué efecto tiene un techo más bajo en el desarrollo del incendio?',['Desarrollo más rápido y ILV antes','Desarrollo más lento','Más pérdidas de calor'],0],
+['¿Qué efecto tiene la inercia térmica del recinto?',['Alarga las fases del incendio','Acelera el flashover','Aumenta la concentración de oxígeno'],0]]},
+{t:'Confinamiento y compartimentación',x:'<b>Confinamiento</b>: grado de ventilación del recinto con el exterior y el resto del edificio. Con puertas cerradas, el incendio no accede al oxígeno del resto y los gases no se extienden.<br><b>Compartimentación</b>: grado de división interior; en un mismo edificio puede haber estancias en distintas fases.',q:[
+['¿Qué se entiende por nivel de confinamiento?',['El grado de ventilación entre el recinto, el exterior y el resto del edificio','El número de estancias del edificio','El grado de aislamiento térmico'],0]]}
+]},
+{nv:2,t:'Riesgos en interior',c:[
+{t:'Calor',x:'El aire caliente respirado es letal: el <b>NRCC de Canadá</b> fija <b>140 ºC</b> como máxima temperatura de aire respirable para sobrevivir, y solo brevemente y sin humedad.<br>Arriba se superan fácilmente <b>600 ºC</b>; abajo puede haber unos 100 ºC.<br>Radiación: <b>10 kW/m²</b> es el umbral de trabajo con equipo completo; <b>20 kW/m²</b> daña equipos y personas.',q:[
+['Según el NRCC de Canadá, ¿cuál es la máxima temperatura de aire respirado que permite sobrevivir?',['140 ºC','100 ºC','200 ºC'],0],
+['¿Qué nivel de radiación se considera el umbral de trabajo para un bombero completamente equipado?',['10 kW/m²','20 kW/m²','2 kW/m²'],0]]},
+{t:'Ruta fría y ruta caliente',x:'<b>Ruta fría</b> (de la entrada al foco): buena visibilidad, baja temperatura, mucho oxígeno, buenas condiciones de supervivencia.<br><b>Ruta caliente</b> (gases hacia la salida): baja visibilidad, alta temperatura, tóxicos, gases inflamables, condiciones críticas.',q:[
+['¿Qué caracteriza a la ruta fría del flujo de gases?',['Buena visibilidad, baja temperatura y alta concentración de oxígeno','Gases tóxicos e inflamables','Baja visibilidad y alta temperatura'],0]]},
+{t:'Toxicidad y visibilidad',x:'Los tóxicos tienen efecto <b>sinérgico</b>: juntos son peores que la suma por separado. Importa la <b>dosis</b>: concentración y tiempo.<br>La visibilidad cae con las partículas de la combustión incompleta (paso de ILC a ILV) y depende de la posición del plano neutro.',q:[
+['¿Qué significa que los gases tóxicos del incendio tienen efecto sinérgico?',['Que combinados son más tóxicos que la suma de sus efectos por separado','Que se neutralizan entre sí','Que solo actúan sobre los pulmones'],0]]},
+{t:'Supervivencia de víctimas',x:'Underwriters Laboratories: rango de supervivencia de <b>6 a 12 minutos</b> desde el inicio para víctimas en una estancia con puerta abierta.<br>Los <b>parámetros respiratorios</b> resultaron más críticos que los térmicos. El ILV se alcanzaba a los <b>5 minutos</b>.',q:[
+['Según Underwriters Laboratories, ¿cuál es el rango de supervivencia de víctimas en una estancia con puerta abierta?',['6 a 12 minutos','1 a 3 minutos','20 a 30 minutos'],0]]}
+]},
+{nv:3,t:'El agua en el incendio de interior',c:[
+{t:'Enfriamiento y dilución',x:'El agua actúa por <b>enfriamiento</b> (calentar agua, evaporarla y calentar el vapor) y por <b>dilución</b> (el vapor desplaza combustible y comburente fuera del rango de inflamabilidad).<br>Calor latente del agua: <b>2.257 kJ/kg</b>.',q:[
+['¿Cuál es el calor latente de evaporación del agua?',['2.257 kJ/kg','4,18 kJ/kg','540 kJ/kg'],0]]},
+{t:'Efectividad',x:'El agua que se evapora absorbe al menos <b>7 veces más energía</b> (7,58) que la que solo llega a hervir.<br>A 100 ºC el vapor ocupa unas <b>1.600 veces</b> el volumen del agua líquida, y más a mayor temperatura.<br>Efectividad del enfriamiento de gases con lanzas combinadas: <b>50–70 %</b>.',q:[
+['¿Cuántas veces más energía absorbe el agua si se evapora frente a si solo llega a ebullición?',['Unas 7 veces','Unas 2 veces','Unas 20 veces'],0],
+['¿Qué volumen ocupa aproximadamente el vapor de 1 litro de agua a 100 ºC?',['1.600 litros','160 litros','16.000 litros'],0]]},
+{t:'Tamaño de la gota',x:'Gota <b>fina</b>: más tiempo en suspensión y mejor absorción, pero <b>menos alcance</b>; si es demasiado fina se evapora junto al bombero.<br>Gota <b>gruesa</b> o chorro: más alcance pero menos intercambio y más escorrentía.<br>Tamaño óptimo: <b>0,3 a 0,7 mm</b>.',q:[
+['¿Cuál es el tamaño de gota óptimo según diversos autores?',['Entre 0,3 y 0,7 mm','Entre 1 y 2 mm','Menos de 0,1 mm'],0],
+['¿Qué inconveniente tiene una gota excesivamente pequeña?',['Se evapora junto al bombero y lo expone al vapor','Produce mucha escorrentía','Tiene demasiado alcance'],0]]}
+]},
+{nv:3,t:'Ventilación y presión',c:[
+{t:'Para qué ventilar',x:'Un buen control de la ventilación permite: <b>aumentar la visibilidad</b>, <b>reducir la temperatura</b> en zonas, <b>controlar la potencia</b> y <b>conducir el flujo de gases</b>.<br>En ILV, el aire fresco también <b>aumenta la potencia</b>: siempre hay que coordinar ventilación y agua.',q:[
+['¿Por qué la ventilación debe coordinarse siempre con la aplicación de agua?',['Porque el aporte de aire aumenta la potencia en incendios ILV','Porque el agua enfría el ventilador','Porque la ventilación apaga el incendio por sí sola'],0]]},
+{t:'Conservación de la masa',x:'La masa de gases que sale es igual a la que entra más el combustible gasificado (que no suele superar el <b>10 %</b>).<br>Pero el <b>volumen</b> no es igual: los gases calientes se dilatan y necesitan más superficie para salir.',q:[
+['Según el principio de conservación de la masa aplicado al incendio, lo que es casi igual entre entrada y salida es…',['La masa de gases','El volumen de gases','La velocidad de los gases'],0]]},
+{t:'Flotabilidad y presión',x:'Los gases se mueven por <b>flotabilidad</b> (menos densos por la temperatura) y por <b>diferencias de presión</b> entre interior y exterior.<br>Los fluidos van de mayor a menor presión por el camino más corto.',q:[
+['¿Cuáles son las dos causas de la movilidad de los gases de incendio?',['Flotabilidad y diferencias de presión','Viscosidad y tensión superficial','Radiación y conducción'],0]]},
+{t:'Flujos uni y bidireccionales',x:'<b>Bidireccional</b>: en una apertura que abarca zonas por encima y por debajo del plano neutro (sale arriba, entra abajo).<br><b>Unidireccional</b>: apertura claramente por encima (salida) o por debajo (entrada) del plano neutro. Necesita <b>al menos dos aperturas</b>. La <b>VPP</b> es de las formas más efectivas de crearlo.',q:[
+['¿Qué hace falta para que se produzca un flujo unidireccional?',['Al menos dos aperturas, una de entrada y otra de salida','Una sola apertura grande','Que el incendio esté confinado'],0]]},
+{t:'Patrones de ventilación',x:'<b>Antiventilación</b>: confinado, sin flujo; en ILV la potencia tiende a cero.<br><b>Natural</b>: flujos por diferencia de presión; puede haber flashover.<br><b>Dominado por el viento</b>: con solo <b>6 m/s (21 km/h)</b> se generan 25–30 Pa entre fachadas; efecto antorcha; <b>no entrar</b> a lo largo del flujo caliente.<br><b>Bajo VPP</b>: el aporte puede subir la potencia hasta un <b>60 %</b>.',q:[
+['¿A qué velocidad del viento se generan ya diferencias de 25–30 Pa entre fachadas?',['6 m/s (21 km/h)','20 m/s (72 km/h)','1 m/s (3,6 km/h)'],0],
+['Según algunos autores, ¿cuánto puede aumentar la potencia de un incendio al aplicar VPP?',['Hasta un 60 %','Hasta un 10 %','Hasta un 200 %'],0]]},
+{t:'Presiones en el recinto',x:'En una vivienda con incendio ventilado en pleno desarrollo, el diferencial va de <b>−15 Pa</b> abajo a <b>+30 Pa</b> arriba.<br>Un ventilador VPP de 18"–21" genera <b>15–30 Pa</b> en un recinto sin incendio.<br>Un incendio confinado en ILV puede tener <b>presión negativa</b> y no mostrar humo: la ausencia de humo no significa ausencia de incendio.',q:[
+['¿Qué puede indicar la ausencia de humo exterior en un recinto confinado?',['Un incendio en ILV con presión interior negativa, listo para reaccionar a la ventilación','Que el incendio está extinguido','Que el incendio está limitado por el combustible'],0]]},
+{t:'Presurización contra la propagación',x:'Presurizar un recinto adyacente <b>evita que el incendio se propague</b> hacia él. Bastan diferenciales de unos <b>5 Pa</b>, incluso con pequeñas aperturas.<br>Es la base del <b>ataque en presión positiva contra la propagación</b>.',q:[
+['¿Qué diferencial de presión aproximado basta para evitar la propagación a un recinto adyacente presurizado?',['5 Pa','50 Pa','500 Pa'],0]]}
+]}
+]});
+
+T.push({id:12,b:2,n:'Incendios de interior: técnicas de intervención',s:'Aplicación de agua, elección del caudal, control de la ventilación y trabajo en espacios sin visibilidad',L:[
+{nv:1,t:'Técnicas de aplicación de agua',c:[
+{t:'Las cinco técnicas',x:'<b>Ataque indirecto</b>: inundar el recinto de vapor.<br><b>Ataque directo</b>: mojar los combustibles que arden.<br><b>Enfriamiento de gases</b>: hacer segura la progresión (no extingue).<br><b>Ataque defensivo contra la propagación</b>: mojar lo que aún no arde.<br><b>Ataque exterior ofensivo</b> o "ablandado": bajar la potencia desde fuera.',q:[
+['¿Qué técnica de aplicación de agua NO es una técnica de extinción?',['El enfriamiento de gases','El ataque directo','El ataque indirecto'],0],
+['¿Qué técnica busca mojar superficies que todavía no arden para que no se incendien?',['Ataque defensivo contra la propagación','Ataque directo','Ataque indirecto'],0]]},
+{t:'Ataque indirecto',x:'Extinción <b>inundando el recinto con vapor de agua</b> desde un punto exterior; el chorro no llega directamente al foco.<br>Ventaja: se ataca desde posición segura. Inconvenientes: se <b>pierde toda la visibilidad</b>, posibles quemaduras por vapor a víctimas y desplazamiento de gases a otras estancias.<br>Nadie del equipo debe estar dentro del recinto que se inunda.',q:[
+['¿Qué persigue el ataque indirecto?',['La extinción inundando el recinto con vapor de agua desde el exterior','Mojar los combustibles incendiados','Reducir la inflamabilidad del colchón para progresar'],0],
+['¿Cuál es un inconveniente del ataque indirecto?',['La pérdida completa de visibilidad en el recinto','Que expone al bombero a las condiciones interiores','Que solo funciona con chorro sólido'],0]]},
+{t:'Ataque directo',x:'Extinción aplicando una <b>película de agua sobre los combustibles</b> que arden; enfría y <b>corta la pirólisis</b>.<br>Solo debe usarse cuando el foco se ha <b>localizado visualmente</b> y hay certeza de que el agua impactará en él. Entonces es <b>la técnica más efectiva</b>.<br>Hay que evitar la escorrentía.',q:[
+['¿Cuándo debe emplearse el ataque directo?',['Cuando se ha localizado visualmente el foco y hay certeza de que el chorro lo alcanzará','Siempre como primera técnica al entrar','Cuando no hay visibilidad'],0]]},
+{t:'Enfriamiento de gases',x:'Su objetivo es <b>reducir la inflamabilidad del colchón</b> para que el equipo progrese seguro frente a flashover y backdraft.<br><b>No extingue</b>: al localizar el foco hay que pasar a ataque directo o indirecto.<br>Bien hecho, el colchón <b>se contrae</b> más de lo que se expande el vapor y se mantiene la estratificación.',q:[
+['¿Cuál es el objetivo del enfriamiento de gases?',['Reducir la inflamabilidad del colchón para progresar con seguridad','Extinguir el foco del incendio','Inundar el recinto de vapor'],0]]},
+{t:'Ataque defensivo contra la propagación',x:'Limita la propagación a zonas no afectadas mojando las superficies para <b>dificultar la pirólisis</b>.<br>Útil con recursos o agua limitados, en grandes estructuras o para que lo extinguido no reavive.<br>Durante la progresión se hace el "<b>pintado de paredes</b>".',q:[
+['¿Cómo se llama la aplicación de agua sobre paredes durante la progresión para evitar la propagación detrás del equipo?',['Pintado de paredes','Ablandado','Barrido'],0]]},
+{t:'Ataque exterior ofensivo ("ablandado")',x:'Reduce la potencia desde fuera con un <b>chorro sólido contra un punto fijo del techo</b> a través de una ventana, sin bloquear la salida de gases. El chorro rompe en gotas finas.<br>No extingue: después hace falta progresión interior. Estudios de <b>UL, NIST y FDNY</b> muestran que baja la temperatura también en estancias conectadas y aumenta la supervivencia.',q:[
+['En el ataque exterior ofensivo, ¿cómo se aplica el agua?',['Con chorro sólido contra un punto fijo del techo, sin bloquear la salida de gases','Con cono abierto en barrido por la ventana','Con pulsaciones cortas de 1 segundo'],0],
+['¿Por qué no se usa cono abierto en el ataque exterior ofensivo?',['Porque bloquearía la salida de gases y los desplazaría por el interior','Porque tiene poco alcance','Porque gasta demasiada agua'],0]]}
+]},
+{nv:2,t:'Parámetros de cada técnica',c:[
+{t:'Ataque indirecto: parámetros',x:'Caudal <b>medio a alto (100–500 lpm)</b>. Cono <b>15º a 30º</b>.<br>Pulsaciones de <b>media a larga duración (3" a 20")</b>, con pausas largas de <b>15" a 45"</b>.<br>Movimiento en "<b>T</b>" (primeras pulsaciones o fuerte gradiente térmico) o en "<b>O</b>" (grandes volúmenes o aplicaciones sucesivas), empezando arriba.',q:[
+['En el ataque indirecto, el patrón de pulsaciones empleado es de…',['Media a larga duración (3" a 20")','Media a larga duración (10" a 20")','Media a larga duración (10" a 30")'],0],
+['¿Cuándo es preferible el patrón en "T" en el ataque indirecto?',['En las primeras pulsaciones o con fuerte gradiente térmico','En recintos muy amplios','En aplicaciones sucesivas'],0]]},
+{t:'Ataque directo: parámetros',x:'Caudal <b>medio (100–250 lpm)</b>. Cono <b>0º a 15º</b> (puede llegar a chorro sólido).<br>Aplicaciones de <b>larga duración (&gt;20")</b>, hasta continuas, con la lanza en movimiento a velocidad constante.',q:[
+['¿Qué ángulo de cono se emplea en el ataque directo?',['0º a 15º','15º a 30º','45º'],0]]},
+{t:'Enfriamiento de gases: parámetros',x:'Caudal <b>bajo-medio (50–250 lpm)</b>. Cono <b>30º</b>. Pulsaciones cortas de <b>1" a 5"</b>, dirigidas a las <b>esquinas superiores del fondo</b>, con ángulo de unos 30º sobre la horizontal y barrido de 1–5 m.<br>Antes se usaban pulsaciones &lt;1" con cono de 45º y 75º de inclinación; enfriaban solo junto al bombero.<br>Un cono cerrado y lejano aleja del bombero la zona donde se expande el vapor.',q:[
+['¿Por qué es mejor un cono cerrado (unos 30º) y lejano en el enfriamiento de gases?',['Mejora las condiciones hacia donde va el bombero y aleja de él la evaporación','Porque enfría las paredes','Porque inunda el recinto de vapor'],0],
+['¿Hacia dónde se dirigen las pulsaciones en el enfriamiento de gases actual?',['Hacia las esquinas superiores del fondo del recinto','Verticalmente al techo sobre el bombero','Al suelo, delante del bombero'],0]]},
+{t:'Defensivo y ablandado: parámetros',x:'<b>Defensivo contra propagación</b>: caudal <b>bajo (50–100 lpm)</b>, cono 0–15º, aplicaciones largas o continuas.<br><b>Ataque exterior ofensivo</b>: caudal <b>medio (100–250 lpm)</b>, chorro sólido, pulsaciones de <b>5" a 30"</b>, lanza <b>fija</b>, pausas de 15" a 45".',q:[
+['¿Qué caudal se emplea en el ataque defensivo contra la propagación?',['Bajo, de 50 a 100 lpm','Alto, de 300 a 500 lpm','Medio, de 100 a 250 lpm'],0]]},
+{t:'Efectividad en el colchón',x:'Si el agua se evapora en el colchón entre un <b>30 % y un 100 %</b>, el volumen final es igual o menor y se conserva la estratificación.<br>Por debajo del <b>30 %</b> el colchón se expande y se rompe el equilibrio térmico.<br>Las gotas que chocan contra las paredes enfrían paredes, no gases, y hacen bajar el plano neutro.',q:[
+['¿Por debajo de qué porcentaje de evaporación en el colchón se produce una expansión que rompe el equilibrio térmico?',['30 %','70 %','10 %'],0]]}
+]},
+{nv:2,t:'Acceso y caudal',c:[
+{t:'Acceso a través de puerta',x:'Toda puerta en zona de incendio puede ocultar gases. El procedimiento debe ser <b>único</b> y tener dos fases: <b>evaluar</b> las condiciones y <b>reducir el riesgo</b> enfriando y diluyendo el colchón.<br>Pulsación sobre el <b>tercio superior</b> de la puerta cerrada; se abre, se observa por encima y por debajo del plano neutro; si hay colchón, <b>dos pulsaciones profundas</b> a las esquinas superiores del fondo; se cierra y se espera.',q:[
+['En el procedimiento de acceso por puerta, ¿dónde se realiza la primera pulsación?',['Sobre el tercio superior de la puerta cerrada','En la cerradura','En la parte baja de la puerta'],0]]},
+{t:'Tipos de caudal',x:'<b>Disponible</b>: el máximo en punta de lanza en cada momento.<br><b>Crítico</b>: el <b>mínimo</b> con el que se consigue la extinción. Por debajo, el incendio solo decae cuando se agota el combustible.<br><b>Óptimo</b>: el que extingue con el <b>mínimo gasto de agua</b>.<br>"Los incendios se apagan con <b>mucho caudal y poca agua</b>".',q:[
+['¿Qué es el caudal crítico?',['El mínimo caudal con el que se consigue la extinción','El caudal que extingue con el mínimo gasto de agua','El máximo caudal en punta de lanza'],0],
+['¿Qué es el caudal óptimo?',['El que consigue la extinción con el mínimo gasto de agua','El máximo que da la bomba','El mínimo para extinguir'],0]]},
+{t:'Caudales mínimos y criterios',x:'Francia fijó por ley <b>500 lpm</b> para la progresión interior; la norma <b>NFPA 1410</b> exige <b>378 lpm</b>.<br>Grimwood y Barnett: <b>24 lpm/MW</b> en vivienda y <b>5 lpm/m²</b> en superficies amplias (&gt;100 m²).<br>Las lanzas actuales logran gota óptima a <b>6–7 bar</b> sin alta presión.',q:[
+['¿Qué caudal mínimo exige la NFPA 1410 para la progresión interior?',['378 lpm','500 lpm','250 lpm'],0],
+['Según Grimwood, ¿qué caudal se necesita por MW en incendios de vivienda?',['24 lpm/MW','5 lpm/MW','100 lpm/MW'],0]]}
+]},
+{nv:2,t:'Control de la ventilación',c:[
+{t:'Antiventilación o confinamiento',x:'Privar al incendio de aire fresco para limitar su crecimiento; especialmente útil en <b>ILV</b>. Evita que los gases inunden escaleras y pasillos comunes, que deben protegerse con prioridad.<br>Se cierran puertas y ventanas o se usan <b>cortinas de bloqueo de humo</b>. Inconveniente: el plano neutro baja hasta el suelo.',q:[
+['¿Qué espacios deben protegerse con prioridad mediante el confinamiento?',['La caja de escalera y los pasillos comunes de evacuación','El recinto del incendio','La cubierta'],0]]},
+{t:'Control de puerta de acceso',x:'Un bombero en el exterior mantiene la puerta <b>entornada al ancho de la manguera</b> y la va dando a medida que avanza el equipo.<br>La <b>cortina de bloqueo de humo</b> bloquea la parte superior, deja pasar la manguera por abajo y permite prescindir de ese bombero.',q:[
+['En el control de puerta de acceso, ¿cómo debe quedar la puerta?',['Entornada al ancho de paso de la manguera','Completamente abierta','Cerrada con la manguera pillada'],0]]},
+{t:'Ventilación natural',x:'Evacuar gases con las diferencias de presión del <b>propio incendio</b>; puede expulsar hasta un <b>50 %</b> de la atmósfera combustible.<br><b>Vertical</b>: entrada y salida a distinto nivel, flujo <b>unidireccional</b>. <b>Horizontal</b>: al mismo nivel, flujo <b>bidireccional</b>, menos eficaz.<br>Hoy su efectividad es limitada por la rápida reacción de los combustibles modernos.',q:[
+['La ventilación natural horizontal genera un flujo…',['Bidireccional','Unidireccional','Nulo'],0]]},
+{t:'Relación entrada / salida',x:'La entrada debe ser <b>al menos igual a la salida</b> (r = 1) y es muy recomendable que sea <b>el doble</b> (r = 0,5), con un rendimiento del 90 % frente al 71 % con r = 1.<br>Nunca reducir la salida para conseguir r = 0,5. La salida, <b>cerca del foco</b> y mejor alargada en vertical.',q:[
+['¿Qué relación entre entrada y salida de gases es muy recomendable?',['Entrada al menos el doble que la salida','Salida el doble que la entrada','Entrada y salida exactamente iguales siempre'],0]]},
+{t:'Ventilación forzada: VPP y VPN',x:'<b>VPP</b> (presión positiva): ventilador en el exterior, en la puerta de acceso; presuriza todo el interior. El ventilador nunca queda expuesto a los gases.<br><b>VPN</b> (presión negativa o extracción): extractores en la salida; expone el equipo a los gases, rinde menos y no admite motores de explosión. Se limita a <b>túneles y garajes</b>.',q:[
+['¿En qué situaciones se limita el uso de la ventilación por presión negativa?',['Túneles y garajes','Viviendas unifamiliares','Cajas de escalera'],0]]},
+{t:'Tipos de ventiladores',x:'<b>Térmicos</b> (3 a 150 CV): autónomos y ligeros, pero ruidosos, meten gases de escape y no son ATEX ni sirven como extractores. Son los más usados.<br><b>Eléctricos</b>: silenciosos, ATEX, sirven de extractor; dependen del cable.<br><b>Batería</b>: solo auxiliares. <b>Hidráulicos</b>: turbina con agua de la bomba.<br><b>Flujo de manguera</b>: cono de agua de dentro afuera por la salida; poco rendimiento, para ventilación final.',q:[
+['¿Qué inconveniente tienen los ventiladores térmicos?',['Introducen gases de escape y no pueden usarse como extractores','Dependen de un cable eléctrico','Tienen muy poca autonomía'],0],
+['En la ventilación hidráulica por flujo de manguera, el cono de agua se dirige…',['Desde dentro hacia fuera por la salida de gases','Desde fuera hacia dentro por la entrada','Al techo del recinto'],0]]}
+]},
+{nv:3,t:'VPP en detalle',c:[
+{t:'Defensiva y ofensiva',x:'<b>Defensiva</b>: el flujo <b>no atraviesa el foco</b>; se basa en el confinamiento del incendio y limpia pasillos y escaleras. La decide el Mando.<br><b>Ofensiva</b>: el flujo <b>atraviesa el foco</b>; abre una ventana temporal para avanzar rápido. En ILV hace crecer el incendio: hay que coordinarla con agua.',q:[
+['¿Qué diferencia a la VPP defensiva de la ofensiva?',['En la defensiva el flujo no atraviesa el foco del incendio','En la defensiva se usa extractor','En la ofensiva el incendio está confinado'],0]]},
+{t:'Pasos de la VPP ofensiva',x:'1. <b>Abrir la salida de gases</b>. 2. Abrir la entrada. 3. Iniciar la ventilación. 4. Valorar. 5. Progresión interior rápida. 6. Control del incendio.<br>Debe ser <b>muy rápida</b> para que el aire frío empuje al caliente como un pistón (cuña de avance) sin mezclarse.<br>No usar con <b>backdraft inminente</b> ni con combustibles en polvo o muy volátiles.',q:[
+['¿Qué se hace primero en una VPP ofensiva?',['Abrir la salida de gases','Arrancar el ventilador','Abrir la entrada de aire'],0],
+['¿En qué caso no debe emplearse la VPP ofensiva?',['Con backdraft inminente','En viviendas unifamiliares','Con viento a favor'],0]]},
+{t:'Presurización de recintos',x:'Usa ventiladores VPP para crear sobrepresión en <b>zonas anexas</b> al incendio y protegerlas de la propagación y del humo (ej. <b>cajas de escalera</b>).<br>Protege frente a la <b>convección</b>, no frente a radiación ni conducción.<br>Para presurizar: reducir la entrada, suprimir salidas y acercar el ventilador.',q:[
+['¿Frente a qué mecanismo de propagación protege la presurización de recintos?',['La convección','La radiación','La conducción'],0]]},
+{t:'Colocación del ventilador',x:'Huella: <b>dardo</b> de alta velocidad + <b>bulbo</b> de aire arrastrado.<br>Para 18"–20" y puerta estándar (2 × 0,9 m), distancia óptima <b>1,8 a 5 m</b>. Ante la duda, <b>mejor más alejado</b>. Demasiado cerca produce "<b>cortocircuito</b>".<br>Un ventilador de 18"–20" (25.000–30.000 m³/h AMCA240) sirve para una vivienda unifamiliar en ofensiva o un bloque de 4–6 plantas en defensiva.',q:[
+['¿Qué ocurre si el ventilador VPP se coloca demasiado cerca de la puerta?',['Se produce un cortocircuito: el aire entra y vuelve a salir','Aumenta mucho la presión interior','El flujo es más laminar'],0],
+['En caso de duda sobre la distancia del ventilador a la puerta, conviene…',['Colocarlo más alejado','Colocarlo pegado a la puerta','Inclinarlo hacia el suelo'],0]]},
+{t:'Barómetro de entrada y viento',x:'<b>Barómetro de entrada</b>: dirigir el flujo un poco bajo (~15 % de la altura) para que salga humo por arriba de la puerta; si esa salida no disminuye, la ventilación no funciona.<br><b>Viento</b>: se debe valorar no usar VPP con viento en contra <b>superior a 4 m/s</b>.',q:[
+['¿Con qué viento en contra debe valorarse no emplear la VPP?',['Superior a 4 m/s','Superior a 15 m/s','Cualquier viento'],0]]}
+]},
+{nv:3,t:'Trabajo sin visibilidad',c:[
+{t:'Medios de orientación',x:'Siempre que se pueda, al menos <b>dos</b> medios:<br>• <b>Paramento de referencia</b>: pared siempre a la misma mano; para salir, se cambia de mano y se deshace el camino.<br>• <b>Tendido de manguera</b>: marca la ruta de escape.<br>• <b>Cámara térmica</b>: siempre complementaria (humo denso, baterías).<br>• <b>Cuerda guía</b>: espacios amplios y fríos, normalmente fuera del recinto de incendio.',q:[
+['¿Cuántos medios de orientación debe disponer como mínimo el bombero sin visibilidad?',['Al menos dos','Uno, la cámara térmica','Al menos cuatro'],0],
+['¿Por qué la cámara térmica debe ser siempre un medio complementario?',['Porque con humo denso y alta temperatura pierde definición y puede agotar la batería','Porque no detecta víctimas','Porque está prohibida en interiores'],0]]},
+{t:'Métodos de rastreo',x:'<b>Método de barrido</b>: tomar una pared de referencia, rastrear el perímetro sin perderla y al volver a la puerta completar la zona central.<br><b>Método francés</b>: el punta de lanza avanza a la siguiente puerta y queda estático; el bombero de apoyo rastrea el perímetro hasta cruzarse con la manguera; luego se repite por el otro lado.<br>En recintos de más de <b>30 m²</b>, cuerda guía para la zona central.',q:[
+['En el método francés de rastreo, ¿qué hace el punta de lanza al llegar a la siguiente puerta?',['Permanece estático mientras el apoyo rastrea el perímetro','Rastrea él el perímetro','Sale al exterior'],0]]},
+{t:'Rescate por el exterior (VEIS)',x:'Principal modo en Norteamérica. 1. Acceso por ventana con vehículo de altura o escalera corredera. 2. <b>Cerrar inmediatamente la puerta</b> del recinto. 3. Rastrear con referencia y herramienta. 4. Salir <b>por la misma ventana</b>.',q:[
+['En el rescate VEIS, ¿qué hace el bombero nada más entrar por la ventana?',['Cierra la puerta del recinto para no crear un flujo de gases hacia la ventana','Abre todas las ventanas','Busca la salida principal'],0]]},
+{t:'Rastreo con VPP defensiva',x:'En vez de sacar a la víctima del peligro, se <b>retira el peligro</b> de donde está la víctima:<br>1. Confinar el incendio. 2. VPP para ganar visibilidad en escaleras y pasillos. 3. Ventilación secuencial de los recintos con humo buscando víctimas.<br>Útil en edificios complejos, muchas víctimas o poco personal.',q:[
+['¿Cuál es el primer paso del rastreo con técnicas de VPP defensiva?',['Confinar el incendio','Ventilar todos los recintos a la vez','Entrar por la ventana'],0]]}
+]}
+]});
+
+T.push({id:13,b:2,n:'Incendios de vegetación',s:'Concepto y clasificación, interfaz urbano-forestal, partes y formas, transmisión del calor, topografía, meteorología, combustibles, modelos de Rothermel y humo',L:[
+{nv:1,t:'Concepto y clasificación',c:[
+{t:'Incendio de vegetación',x:'Fuego que se extiende <b>sin control</b> y afecta a vegetación que no estaba destinada a arder. Si está permitido y controlado (quema de rastrojos), <b>no es incendio</b>.<br>En España más del <b>96 %</b> de los incendios los provoca el ser humano.',q:[
+['¿Qué es esencial para que un fuego de vegetación se considere incendio?',['La falta de control','Que supere 1 hectárea','Que afecte a árboles'],0],
+['¿Qué porcentaje de incendios en España provoca el ser humano según el manual?',['Más del 96 %','Alrededor del 50 %','Menos del 30 %'],0]]},
+{t:'Forestal, agrícola y urbano',x:'<b>Forestal</b>: terreno con especies forestales (arbóreas, arbustivas, matorral, herbáceas). También yermos, roquedos, arenales, construcciones del monte y terrenos agrícolas abandonados con signos forestales.<br><b>Agrícola</b>: terreno dedicado al cultivo.<br><b>De vegetación en suelo urbano</b>: parques, jardines, cunetas, sin influencia forestal.',q:[
+['Un incendio en un parque urbano sin influencia forestal es un incendio…',['De vegetación en suelo urbano','Forestal','De interfaz urbano-forestal'],0]]},
+{t:'Interfaz urbano-forestal',x:'Zona con edificaciones dentro o junto a vegetación forestal. Se conocen como incendios de <b>cuarta generación</b>.<br>Tres modos: estructuras agrupadas dentro de la masa forestal (urbanizaciones); zonas de vegetación aisladas en área urbana (parques); estructuras aisladas en áreas forestales o agrícolas.',q:[
+['¿Cómo se conocen los incendios de interfaz urbano-forestal?',['Incendios de cuarta generación','Incendios de copas activo','Grandes incendios forestales'],0]]},
+{t:'Clasificación por superficie',x:'<b>Conato</b>: menos de <b>1 ha</b>.<br><b>Incendio</b>: 1 ha o más.<br><b>Gran incendio forestal (GIF)</b>: <b>500 ha</b> o más.<br>Recuerda: 1 ha = 10.000 m².',q:[
+['Un incendio forestal que afecta a una superficie de 10.000 m² se denomina…',['Incendio','Conato','Gran incendio'],0],
+['¿A partir de qué superficie se considera gran incendio forestal?',['500 ha','100 ha','1.000 ha'],0]]},
+{t:'Por el estrato que arde',x:'<b>Suelo o subsuelo</b>: materia orgánica y raíces; lento, incandescente; se corta con una línea hasta <b>suelo mineral</b>.<br><b>Superficie</b>: combustible hasta <b>1,5 m</b> de altura; <b>el más frecuente</b>.<br><b>Antorcheo</b>: de superficie que corona copas aisladas.<br><b>Copas pasivo</b>: copas acopladas al fuego de superficie.<br><b>Copas activo</b>: copas independientes de la superficie; viento fuerte y continuidad.',q:[
+['¿Hasta qué altura llega el combustible en un incendio de superficie?',['1,5 metros','0,5 metros','3 metros'],0],
+['¿Qué fuego avanza por las copas independientemente de lo que ocurre en la superficie?',['Copas activo','Copas pasivo','Antorcheo'],0],
+['¿Cuál es el tipo de incendio de vegetación más frecuente?',['De superficie','De copas activo','De subsuelo'],0]]}
+]},
+{nv:1,t:'Partes y formas',c:[
+{t:'Partes de un incendio',x:'<b>Origen</b>: donde empezó. <b>Cabeza</b>: hacia donde avanza; la parte <b>más caliente y activa</b>. <b>Flancos</b>: lados paralelos a la propagación. <b>Cola</b>: opuesta a la cabeza, quema más despacio y suele estar cerca del origen. <b>Perímetro</b>: borde del incendio.',q:[
+['¿Cuál es la parte más caliente y activa de un incendio forestal?',['La cabeza','La cola','Los flancos'],0]]},
+{t:'Dedos, bolsas, islas y focos',x:'<b>Dedo</b>: franja estrecha que se extiende del incendio; peligroso si flanquea al personal.<br><b>Bolsa</b>: zona sin quemar entre el incendio y un dedo.<br><b>Isla</b>: zona sin quemar <b>dentro</b> del perímetro.<br><b>Focos secundarios</b>: zonas ardiendo <b>fuera</b> del perímetro por pavesas y piñas.',q:[
+['¿Cómo se llama una zona de combustible sin quemar dentro del perímetro del incendio?',['Isla','Bolsa','Dedo'],0],
+['¿Cómo se llama el área no quemada entre el incendio principal y un dedo?',['Bolsa','Isla','Foco secundario'],0]]},
+{t:'Morfología',x:'<b>Circular</b>: terreno plano, combustible homogéneo y <b>sin viento</b>.<br><b>Elíptica</b>: viento de dirección predominante, combustible homogéneo, terreno plano o pendiente regular.<br><b>Irregular</b>: viento variable, combustible heterogéneo y/o pendientes irregulares (la más común).',q:[
+['¿En qué condiciones se produce un incendio de progresión circular?',['Terreno plano, combustible homogéneo y sin viento','Viento de dirección predominante','Pendientes irregulares'],0]]},
+{t:'Patrones de propagación',x:'<b>Topográfico</b>: quema ollas y vaguadas; cabeza y flancos se comportan igual. Oportunidad cuando avanza <b>en descenso</b>.<br><b>Conducido por viento</b>: busca crestas; se ataca por flancos de cola a cabeza cuando el viento deja de mandar.<br><b>De combustible</b>: oportunidad en un cambio de modelo.<br><b>Ambiente del incendio</b>: GIF con su propia burbuja meteorológica; solo ataque indirecto.',q:[
+['En un incendio que genera su propio ambiente meteorológico, ¿qué tipo de ataque es factible?',['Solo ataque indirecto','Ataque directo a la cabeza','Ataque por flancos desde la cola'],0]]},
+{t:'Competencias',x:'La Constitución transfirió la prevención y extinción de incendios forestales a las <b>comunidades autónomas</b>. El Estado: estadística, estrategia forestal y coordinación; interviene si la CA lo pide o si afecta a varias.<br>La <b>Ley de Montes</b> fija, entre otras: <b>mando único</b> como director técnico de la extinción, obligación de comunicar el incendio y de restaurar el terreno, prohibiendo el cambio de uso forestal.',q:[
+['¿A quién corresponde la competencia de prevención y extinción de incendios forestales en su territorio?',['A las comunidades autónomas','Al Estado','A los ayuntamientos'],0]]}
+]},
+{nv:2,t:'Transmisión del calor',c:[
+{t:'Conducción',x:'La conductividad de la materia vegetal es <b>baja</b> y el contacto imperfecto: es un mecanismo <b>poco eficiente</b> en incendios forestales.<br>A mayor <b>compacidad</b>, más conducción (pinocha de pino silvestre, hojarasca de haya), pero menos aire interpuesto.',q:[
+['¿Qué mecanismo de transmisión del calor es poco eficiente entre combustibles forestales?',['La conducción','La convección','La radiación'],0]]},
+{t:'Radiación',x:'Transmisión por ondas electromagnéticas a través del aire. Depende de la <b>continuidad</b> horizontal y vertical y de la relación superficie/volumen.<br>La favorece el <b>ahuecamiento</b> (lo contrario de la compacidad), como la hojarasca de roble melojo.',q:[
+['¿Qué característica de la capa de combustible favorece la radiación?',['El ahuecamiento','La compacidad','La humedad'],0]]},
+{t:'Convección',x:'Es el mecanismo que <b>más eficazmente</b> transmite el calor. Convierte los combustibles aéreos en disponibles y hace que un fuego de superficie pase a <b>fuego de copas</b>.<br>Con la pendiente, acelera la propagación <b>cuesta arriba</b>; cuesta abajo solo hay radiación y el fuego es más lento.',q:[
+['¿Qué mecanismo es responsable de que un fuego de superficie se convierta en fuego de copas?',['La convección','La conducción','La radiación'],0]]},
+{t:'Partículas en ignición',x:'Proyección de pavesas que crea focos secundarios: el "<b>salto de fuego</b>". Más frecuente en <b>pinos con fuego de copas</b>, hasta <b>medio kilómetro</b>, en horas centrales, con 20–35 ºC, humedad del 20–50 % y viento <b>entre moderado y vivo (16–39 km/h)</b>.<br>Las más peligrosas: <b>piñas de pino carrasco</b> y <b>corteza de eucalipto</b>.',q:[
+['¿Con qué tipo de viento suelen darse las proyecciones de partículas en ignición en pinares con fuego de copas?',['Entre moderado y vivo','Viento fuerte o muy fuerte','Viento suave'],0],
+['¿Cuáles son las proyecciones más peligrosas según el manual?',['Las piñas de pino carrasco y la corteza del eucalipto','Las hojas de encina','Las pinochas de pino silvestre'],0]]}
+]},
+{nv:2,t:'Topografía',c:[
+{t:'La gran tríada',x:'El comportamiento de un incendio forestal depende de <b>topografía</b>, <b>climatología y tiempo atmosférico</b> y <b>combustible</b>.<br>La topografía es el factor <b>más constante</b> e influye en los otros dos.',q:[
+['¿Cuál es el factor más constante de la "gran tríada" del comportamiento del fuego forestal?',['La topografía','El tiempo atmosférico','El combustible'],0]]},
+{t:'Pendiente',x:'Es el <b>factor topográfico más importante</b>. A más pendiente, más velocidad cuesta arriba y más lento cuesta abajo.<br>Un viento fuerte multiplica la propagación por <b>100</b>; la pendiente, por <b>20</b>.<br>45º = 100 % de pendiente.',q:[
+['¿Cuál es el factor topográfico más importante en el comportamiento del fuego?',['La pendiente','La altitud','La exposición'],0],
+['¿Qué pendiente en porcentaje equivale a un ángulo de 45º?',['100 %','45 %','50 %'],0]]},
+{t:'Exposición y altitud',x:'<b>Solana</b>: más temperatura, vegetación más seca y menos combustible.<br><b>Umbría</b>: menos temperatura, vegetación más húmeda.<br>A mayor <b>altitud</b>, menos vegetación y menos combustible.<br>Barrancos estrechos con mucha pendiente propagan muy rápido.',q:[
+['¿Qué caracteriza a las laderas de solana?',['Mayor temperatura y vegetación más seca','Menor temperatura y más humedad','Más cantidad de combustible'],0]]}
+]},
+{nv:2,t:'Meteorología',c:[
+{t:'Temperatura',x:'Máxima por la tarde, <b>15:00–17:00 h</b>; el momento más fresco y húmedo, de madrugada hacia las <b>06:00 h</b>.<br>Zona de llamas: <b>700–1.000 ºC</b>. Zona de combustible por delante: 1.000–1.400 ºC en arbolado, unos 500 ºC en matorral.',q:[
+['¿A qué hora suele registrarse la temperatura máxima del día?',['Entre las 15:00 y las 17:00 h','A las 12:00 h','A las 06:00 h'],0]]},
+{t:'Humedad relativa',x:'Proporción de vapor sobre el máximo que admite el aire a esa temperatura; al 100 % está saturado.<br>Por <b>debajo del 30 %</b> las condiciones son muy favorables para el fuego.<br>Regla: si la temperatura <b>baja 10º</b>, la humedad relativa <b>se duplica</b>; si sube 10º, se reduce a la mitad.',q:[
+['Según la regla aproximada, si la temperatura sube 10 ºC, la humedad relativa…',['Se reduce a la mitad','Se duplica','No cambia'],0],
+['¿Por debajo de qué humedad relativa las condiciones son muy favorables para el fuego?',['30 %','60 %','10 %'],0]]},
+{t:'Vientos de ladera y valle',x:'<b>Ascendentes</b> de día (8:00 h a puesta de sol), 6–13 km/h, con turbulencias.<br><b>Descendentes</b> de noche (18:00 a 5:00 h), 1–10 km/h, laminares.<br>El cambio de descendente a ascendente puede reactivar en minutos un fuego controlado.<br>1 nudo = 1,852 km/h.',q:[
+['¿Cuándo soplan los vientos de ladera ascendentes?',['Durante el día, desde las 8:00 h hasta la puesta de sol','Por la noche','Solo al amanecer'],0]]},
+{t:'Foehn y torbellinos',x:'<b>Foehn</b>: vientos muy cálidos, secos e intensos que bajan de zonas altas; se han medido hasta <b>145 km/h con 3 % de humedad</b>. En Valencia y Murcia se llama <b>Poniente</b>. No suelen durar más de 3 días.<br><b>Torbellinos</b>: vórtices horizontales o verticales; con viento de más de 7–8 km/h se desplazan con él.',q:[
+['¿Cómo se denomina el viento tipo foehn en la Comunidad Valenciana y Murcia?',['Poniente','Levante','Cierzo'],0]]},
+{t:'Inversión térmica',x:'El aire frío queda debajo del caliente. Tipos: <b>nocturna o de radiación</b>, <b>frontal</b>, <b>marina</b> y <b>por subsidencia</b> (anticiclón; aire caliente, seco y estable durante días).<br>Con inversión el fuego en el valle está contenido; a media mañana se <b>rompe</b> y el fuego se acelera.',q:[
+['¿Qué tipo de inversión térmica se asocia a anticiclones y puede durar días con aire caliente, seco y estable?',['Por subsidencia','Nocturna','Marina'],0]]},
+{t:'Tormentas y nivel de riesgo',x:'<b>Tormenta ígnea</b>: el incendio crea su propio sistema de viento (efecto chimenea). <b>Pirocúmulo</b>: nube de fuego. <b>Reventón</b>: corriente descendente de la columna que se abre en abanico.<br>Condiciones de riesgo: <b>+30 ºC</b>, humedad <b>&lt;35 %</b>, viento <b>≥30 km/h</b>. Dos = <b>grave</b>; tres = <b>extremo</b>; tres + pendiente = extremo a nivel máximo.',q:[
+['Con temperatura de más de 30 ºC, humedad inferior al 35 % y viento de más de 30 km/h, el riesgo es…',['Extremo','Grave','Moderado'],0]]}
+]},
+{nv:3,t:'Combustibles forestales',c:[
+{t:'Tamaño del combustible',x:'<b>Fino</b> 0–5 mm (hojarasca, pasto, acículas). <b>Regular</b> 5–25 mm (ramillas). <b>Mediano</b> 25–75 mm (ramas). <b>Grueso</b> &gt;75 mm (troncos).<br>Cuanto más pequeño, antes pierde humedad y antes se enciende.',q:[
+['¿Qué diámetro tiene un combustible forestal fino?',['0 a 5 mm','5 a 25 mm','25 a 75 mm'],0]]},
+{t:'Tiempo de retardo',x:'Tiempo que tarda un combustible <b>muerto</b> en equilibrar su humedad con el ambiente.<br><b>1 hora</b>: &lt;6 mm (hierbas, pinocha). <b>10 horas</b>: 6 mm–2,5 cm. <b>100 horas</b>: 2,5–7,5 cm. <b>1.000 horas</b>: 7,5–20 cm (cepas, troncos).',q:[
+['Un combustible muerto de menos de 6 mm de diámetro es un combustible de…',['1 hora','10 horas','100 horas'],0]]},
+{t:'Humedad y otros factores',x:'Mientras haya agua, la reacción sigue en fase <b>endotérmica</b>.<br>Combustibles vivos: humedad <b>máxima en primavera</b>, mínima en verano.<br>Más espacio entre partículas, más rápido se seca. Más <b>densidad</b>, más resistencia a arder. Resinas y aceites aumentan la propagación.',q:[
+['¿Cuándo tienen los combustibles vivos su máxima humedad en clima templado?',['En primavera','En verano','En otoño'],0]]},
+{t:'Cantidad y continuidad',x:'Pastos y arbustos: <b>1–10 t/ha</b>; matorrales: <b>10–40 t/ha</b>.<br>Cantidad <b>total</b>, <b>disponible</b> (la que arde de verdad) y <b>restante</b>.<br><b>Continuidad horizontal</b>: dirección y velocidad. <b>Vertical</b>: posibilidad de pasar de superficie a copas.',q:[
+['¿Qué influye en que un incendio de superficie pase a ser de copas?',['La continuidad vertical del combustible','La continuidad horizontal','La cantidad restante'],0]]},
+{t:'Modelos de Rothermel',x:'<b>13 modelos</b> en 4 grupos: <b>pastos 1–3</b>, <b>matorral 4–7</b>, <b>hojarasca bajo arbolado 8–10</b>, <b>ramaje y restos 11–13</b>.<br>En 1984 Rothermel y Burgan publicaron el sistema <b>Behave</b> (hoy Behave Plus).',q:[
+['¿A qué grupo pertenecen los modelos de combustible 8 a 10 de Rothermel?',['Hojarasca bajo arbolado','Matorral','Ramaje y restos'],0],
+['¿Cuántos modelos de combustible describe el sistema de Rothermel?',['13','10','4'],0]]},
+{t:'Modelos destacados',x:'<b>Modelo 1</b>: pasto fino, matorral &lt;1/3 del área. <b>Modelo 3</b>: pasto de 1 m (cereal sin cosechar), 4–6 t/ha.<br><b>Modelo 4</b>: matorral de ~2 m denso, fuego rápido por copas del matorral.<br><b>Modelo 8</b>: hojarasca compacta, fuegos lentos con poca llama.<br><b>Modelos 12 y 13</b>: muchos restos, 50–80 t/ha, pueden generar pavesas.',q:[
+['Un campo de cereal sin cosechar con pasto de 1 m de altura corresponde al modelo…',['3','1','8'],0],
+['¿Qué modelo corresponde a bosques cerrados con hojarasca compacta y fuegos superficiales lentos?',['Modelo 8','Modelo 4','Modelo 12'],0]]},
+{t:'Inflamabilidad de especies',x:'Elvira y Hernando (1989):<br><b>Muy inflamables casi todo el año</b>: brezo, eucalipto, pino carrasco, encina, romero, tomillo.<br><b>Muy inflamables en verano</b>: jara pringosa, albaida, espliego, esparto, pino piñonero, alcornoque…<br><b>Medianamente inflamables</b>: madroño, enebro, coscoja, quejigo.',q:[
+['Según Elvira y Hernando, ¿cuál de estas especies es muy inflamable durante casi todo el año?',['Eucalipto','Madroño','Quejigo'],0]]}
+]},
+{nv:3,t:'Comportamiento y humo',c:[
+{t:'Longitud de llama e intensidad',x:'<b>Longitud de llama</b>: distancia máxima entre la base y la punta de la llama, medida sobre la inclinación. Sirve de referencia de la intensidad.<br><b>Intensidad lineal</b>: energía liberada por unidad de longitud del frente; determina si se puede controlar.',q:[
+['¿Cómo se define la longitud de llama?',['La máxima distancia entre la base y la punta de la llama','La altura vertical de la llama','La anchura del frente'],0]]},
+{t:'Velocidad de propagación',x:'<b>Lineal</b>: para fijar líneas de control (cuánto tarda en llegar).<br><b>Areal</b>: superficie afectada y daño.<br><b>Perimetral</b>: cuánto crece el perímetro; para calcular los medios necesarios.',q:[
+['¿Qué velocidad de propagación permite determinar los recursos necesarios para las labores sobre el perímetro?',['Perimetral','Lineal','Areal'],0]]},
+{t:'Humo: origen y volumen',x:'<b>Legítimos</b>: quemas autorizadas, fábricas, hornos.<br><b>Ilegítimos</b>: incendios, quemas ilegales.<br><b>Falsos</b>: nubes de polvo o polen.<br>El volumen de la columna es proporcional a cantidad, tipo y área de combustible.',q:[
+['Una nube de polen que parece humo se clasifica como humo…',['Falso','Ilegítimo','Legítimo'],0]]},
+{t:'Humo: color',x:'<b>Blanco</b>: pastizales, poca intensidad, combustible húmedo.<br><b>Blanco azulado</b>: pastos secos.<br><b>Gris café</b>: matorrales ralos.<br><b>Gris-negro</b>: matorral denso, eucalipto, pinar, encinar; <b>alta intensidad</b>.<br><b>Amarillo</b>: coníferas como el pino insigne.',q:[
+['Un humo gris-negro en un incendio forestal indica…',['Matorral denso, eucalipto o pinar y fuego de alta intensidad','Pastizal húmedo y poca intensidad','Bosque de coníferas como el pino insigne'],0]]},
+{t:'Humo: ángulo',x:'<b>Vertical (80–90º)</b>: poco viento, propagación lenta.<br><b>Diagonal (40–50º)</b>: vientos de unos 20–30 nudos; foco peligroso.<br><b>Tumbada (~20º)</b>: fuertes vientos en la base, posible estabilidad atmosférica.',q:[
+['Una columna de humo con un ángulo de 40–50º indica…',['Vientos de unos 20–30 nudos y un foco peligroso','Poco viento y propagación lenta','Ausencia de viento'],0]]}
+]}
+]});
+
+</script>
+<script>
+"use strict";
+// ---------- Temario completo (bases BOAM 9.919, 11/07/2025) ----------
+const TEMARIO=[
+[1,1,'Constitución y Estatuto de Autonomía'],[2,1,'Régimen local y Ley de Capitalidad'],[3,1,'Haciendas Locales'],[4,1,'EBEP I: objeto, personal, derechos y deberes'],[5,1,'EBEP II: carrera, situaciones y régimen disciplinario'],[6,1,'Ley 39/2015 de Procedimiento Administrativo'],[7,1,'Igualdad: LO 3/2007, Ley 4/2023 y III Plan'],[8,1,'Prevención de Riesgos Laborales'],
+[9,2,'Teoría del fuego'],[10,2,'Hidráulica'],[11,2,'Incendios de interior y ventilación'],[12,2,'Técnicas de intervención en interior'],[13,2,'Incendios de vegetación'],[14,2,'Rescate en altura'],[15,2,'Riesgo eléctrico'],[16,2,'Riesgo NRBQ'],[17,2,'EPI y protección respiratoria'],[18,2,'Equipos y herramientas de extinción'],[19,2,'Rescate en accidentes de tráfico I'],[20,2,'Rescate en accidentes de tráfico II'],[21,2,'Vehículos híbridos, eléctricos, gas y 4x4'],[22,2,'Mecánica: estructura, motor y alimentación'],[23,2,'Mecánica: escape, lubricación, refrigeración y electricidad'],[24,2,'Mecánica: transmisión, ruedas, dirección y frenos'],[25,2,'Vehículos del SEIS de Madrid'],[26,2,'Grúas móviles y señales gestuales'],[27,2,'Útiles de elevación de cargas'],[28,2,'Seguridad vial (Manual DGT)'],[29,2,'Ley de Tráfico y Código Penal'],[30,2,'Reglamentos de Circulación, Conductores y Vehículos'],[31,2,'Soporte vital básico'],[32,2,'Paciente politraumatizado'],[33,2,'Urgencias cardiocirculatorias, neurológicas y otras'],[34,2,'Reglamento del Cuerpo de Bomberos de Madrid'],[35,2,'CTE DB-SI: instalaciones e intervención']
+].map(([id,b,n])=>({id,b,n}));
+const NIV={1:'Nivel 1 · Básico',2:'Nivel 2 · Intermedio',3:'Nivel 3 · Avanzado'};
+const IV=[1,3,7,16,35,80,180]; // días por etapa
+
+// ---------- índice de tarjetas ----------
+T.sort((a,b)=>a.id-b.id);
+const TM={};T.forEach(t=>TM[t.id]=t);
+const CARDS=[],CM={};
+T.forEach(t=>t.L.forEach((l,li)=>l.c.forEach((c,ci)=>{
+  const id=t.id+'-'+li+'-'+ci;
+  const o={id,tema:t.id,li,ci,nv:l.nv,lt:l.t,t:c.t,x:c.x,q:c.q.map((q,qi)=>({p:q[0],o:q[1],c:q[2],qid:id+'-'+qi}))};
+  CARDS.push(o);CM[id]=o;
+})));
+const QS=[];CARDS.forEach(c=>c.q.forEach((q,qi)=>QS.push({...q,qi,card:c})));
+const ROUTE=[9,10,11,12,13,1,2].filter(id=>TM[id]).concat(T.map(t=>t.id).filter(id=>![9,10,11,12,13,1,2].includes(id)));
+
+// ---------- estado ----------
+const KEY='tbm-v1';
+const CL={doc:null,busy:false,dirty:false,t:0};
+const DEF={at:0,cards:{},qs:{},daily:{d:0,nw:0,extra:0},streak:{last:0,n:0},set:{npd:8,cur:ROUTE[0],mode:'tema',theme:'auto',vf:1},tests:[]};
+let S=load();
+function load(){try{const j=JSON.parse(localStorage.getItem(KEY));if(j&&j.cards)return deep(DEF,j)}catch(e){}return JSON.parse(JSON.stringify(DEF))}
+function deep(d,j){const o=JSON.parse(JSON.stringify(d));for(const k in j){o[k]=(j[k]&&typeof j[k]==='object'&&!Array.isArray(j[k])&&d[k]&&typeof d[k]==='object'&&!Array.isArray(d[k]))?Object.assign(o[k],j[k]):j[k]}return o}
+function save(){S.at=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}cloudPush()}
+function today(){const d=new Date();return Math.floor((d.getTime()-d.getTimezoneOffset()*60000)/86400000)}
+function rollDay(){const d=today();if(S.daily.d!==d){S.daily={d,nw:0,extra:0};save()}}
+function cs(id){return S.cards[id]}
+function mastery(id){const c=cs(id);if(!c)return 0;if(c.st>=5)return 4;if(c.st>=3)return 3;if(c.st>=2)return 2;return 1}
+const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
+function esc(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)}
+function plain(h){return h.replace(/<br\s*\/?>/g,' ').replace(/<[^>]+>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&amp;/g,'&')}
+
+// ---------- planificación de Hoy ----------
+function dueCards(){const d=today();return CARDS.filter(c=>{const s=cs(c.id);return s&&s.due<=d}).sort((a,b)=>cs(a.id).due-cs(b.id).due)}
+function unseenOf(tid){return CARDS.filter(c=>c.tema===tid&&!cs(c.id))}
+function nextNew(n){
+  const out=[];
+  if(S.set.mode==='mix'){
+    const lists=ROUTE.map(unseenOf).filter(l=>l.length);
+    let i=Math.max(0,ROUTE.filter(id=>unseenOf(id).length).indexOf(S.set.cur));
+    // bloques de 3 tarjetas por tema para no fragmentar demasiado
+    while(out.length<n&&lists.some(l=>l.length)){const l=lists[i%lists.length];out.push(...l.splice(0,Math.min(3,n-out.length)));i++}
+    return out;
+  }
+  const order=[S.set.cur,...ROUTE.filter(id=>id!==S.set.cur)];
+  for(const id of order){for(const c of unseenOf(id)){if(out.length>=n)return out;out.push(c)}}
+  return out;
+}
+function newLeft(){return Math.max(0,S.set.npd+S.daily.extra-S.daily.nw)}
+
+// ---------- preguntas ----------
+function mkQ(card,qi,form){const q=card.q[qi%card.q.length];
+  const lock=q.o.some(o=>/anteriores|ambas|ninguna|todas las/i.test(o));
+  let idx=[0,1,2];if(!lock)idx=shuf(idx);
+  const it={card,q,form,opts:idx.map(i=>q.o[i]),corr:idx.indexOf(q.c)};
+  if(form==='vf'){const w=q.o.map((_,i)=>i).filter(i=>i!==q.c);it.truth=Math.random()<.5;it.prop=it.truth?q.o[q.c]:q.o[w[Math.floor(Math.random()*w.length)]]}
+  return it}
+function pickForm(){return S.set.vf&&Math.random()<.3?'vf':'mc'}
+
+// ---------- sesión de estudio ----------
+let SES=null;
+function buildSession(opts={}){
+  rollDay();
+  let news=opts.free?[]:nextNew(newLeft());
+  let revs=opts.free?shuf(CARDS.filter(c=>cs(c.id))).slice(0,12):dueCards().slice(0,60);
+  const Q=[];const rv=shuf(revs);
+  for(let g=0;g<news.length;g+=3){
+    const grp=news.slice(g,g+3);
+    grp.forEach(c=>{Q.push({k:'learn',card:c});Q.push({k:'q',card:c,qi:0,form:'mc'})});
+    const mix=shuf(grp).map(c=>({k:'q',card:c,qi:c.q.length>1?1:0,form:c.q.length>1?(S.set.vf&&Math.random()<.25?'vf':'mc'):(S.set.vf?'vf':'mc')}));
+    Q.push(...mix);
+    rv.splice(0,3).forEach(c=>Q.push({k:'q',card:c,qi:revQi(c),form:pickForm(),rev:1}));
+  }
+  rv.forEach(c=>Q.push({k:'q',card:c,qi:revQi(c),form:pickForm(),rev:1}));
+  const st={};news.forEach(c=>st[c.id]={nw:1,fail:0,left:0});revs.forEach(c=>st[c.id]={nw:0,fail:0,left:0});
+  Q.forEach(it=>{if(it.k==='q')st[it.card.id].left++});
+  SES={Q,i:0,st,ok:0,ko:0,nw:news.length,total:Q.length,free:!!opts.free,ans:null};
+  return SES;
+}
+function revQi(c){const s=cs(c.id);return s?(s.qi||0)%c.q.length:0}
+function startStudy(opts){
+  const s=buildSession(opts);
+  if(!s.Q.length){toast(opts&&opts.free?'Aún no has visto ninguna tarjeta':'No hay nada pendiente hoy');return}
+  document.body.classList.add('studying');showView('study');renderItem();
+}
+function finishCard(id){
+  const r=SES.st[id];if(!r||r.done)return;r.done=1;if(SES.free&&!r.fail)return;
+  const d=today();let s=cs(id);
+  if(r.nw){S.cards[id]={st:r.fail?0:1,due:d+(r.fail?1:IV[0]),seen:d,ok:0,ko:0,qi:1};S.daily.nw++}
+  else if(s){if(r.fail){s.st=Math.max(0,s.st-2);s.due=d+1}else{s.st=Math.min(s.st+1,IV.length);s.due=d+IV[s.st-1]}s.qi=(s.qi||0)+1}
+  save();
+}
+function renderItem(){
+  const it=SES.Q[SES.i];const stage=$('#st-stage'),panel=$('#st-panel');
+  const done=SES.i,tot=SES.Q.length;$('#st-bar i').style.width=(100*done/tot)+'%';$('#st-left').textContent=(tot-done)+'';
+  SES.ans=null;
+  if(!it){endStudy();return}
+  const c=it.card,t=TM[c.tema];
+  const ctx=`<div class="ctx"><span class="tag ${it.rev?'rev':(it.k==='learn'?'new':'')}">${it.rev?'Repaso':(it.k==='learn'?'Nueva':'Pregunta')}</span><span>Tema ${c.tema} · ${esc(c.lt)}</span><span class="tag n${c.nv}">N${c.nv}</span></div>`;
+  if(it.k==='learn'){
+    stage.innerHTML=ctx+`<div class="ficha pop"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div></div>`;
+    panel.innerHTML=`<button class="btn primary block" id="go">Entendido, pregúntame</button><p class="hint keys">Pulsa Intro para seguir</p>`;
+    $('#go').onclick=next;return;
+  }
+  const Qi=mkQ(c,it.qi,it.form);it.Qi=Qi;
+  if(it.form==='vf'){
+    stage.innerHTML=ctx+`<p class="note">¿Es correcta esta respuesta?</p><div class="qq">${esc(Qi.q.p)}</div><div class="prop">${esc(Qi.prop)}</div>`;
+    panel.innerHTML=`<div class="vf"><button class="opt" data-v="1"><span class="k">V</span>Verdadero</button><button class="opt" data-v="0"><span class="k">F</span>Falso</button></div><p class="hint keys">Teclas V / F</p>`;
+    $$('#st-panel .opt').forEach(b=>b.onclick=()=>answer(b.dataset.v==='1'===Qi.truth,b));
+  }else{
+    stage.innerHTML=ctx+`<div class="qq">${esc(Qi.q.p)}</div>`;
+    panel.innerHTML=Qi.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="k">${'ABC'[i]}</span><span>${esc(o)}</span></button>`).join('')+`<p class="hint keys">Teclas 1, 2, 3 o A, B, C</p>`;
+    $$('#st-panel .opt').forEach(b=>b.onclick=()=>answer(+b.dataset.i===Qi.corr,b));
+  }
+}
+function answer(ok,btn){
+  if(SES.ans!==null)return;const it=SES.Q[SES.i],Qi=it.Qi,c=it.card,r=SES.st[c.id];SES.ans=ok;
+  const panel=$('#st-panel');
+  if(it.form==='vf'){$$('#st-panel .opt').forEach(b=>{const v=b.dataset.v==='1';if(v===Qi.truth)b.classList.add('good');else if(b===btn)b.classList.add('wrong');else b.classList.add('dim')})}
+  else{$$('#st-panel .opt').forEach(b=>{const i=+b.dataset.i;if(i===Qi.corr)b.classList.add('good');else if(b===btn)b.classList.add('wrong');else b.classList.add('dim')})}
+  r.left--;
+  const qs=S.qs[Qi.q.qid]||(S.qs[Qi.q.qid]={ok:0,ko:0});
+  if(ok){SES.ok++;qs.ok++;btn.classList.add('pop');}
+  else{SES.ko++;qs.ko++;r.fail++;btn.classList.add('shake');
+    if(r.fail<=3){const at=Math.min(SES.Q.length,SES.i+4);SES.Q.splice(at,0,{k:'q',card:c,qi:it.qi+1,form:'mc',rev:it.rev,retry:1});r.left++}}
+  save();
+  if(r.left<=0)finishCard(c.id);
+  let fb;
+  if(ok)fb=`<div class="fb ok">${pick(['¡Bien!','¡Correcto!','¡Eso es!','¡Perfecto!','¡Muy bien!'])}</div>`;
+  else{const right=Qi.q.o[Qi.q.c];fb=`<div class="fb bad">No es así. Correcta: ${esc(right)}</div><div class="ficha mini"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div></div>`}
+  const fbBox=document.createElement('div');fbBox.style.display='flex';fbBox.style.flexDirection='column';fbBox.style.gap='8px';fbBox.innerHTML=fb;
+  if(!ok){$('#st-stage').appendChild(fbBox)}else{panel.insertBefore(fbBox,panel.firstChild)}
+  const h=panel.querySelector('.hint');if(h)h.remove();
+  const b=document.createElement('button');b.className='btn primary block';b.id='go';b.textContent='Continuar';b.onclick=next;panel.appendChild(b);
+  if(!ok)setTimeout(()=>fbBox.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function next(){SES.i++;renderItem();$('.stage').scrollTop=0}
+function endStudy(){
+  Object.keys(SES.st).forEach(id=>{const r=SES.st[id];if(!r.done&&r.left<=0)finishCard(id)});
+  const d=today();
+  if(S.streak.last!==d){S.streak.n=(S.streak.last===d-1)?S.streak.n+1:1;S.streak.last=d}
+  save();document.body.classList.remove('studying');showView('home');
+  const tot=SES.ok+SES.ko;
+  $('#cele-h').textContent=SES.free?'¡Repaso hecho!':(dueCards().length||newLeft()?'¡Sesión completada!':'¡Día completado!');
+  $('#cele-sub').textContent=tot?`${Math.round(100*SES.ok/tot)} % de respuestas correctas.`:'';
+  $('#cele-a').textContent=SES.ok;$('#cele-new').textContent=SES.nw;$('#cele-st').textContent=S.streak.n;
+  $('#cele').hidden=false;confetti();SES=null;renderHome();
+}
+function exitStudy(){
+  if(SES){Object.keys(SES.st).forEach(id=>{const r=SES.st[id];if(!r.done&&r.left<=0)finishCard(id)});
+    // las nuevas vistas pero sin terminar quedan como recién vistas para hoy
+    Object.keys(SES.st).forEach(id=>{const r=SES.st[id];if(r.nw&&!r.done&&SES.Q.slice(0,SES.i+1).some(x=>x.card.id===id)){S.cards[id]={st:0,due:today(),seen:today(),ok:0,ko:0,qi:0};S.daily.nw++;r.done=1}});
+    if(SES.ok+SES.ko>0&&S.streak.last!==today()){S.streak.n=(S.streak.last===today()-1)?S.streak.n+1:1;S.streak.last=today()}
+    save()}
+  SES=null;document.body.classList.remove('studying');showView('home');renderHome();
+}
+
+// ---------- confeti ----------
+function confetti(){const cv=$('#cele-c'),x=cv.getContext('2d');const W=cv.width=innerWidth*devicePixelRatio,H=cv.height=innerHeight*devicePixelRatio;
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const cols=['#e2231a','#b3121f','#f59e0b','#ffffff','#16a34a','#ff7a6e'];const P=[...Array(140)].map(()=>({x:W/2,y:H*.45,vx:(Math.random()-.5)*W*.022,vy:-Math.random()*H*.022-H*.006,r:(4+Math.random()*6)*devicePixelRatio,c:pick(cols),a:Math.random()*6,va:(Math.random()-.5)*.3}));
+  let t=0;(function f(){x.clearRect(0,0,W,H);P.forEach(p=>{p.vy+=H*.0006;p.x+=p.vx;p.y+=p.vy;p.a+=p.va;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});if(++t<150&&!$('#cele').hidden)requestAnimationFrame(f);else x.clearRect(0,0,W,H)})()}
+
+// ---------- pantalla Hoy ----------
+function renderHome(){
+  rollDay();
+  const due=dueCards().length,nl=Math.min(newLeft(),CARDS.filter(c=>!cs(c.id)).length);
+  $('#s-due').textContent=due;$('#s-new').textContent=nl;
+  const st=(S.streak.last>=today()-1)?S.streak.n:0;$('#s-streak').textContent=st;
+  $('#npd').textContent=$('#npd2').textContent=S.set.npd;
+  const nx=nextNew(Math.max(1,nl))[0];
+  let msg;
+  if(!due&&!nl)msg=S.daily.nw||S.streak.last===today()?'<b>Hoy ya está.</b> Mañana tendrás repasos nuevos. Si quieres más, añade tarjetas o haz un test.':'<b>No hay nada pendiente.</b>';
+  else msg=`Hoy: <b>${due} repaso${due===1?'':'s'}</b> y <b>${nl} tarjeta${nl===1?'':'s'} nueva${nl===1?'':'s'}</b>${nx&&nl?` del tema ${nx.tema} (${esc(TM[nx.tema].n)}), ${esc(nx.lt.toLowerCase())}`:''}. Unos ${Math.max(2,Math.round((due*0.4+nl*1.3)))} minutos.`;
+  $('#today-b').innerHTML=msg;
+  $('#b-study').disabled=!due&&!nl;
+  $('#b-study').textContent=due||nl?'Estudiar ahora':'Todo hecho por hoy';
+  $('#b-more').hidden=!!(due||nl)||!CARDS.some(c=>!cs(c.id));
+  $('#b-free').hidden=!!(due||nl)||!Object.keys(S.cards).length;
+  // progreso
+  const cnt=[0,0,0,0,0];CARDS.forEach(c=>cnt[mastery(c.id)]++);const N=CARDS.length;
+  const seen=N-cnt[0];
+  $('#p-txt').textContent=`${seen} de ${N} tarjetas vistas`;
+  $('#p-bar').innerHTML=[4,3,2,1].map(m=>`<i style="width:${100*cnt[m]/N}%;background:var(--m${m})"></i>`).join('');
+  const days=Math.ceil(cnt[0]/Math.max(1,S.set.npd));
+  $('#p-eta').textContent=cnt[0]?`≈ ${days} día${days===1?'':'s'} para verlo todo a este ritmo`:'¡Lo has visto todo!';
+  $('#p-sub').textContent=`${cnt[4]} dominadas · ${cnt[3]} bien · ${cnt[2]} empezadas · ${cnt[1]} recién vistas. Hay contenido de ${T.length} de 35 temas.`;
+  // ruta
+  $('#route').innerHTML=ROUTE.map(id=>routeRow(id)).join('');
+  $$('#route .zone').forEach(b=>b.onclick=()=>{S.set.cur=+b.dataset.t;save();renderHome();toast('Tema '+b.dataset.t+' será lo siguiente que estudies')});
+}
+function temaStats(id){const cs_=CARDS.filter(c=>c.tema===id);const cnt=[0,0,0,0,0];cs_.forEach(c=>cnt[mastery(c.id)]++);return{n:cs_.length,cnt,q:cs_.reduce((a,c)=>a+c.q.length,0)}}
+function routeRow(id){const t=TM[id],s=temaStats(id);const cur=S.set.mode==='tema'&&id===curTema();
+  return `<button class="zone${cur?' cur':''}" data-t="${id}"><span class="num">${id}</span><span class="nm">${esc(t.n)}</span><span class="ct">${s.n-s.cnt[0]}/${s.n}</span><div class="bar mk">${[4,3,2,1].map(m=>`<i style="width:${100*s.cnt[m]/s.n}%;background:var(--m${m})"></i>`).join('')}</div></button>`}
+function curTema(){const n=nextNew(1)[0];return n?n.tema:S.set.cur}
+
+// ---------- modo test ----------
+const TT={sel:new Set(T.map(t=>t.id)),src:'all',n:20,mode:'end',time:false};
+function renderTestSetup(){
+  const chip=t=>`<button class="chip${TT.sel.has(t.id)?' on':''}" data-t="${t.id}"><b>${t.id}</b>${esc(t.n)}</button>`;
+  $('#tt-b1').innerHTML=T.filter(t=>t.b===1).map(chip).join('')||'<span class="note">Sin temas todavía</span>';
+  $('#tt-b2').innerHTML=T.filter(t=>t.b===2).map(chip).join('');
+  $$('#tt-b1 .chip,#tt-b2 .chip').forEach(b=>b.onclick=()=>{const id=+b.dataset.t;TT.sel.has(id)?TT.sel.delete(id):TT.sel.add(id);renderTestSetup()});
+  $$('#tt-src button').forEach(b=>b.classList.toggle('on',b.dataset.v===TT.src));
+  $$('#tt-mode button').forEach(b=>b.classList.toggle('on',b.dataset.v===TT.mode));
+  $('#tt-time').classList.toggle('on',TT.time);
+  const pool=testPool();const av=pool.length;
+  $('#tt-av').textContent=av?`${av} preguntas disponibles con esta selección.`:(TT.src==='seen'?'Aún no has estudiado tarjetas de estos temas en Hoy.':TT.src==='fail'?'Todavía no tienes fallos registrados en estos temas.':'Elige al menos un tema.');
+  TT.n=Math.max(5,Math.min(TT.n,90));$('#tt-n').textContent=Math.min(TT.n,av)||TT.n;
+  $('#tt-go').disabled=!av;
+  const h=S.tests.slice(-6).reverse();$('#tt-hist-c').hidden=!h.length;
+  $('#tt-hist').innerHTML=h.map(r=>`<div class="rv"><div class="row between"><span>${new Date(r.at).toLocaleDateString('es-ES',{day:'numeric',month:'short'})} · ${r.n} preguntas${r.sim?' · simulacro':''}</span><b class="${r.nota>=5?'':'y'}" style="font-variant-numeric:tabular-nums">${r.nota.toFixed(2).replace('.',',')}</b></div><span class="note">${r.a} aciertos · ${r.f} fallos · ${r.b} en blanco · temas ${r.temas.join(', ')}</span></div>`).join('');
+}
+function testPool(){
+  let p=QS.filter(q=>TT.sel.has(q.card.tema));
+  if(TT.src==='seen')p=p.filter(q=>cs(q.card.id));
+  if(TT.src==='fail'){p=p.filter(q=>(S.qs[q.qid]||{}).ko>0).sort((a,b)=>fr(b)-fr(a))}
+  return p}
+function fr(q){const s=S.qs[q.qid]||{ok:0,ko:0};return (s.ko+1)/(s.ok+s.ko+2)}
+let TR=null;
+function startTest(sim){
+  let qs;
+  if(sim){const b2=shuf(QS.filter(q=>q.card.tema>=9)),b1=shuf(QS.filter(q=>q.card.tema<9));const n=Math.min(90,b2.length+b1.length);let n1=Math.min(b1.length,Math.round(n*.2));qs=shuf(b2.slice(0,n-n1).concat(b1.slice(0,n1)));}
+  else{const p=testPool();qs=(TT.src==='fail'?p.slice(0,TT.n):shuf(p).slice(0,TT.n));qs=shuf(qs)}
+  if(!qs.length)return;
+  TR={sim,items:qs.map(q=>{const it=mkQ(q.card,q.qi,'mc');return {...it,a:null}}),i:0,mode:sim?'end':TT.mode,time:sim||TT.time,t0:Date.now(),done:false};
+  TR.limit=TR.items.length*60;
+  $('#test-setup').style.display='none';const r=$('#test-run');r.style.display='flex';document.body.classList.add('studying');
+  clearInterval(TR.tk);if(TR.time)TR.tk=setInterval(tick,1000);tick();
+  renderTQ();
+}
+function tick(){if(!TR||!TR.time){$('#tr-timer').textContent='';return}const left=TR.limit-Math.floor((Date.now()-TR.t0)/1000);
+  const el=$('#tr-timer');el.textContent=Math.floor(Math.max(0,left)/60)+':'+String(Math.max(0,left)%60).padStart(2,'0');el.classList.toggle('low',left<120);
+  if(left<=0&&!TR.done){clearInterval(TR.tk);toast('Se acabó el tiempo');endTest()}}
+function renderTQ(){
+  const it=TR.items[TR.i],N=TR.items.length;
+  $('#tr-bar i').style.width=(100*TR.i/N)+'%';$('#tr-left').textContent=(TR.i+1)+'/'+N;
+  const c=it.card;
+  $('#tr-stage').innerHTML=`<div class="ctx"><span class="tag">Pregunta ${TR.i+1}</span><span>Tema ${c.tema} · ${esc(TM[c.tema].n)}</span></div><div class="qq">${esc(it.q.p)}</div>`;
+  const locked=TR.mode==='now'&&it.a!==null;
+  const cl=i=>locked?(i===it.corr?' good':(i===it.a?' wrong':' dim')):(i===it.a?' sel':'');
+  $('#tr-panel').innerHTML=it.opts.map((o,i)=>`<button class="opt${cl(i)}" data-i="${i}"><span class="k">${'ABC'[i]}</span><span>${esc(o)}</span></button>`).join('')+
+    (locked&&it.a!==it.corr?`<div class="ficha mini"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div></div>`:'')+
+    `<div class="row">${TR.i>0?'<button class="btn small" id="tq-prev">‹ Anterior</button>':''}<button class="btn small" id="tq-blank" style="flex:1">${it.a===null?'Dejar en blanco':'Borrar respuesta'}</button>${TR.i<N-1?'<button class="btn small primary" id="tq-next" style="flex:1">Siguiente ›</button>':'<button class="btn small primary" id="tq-end" style="flex:1">Terminar y corregir</button>'}</div>`;
+  $$('#tr-panel .opt').forEach(b=>b.onclick=()=>{if(locked)return;it.a=+b.dataset.i;if(TR.mode==='now'){renderTQ()}else{renderTQ();setTimeout(()=>{if(TR&&TR.i<N-1&&TR.items[TR.i]===it){TR.i++;renderTQ()}},220)}});
+  const bl=$('#tq-blank');if(bl){bl.disabled=locked;bl.onclick=()=>{it.a=null;if(TR.i<N-1){TR.i++}renderTQ()}}
+  const nx=$('#tq-next');if(nx)nx.onclick=()=>{TR.i++;renderTQ()};
+  const pv=$('#tq-prev');if(pv)pv.onclick=()=>{TR.i--;renderTQ()};
+  const en=$('#tq-end');if(en)en.onclick=()=>{const blanks=TR.items.filter(x=>x.a===null).length;if(blanks&&!en.dataset.sure){en.dataset.sure=1;en.textContent=`Hay ${blanks} en blanco. ¿Corregir?`;return}endTest()};
+  $('.view#test-run .stage').scrollTop=0;
+}
+function endTest(){
+  TR.done=true;clearInterval(TR.tk);const N=TR.items.length;let a=0,f=0,b=0;const d=today();
+  TR.items.forEach(it=>{const qs=S.qs[it.q.qid]||(S.qs[it.q.qid]={ok:0,ko:0});
+    if(it.a===null){b++;return}
+    if(it.a===it.corr){a++;qs.ok++}else{f++;qs.ko++;const s=cs(it.card.id);if(s){s.due=d;s.st=Math.max(0,s.st-1)}}});
+  const net=a-f/3,nota=Math.max(0,10*net/N);
+  S.tests.push({at:Date.now(),n:N,a,f,b,nota,sim:TR.sim,temas:[...new Set(TR.items.map(x=>x.card.tema))].sort((x,y)=>x-y)});if(S.tests.length>50)S.tests.shift();save();
+  $('#tr-bar i').style.width='100%';$('#tr-left').textContent='';$('#tr-timer').textContent='';
+  const cls=nota>=7?'ok':nota>=5?'warn':'bad';const mins=Math.round((Date.now()-TR.t0)/60000);
+  const wrong=TR.items.filter(it=>it.a!==it.corr);
+  $('#tr-stage').innerHTML=`<div class="card"><h2>Resultado</h2><div class="row between"><div class="res-big ${cls}">${nota.toFixed(2).replace('.',',')}</div><span class="note" style="text-align:right">sobre 10<br>${mins} min</span></div>
+   <div class="stats"><div class="stat"><b style="color:var(--ok)">${a}</b><span>aciertos</span></div><div class="stat"><b style="color:var(--bad)">${f}</b><span>fallos (−${(f/3).toFixed(2).replace('.',',')})</span></div><div class="stat"><b>${b}</b><span>en blanco</span></div></div>
+   <p class="note">Puntuación neta: ${net.toFixed(2).replace('.',',')} de ${N}. Cada fallo resta un tercio de acierto; las preguntas en blanco no cuentan.${f?' Las tarjetas falladas que ya habías estudiado vuelven hoy a tus repasos.':''}</p></div>
+   ${wrong.length?`<div class="card"><h2>Repasa ${wrong.length===1?'esta':'estas '+wrong.length}</h2>${wrong.map(it=>`<div class="rv"><span class="note">Tema ${it.card.tema}</span><span class="q">${esc(it.q.p)}</span><span class="a">✓ ${esc(it.q.o[it.q.c])}</span><span class="y${it.a===null?' blank':''}">${it.a===null?'En blanco':'✗ '+esc(it.opts[it.a])}</span><details><summary>Ver la tarjeta</summary><div class="ficha mini" style="margin-top:8px"><h3>${esc(it.card.t)}</h3><div class="tx">${it.card.x}</div></div></details></div>`).join('')}</div>`:'<div class="fb ok">¡Pleno! Ninguna incorrecta.</div>'}`;
+  $('#tr-panel').innerHTML=`<div class="row"><button class="btn block" id="tq-again">Otro test igual</button><button class="btn primary block" id="tq-out">Volver</button></div>`;
+  $('#tq-out').onclick=closeTest;$('#tq-again').onclick=()=>{const s=TR.sim;closeTest();startTest(s)};
+  $('.view#test-run .stage').scrollTop=0;
+}
+function closeTest(){if(TR)clearInterval(TR.tk);TR=null;$('#test-run').style.display='none';$('#test-setup').style.display='';document.body.classList.remove('studying');renderTestSetup()}
+
+// ---------- temario ----------
+let TMV=null;
+function renderTemario(){
+  const el=$('#tm-list');
+  if(TMV){const t=TM[TMV],s=temaStats(TMV);
+    el.innerHTML=`<header class="full"><button class="back" id="tm-back">‹ Temario</button><h1>Tema ${t.id}. ${esc(t.n)}</h1><p class="sub">${esc(t.s)}</p></header>
+    <div class="card full"><div class="row between"><b>${s.n-s.cnt[0]} de ${s.n} tarjetas vistas · ${s.q} preguntas</b><button class="btn small primary" id="tm-go">Estudiar este tema</button></div><div class="bar mk">${[4,3,2,1].map(m=>`<i style="width:${100*s.cnt[m]/s.n}%;background:var(--m${m})"></i>`).join('')}</div></div>
+    <div class="card full" style="gap:0">${t.L.map((l,li)=>{const cc=CARDS.filter(c=>c.tema===t.id&&c.li===li);const sv=cc.filter(c=>cs(c.id)).length;
+      return `<details class="lesson"${li===0?' open':''}><summary><span class="tag n${l.nv}">N${l.nv}</span>${esc(l.t)}<span class="ct">${sv}/${cc.length}</span></summary><div class="cards">${cc.map(c=>{const m=mastery(c.id);return `<div class="ficha mini" style="border-left-color:var(--m${m||0})"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div><span class="note">${['Sin ver todavía','Recién vista','Empezada','Bien','Dominada'][m]}</span></div>`}).join('')}</div></details>`}).join('')}</div>`;
+    $('#tm-back').onclick=()=>{TMV=null;renderTemario()};
+    $('#tm-go').onclick=()=>{S.set.cur=t.id;save();TMV=null;showView('home');renderHome();toast('Tema '+t.id+' será lo siguiente que estudies')};
+    el.scrollTop=0;return}
+  const row=t=>{const has=TM[t.id];if(!has)return `<div class="zone off"><span class="num">${t.id}</span><span class="nm">${esc(t.n)}</span><span class="ct">pendiente</span></div>`;const s=temaStats(t.id);
+    return `<button class="zone" data-t="${t.id}"><span class="num">${t.id}</span><span class="nm">${esc(t.n)}</span><span class="ct">${s.n} tarjetas</span><div class="bar mk">${[4,3,2,1].map(m=>`<i style="width:${100*s.cnt[m]/s.n}%;background:var(--m${m})"></i>`).join('')}</div></button>`};
+  el.innerHTML=`<header><h1>Temario</h1><p class="sub">35 temas según las bases (BOAM 9.919). Toca un tema para leer sus tarjetas como apuntes.</p></header>
+   <div class="card" style="gap:0"><h2 style="margin-bottom:6px">Bloque I · Comunes</h2><p class="note" style="margin-bottom:6px">Como máximo el 20 % de las preguntas del examen.</p>${TEMARIO.filter(t=>t.b===1).map(row).join('')}</div>
+   <div class="card" style="gap:0"><h2 style="margin-bottom:6px">Bloque II · Específicos</h2><p class="note" style="margin-bottom:6px">Al menos el 80 % de las preguntas. Al menos una pregunta por cada epígrafe.</p>${TEMARIO.filter(t=>t.b===2).map(row).join('')}</div>`;
+  $$('#tm-list .zone[data-t]').forEach(b=>b.onclick=()=>{TMV=+b.dataset.t;renderTemario()});
+}
+
+// ---------- ajustes ----------
+function renderSet(){
+  $$('#set-mode button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.set.mode));
+  $('#set-mode-n').textContent=S.set.mode==='tema'?'Terminas un tema (nivel 1 → 3) antes de pasar al siguiente de tu ruta.':'Vas alternando bloques de 3 tarjetas de cada tema de tu ruta.';
+  $$('#set-theme button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.set.theme));
+  $$('#set-vf button').forEach(b=>b.classList.toggle('on',+b.dataset.v===+S.set.vf));
+  $('#npd').textContent=$('#npd2').textContent=S.set.npd;
+}
+function applyTheme(){const r=document.documentElement;if(S.set.theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',S.set.theme)}
+
+// ---------- navegación ----------
+function showView(v){$$('.view').forEach(x=>{if(x.id!=='test-run')x.classList.toggle('on',x.id==='v-'+v)});
+  const tab={home:'home',study:'home',test:'test',temario:'temario',set:'set'}[v];$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab))}
+$$('#tabs button').forEach(b=>b.onclick=()=>{
+  if(SES){exitStudy()}if(TR&&!TR.done&&b.dataset.tab!=='test'){if(!confirmLeave())return;closeTest()}
+  const v=b.dataset.tab;showView(v);if(v==='home')renderHome();if(v==='test'&&!TR)renderTestSetup();if(v==='temario'){renderTemario()}if(v==='set')renderSet()});
+function confirmLeave(){return true}
+$('#b-study').onclick=()=>startStudy();
+$('#b-more').onclick=()=>{S.daily.extra+=5;save();renderHome();startStudy()};
+$('#b-free').onclick=()=>startStudy({free:true});
+$('#st-exit').onclick=exitStudy;
+$$('[data-npd]').forEach(b=>b.onclick=()=>{S.set.npd=Math.max(1,Math.min(30,S.set.npd+ +b.dataset.npd));save();renderHome();renderSet()});
+$('#cele-x').onclick=()=>{$('#cele').hidden=true};
+$('#tt-all').onclick=()=>{T.forEach(t=>TT.sel.add(t.id));renderTestSetup()};
+$('#tt-none').onclick=()=>{TT.sel.clear();renderTestSetup()};
+$$('#tt-src button').forEach(b=>b.onclick=()=>{TT.src=b.dataset.v;renderTestSetup()});
+$$('#tt-mode button').forEach(b=>b.onclick=()=>{TT.mode=b.dataset.v;renderTestSetup()});
+$('#tt-time').onclick=()=>{TT.time=!TT.time;renderTestSetup()};
+$$('[data-tn]').forEach(b=>b.onclick=()=>{const av=testPool().length;TT.n=Math.max(5,Math.min(90,Math.min(av||90,TT.n+ +b.dataset.tn)));if(+b.dataset.tn>0&&TT.n>av)TT.n=av;renderTestSetup()});
+$('#tt-go').onclick=()=>startTest(false);
+$('#tt-sim').onclick=()=>startTest(true);
+$('#tr-exit').onclick=()=>{if(TR&&!TR.done){const x=$('#tr-exit');if(!x.dataset.sure){x.dataset.sure=1;x.textContent='¿Salir sin corregir?';setTimeout(()=>{x.dataset.sure='';x.textContent='Salir'},2500);return}x.dataset.sure='';x.textContent='Salir'}closeTest()};
+$$('#set-mode button').forEach(b=>b.onclick=()=>{S.set.mode=b.dataset.v;save();renderSet()});
+$$('#set-theme button').forEach(b=>b.onclick=()=>{S.set.theme=b.dataset.v;save();applyTheme();renderSet()});
+$$('#set-vf button').forEach(b=>b.onclick=()=>{S.set.vf=+b.dataset.v;save();renderSet()});
+$('#set-exp').onclick=async()=>{const box=$('#set-box');box.hidden=false;box.value=btoa(unescape(encodeURIComponent(JSON.stringify(S))));box.select();try{await navigator.clipboard.writeText(box.value);toast('Copia copiada al portapapeles')}catch(e){toast('Selecciona el texto y cópialo')}};
+$('#set-imp').onclick=()=>{const box=$('#set-box');box.hidden=false;box.value='';box.focus();$('#set-imp-ok').hidden=false};
+$('#set-imp-ok').onclick=()=>{try{const j=JSON.parse(decodeURIComponent(escape(atob($('#set-box').value.trim()))));if(!j.cards)throw 0;S=deep(DEF,j);save();applyTheme();toast('Progreso restaurado');$('#set-imp-ok').hidden=true;$('#set-box').hidden=true;renderSet()}catch(e){toast('Esa copia no es válida')}};
+$('#set-reset').onclick=()=>{const b=$('#set-reset');if(!b.dataset.sure){b.dataset.sure=1;b.textContent='Pulsa otra vez para borrarlo todo';setTimeout(()=>{b.dataset.sure='';b.textContent='Borrar todo el progreso'},3000);return}S=JSON.parse(JSON.stringify(DEF));save();applyTheme();b.dataset.sure='';b.textContent='Borrar todo el progreso';toast('Progreso borrado');renderSet()};
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='TEXTAREA'||e.target.tagName==='INPUT')return;
+  if(!$('#cele').hidden&&(e.key==='Enter'||e.key==='Escape')){$('#cele').hidden=true;e.preventDefault();return}
+  const k=e.key.toLowerCase();
+  if(SES&&$('#v-study').classList.contains('on')){
+    if((k==='enter'||k===' ')&&$('#go')){$('#go').click();e.preventDefault();return}
+    const it=SES.Q[SES.i];if(!it||it.k!=='q'||SES.ans!==null)return;
+    if(it.form==='vf'){if(k==='v')$('#st-panel .opt[data-v="1"]').click();if(k==='f')$('#st-panel .opt[data-v="0"]').click()}
+    else{const i={'1':0,'2':1,'3':2,a:0,b:1,c:2}[k];if(i!==undefined)$$('#st-panel .opt')[i].click()}
+  }else if(TR&&!TR.done){const i={'1':0,'2':1,'3':2,a:0,b:1,c:2}[k];if(i!==undefined)$$('#tr-panel .opt')[i]&&$$('#tr-panel .opt')[i].click();
+    if(k==='enter'&&TR.mode==='now'&&TR.items[TR.i].a!==null){($('#tq-next')||$('#tq-end')).click();e.preventDefault()}
+    if(k==='arrowright'&&$('#tq-next'))$('#tq-next').click();if(k==='arrowleft'&&$('#tq-prev'))$('#tq-prev').click()}
+});
+if(!TM[S.set.cur])S.set.cur=ROUTE[0];
+applyTheme();renderHome();
+// ---------- sincronización con tu cuenta (si la página la ofrece) ----------
+function cloudPush(){if(!CL.doc)return;CL.dirty=true;clearTimeout(CL.t);CL.t=setTimeout(cloudFlush,2500)}
+async function cloudFlush(){if(!CL.doc||CL.busy||!CL.dirty)return;CL.busy=true;CL.dirty=false;
+  try{await CL.doc.set({s:JSON.stringify(S),at:S.at})}catch(e){const c=e&&e.code;if(c==='invalid_argument'||c==='revoked'||c==='not_granted'){CL.doc=null;syncNote(false)}else CL.dirty=true}
+  CL.busy=false;if(CL.dirty&&CL.doc)CL.t=setTimeout(cloudFlush,4000)}
+function syncNote(on){const n=$('#sync-n');if(n)n.textContent=on?'Se guarda en tu cuenta y se sincroniza entre tus dispositivos (móvil y PC) al abrir la página. También tienes la copia de seguridad manual.':'Se guarda en este navegador. Para pasarlo a otro dispositivo, copia la copia de seguridad aquí y pégala allí.'}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&CL.dirty){clearTimeout(CL.t);cloudFlush()}});
+(async()=>{try{
+  if(!window.claude||typeof claude.use!=='function')return;
+  const db=await claude.use('db'),u=await claude.use('user');if(!db||!u)return;
+  const id=await u.id();if(!id)return;
+  const d=db.doc('data/users/'+id+'/progreso');const sn=await d.get();CL.doc=d;syncNote(true);
+  const rm=sn.exists?sn.data():null;
+  if(rm&&typeof rm.s==='string'&&(rm.at||0)>(S.at||0)){
+    if(SES||TR){return}
+    S=deep(DEF,JSON.parse(rm.s));try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+    applyTheme();renderHome();if($('#v-set').classList.contains('on'))renderSet();if($('#v-test').classList.contains('on'))renderTestSetup();toast('Progreso sincronizado');
+  }else if(S.at&&(!rm||(rm.at||0)<S.at)){CL.dirty=true;cloudFlush()}
+}catch(e){}})();
+if('serviceWorker' in navigator&&location.protocol==='https:'&&!/claude/.test(location.host)){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+</script>
+</body>
+</html>
