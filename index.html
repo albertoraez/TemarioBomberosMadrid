@@ -108,6 +108,17 @@ h3{font-size:16px;margin:0}
 .stage-in{width:100%;max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
 .panel{background:var(--surface);border-top:1px solid var(--line);padding:10px 14px calc(12px + env(safe-area-inset-bottom,0));}
 .panel-in{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:8px}
+.mem{margin-top:10px;border-top:1px dashed var(--line,#ddd);padding-top:8px;font-size:14px}
+.mem>summary{cursor:pointer;font-weight:600;color:var(--muted,#666);list-style:none;display:flex;align-items:center;gap:6px;min-height:32px}
+.mem>summary::-webkit-details-marker{display:none}.mem>summary::after{content:'▾';margin-left:auto;transition:transform .15s}.mem[open]>summary::after{transform:rotate(180deg)}
+.mem .dot{width:7px;height:7px;border-radius:50%;background:var(--accent,#c8102e);display:inline-block}
+.mem-b{display:flex;flex-direction:column;gap:8px;padding:4px 0 2px}.mem-b p{margin:0}
+.ph{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;background:var(--surface2,rgba(127,127,127,.08));border-radius:10px;padding:8px 10px}
+.ph .em{font-size:30px;line-height:1;grid-row:span 2}.ph .w{font-weight:700}.ph .w u{text-decoration:none;color:var(--accent,#c8102e)}.ph .d{font-size:13px;color:var(--muted,#666)}
+.mem-u{border-left:3px solid var(--accent,#c8102e);padding:4px 10px;background:var(--surface2,rgba(127,127,127,.08));border-radius:0 8px 8px 0}
+.mem textarea{width:100%;min-height:80px;font:inherit;padding:8px;border-radius:8px;border:1px solid var(--line,#ccc);background:var(--surface,#fff);color:inherit}
+.mem .row{display:flex;gap:8px;flex-wrap:wrap}.mem .tab{font-size:12px;color:var(--muted,#666)}.mem .tab summary{cursor:pointer}
+.mem .tab table{border-collapse:collapse;margin-top:4px}.mem .tab td{border:1px solid var(--line,#ddd);padding:2px 6px;text-align:center}
 .fig{margin:4px 0 10px;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--line,#ddd)}.fig img{display:block;width:100%;max-height:260px;object-fit:contain;background:#fff}.fig figcaption{font-size:12px;color:#555;padding:6px 10px;background:#f6f6f6}
 .ctx{font-size:13px;color:var(--muted);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .ficha{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:12px;padding:16px 16px 18px;display:flex;flex-direction:column;gap:10px}
@@ -1709,6 +1720,34 @@ T.push({id:26,b:2,n:'Grúas móviles y señales gestuales',s:'NTP 1077 Grúas m�
 ['Antebrazos moviéndose hacia el cuerpo con palmas hacia dentro significa…',['Avanzar','Retroceder','Bajar'],0]]}]}
 ]});
 
+// Trucos para recordar. Clave: "tema|título de la tarjeta".
+// r = regla (html). f = código fonético: [número, palabra (mayúsculas = consonantes que cuentan), dibujo, frase]
+var MN={
+"4|Art. 48: enfermedad y fallecimiento":{r:"<b>Enfermedad 5-4, fallecimiento 3-2.</b> El 1.er grado siempre tiene un día más que el 2.º. Si el fallecimiento es en otra localidad, se suman 2 días (5-4)."},
+"4|Art. 48: otros permisos":{r:"Mudanza 1 día · asuntos propios 6 · boda 15.",f:[["15","TeLa","👰","la tela del vestido de novia: 15 días por matrimonio"]]},
+"8|Art. 35. Delegados de Prevención":{r:"Hasta 30 trabajadores el delegado es el propio Delegado de Personal; de 31 a 49, 1. Después: 50-100 → 2, 101-500 → 3, 501-1.000 → 4, y a partir de ahí <b>uno más por cada mil</b> hasta llegar a 8 (más de 4.000)."},
+"9|Escalas de temperatura":{r:"Para pasar a Fahrenheit: × 1,8 y + 32. Para pasar a Kelvin: + 273.",f:[["32","MaNo","✋","el agua se congela en la mano: 32 ºF"],["212","aNTeNa","📡","y hierve en la antena: 212 ºF"]]},
+"9|Propiedades del agua":{f:[["540","LiCoR","🍷","evaporar un gramo de agua cuesta un licor: 540 cal"],["80","GoRRo","🧢","el hielo pide gorro para fundirse: 80 cal"]]},
+"10|Equivalencias":{r:"En la práctica todo vale «1»: 1 atm ≈ 1 bar ≈ 1 kg/cm² ≈ 10 m de agua.",f:[["760","FiSuRa","🧪","el tubo de mercurio tiene una fisura: 760 mm de Hg"]]},
+"13|Temperatura":{r:"Más calor a la hora de la siesta (15-17 h); más fresco al amanecer (6 h)."},
+"13|Tiempo de retardo":{r:"Las horas se multiplican por 10 (1-10-100-1.000) y los tamaños van 6 mm → 2,5 cm → 7,5 cm → 20 cm: <b>cuanto más gordo, más tarda en secarse</b>."},
+"13|Modelos de Rothermel":{r:"<b>Pa-Ma-Ho-Ra</b> (Pasto, Matorral, Hojarasca, Ramaje) con <b>3-4-3-3</b> modelos: 1-3, 4-7, 8-10, 11-13."},
+"14|Factor de caída":{r:"Factor = caída ÷ cuerda. Si caes lo mismo que la cuerda, factor 1; si caes el doble, factor 2."},
+"15|Distancias de seguridad":{r:"Grúa: 5 m por encima de 66 kV, 3 m por debajo. Bajo tierra: medio metro a mano, un metro a máquina.",f:[["66","OSoS","🐻🐻","dos osos marcan la frontera: 66 kV"]]},
+"16|Las 9 clases":{r:"Orden: <b>E</b>xplosivos, <b>G</b>ases, <b>L</b>íquidos, <b>S</b>ólidos, <b>C</b>omburentes, <b>T</b>óxicas, <b>R</b>adiactivas, <b>C</b>orrosivas, <b>D</b>iversas → «<i>Esa Gente Lista Siempre Come Tortilla Rica Con Dátiles</i>»."},
+"16|Código NIP":{r:"Cada cifra es la clase ADR de su peligro (2 gas, 3 líquido…). Cifra repetida = peligro más intenso. X = cuidado con el agua."},
+"17|Atmósferas suboxigenadas":{f:[["21","NaTa","🥛","lo normal es la nata: 21 %"],["19,5","DiaBLo","😈","por debajo aparece el diablo: falta oxígeno"],["23,5","aNiMaL","🐾","por encima se desata el animal: aire enriquecido"],["18","DoGo","🐕","el filtro es un perro: necesita al menos 18 %"]]},
+"17|La botella":{r:"Retimbrado cada <b>3</b> años, inspección visual cada <b>1</b>. Aire = litros × bar."},
+"17|Cálculo de autonomía":{r:"(presión − 50) × litros ÷ consumo.",f:[["50","LoRo","🦜","a la botella siempre le quitas el loro: 50 bar de reserva"]]},
+"18|Datos técnicos":{r:"Los tres diámetros de manguera son el Nilo, la Cola y el Faro.",f:[["25","NiLo","🏞️","25 mm"],["45","CoLa","🥤","45 mm"],["70","FaRo","🗼","70 mm"]]},
+"20|Salidas y ángulos":{r:"Delante: 0-25-60-90. Detrás: 0-20-60-90. Siempre se empieza por el portón (0º) y se acaba por las puertas de la propia fila (90º)."},
+"21|GLP, GNC y GNL":{r:"<b>GLP = Pesado</b>, se queda abajo. <b>GNC = metano</b>, ligero, se va arriba.",f:[["161","TaZa De","🍵","el GNL es tan frío que congela la taza de té: −161 ºC"]]},
+"23|Batería":{r:"Cada vaso da 2 V; 12 V ÷ 2 = 6 vasos. Camión: dos de 12 en serie = 24 V.",f:[["12","TiNa","🛁","la batería del turismo es una tina: 12 V"]]},
+"23|Clasificación de aceites":{r:"<b>W = Winter</b>: el número de delante es en frío y el de detrás en caliente."},
+"24|Marcado del neumático":{r:"Ancho / perfil · R · llanta · carga · velocidad. Velocidades por orden alfabético: K 110 → L 120 → M 130 → N 140."},
+"26|Líneas eléctricas":{r:"<b>1-3-5</b>: hasta 1 kV, 1 m; hasta 110 kV, 3 m; más o desconocida, 5 m."}
+};
+
 </script>
 <script>
 "use strict";
@@ -1735,7 +1774,7 @@ const ROUTE=T.map(t=>t.id).sort((a,b)=>a-b);
 // ---------- estado ----------
 const KEY='tbm-v1';
 const CL={doc:null,busy:false,dirty:false,t:0};
-const DEF={at:0,cards:{},qs:{},daily:{d:0,nw:0,extra:0},streak:{last:0,n:0},set:{npd:8,cur:ROUTE[0],mode:'tema',theme:'auto',vf:1,blk:'esp',cb:{}},tests:[]};
+const DEF={at:0,cards:{},qs:{},daily:{d:0,nw:0,extra:0},streak:{last:0,n:0},notes:{},set:{npd:8,cur:ROUTE[0],mode:'tema',theme:'auto',vf:1,blk:'esp',cb:{}},tests:[]};
 let S=load();
 function load(){try{const j=JSON.parse(localStorage.getItem(KEY));if(j&&j.cards)return deep(DEF,j)}catch(e){}return JSON.parse(JSON.stringify(DEF))}
 function deep(d,j){const o=JSON.parse(JSON.stringify(d));for(const k in j){o[k]=(j[k]&&typeof j[k]==='object'&&!Array.isArray(j[k])&&d[k]&&typeof d[k]==='object'&&!Array.isArray(d[k]))?Object.assign(o[k],j[k]):j[k]}return o}
@@ -1746,6 +1785,24 @@ function cs(id){return S.cards[id]}
 function mastery(id){const c=cs(id);if(!c)return 0;if(c.st>=5)return 4;if(c.st>=3)return 3;if(c.st>=2)return 2;return 1}
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function figH(c){return c.i?`<figure class="fig"><img src="${c.i}" alt="${esc(c.ic||c.t)}" loading="lazy">${c.ic?`<figcaption>${esc(c.ic)}</figcaption>`:''}</figure>`:''}
+
+const PHT=[['0','r, rr'],['1','t, d'],['2','n, ñ'],['3','m, w'],['4','c, k, q'],['5','v, l, ll'],['6','s, z'],['7','f, j'],['8','g, x, ch'],['9','p, b']];
+const MNX=typeof MN!=='undefined'?MN:{};
+function mkey(c){return c.tema+'|'+c.t}
+function phW(w){return esc(w).replace(/CH|LL|RR|[A-ZÑ]/g,m=>'<u>'+m.toLowerCase()+'</u>').replace(/^<u>(\w+)<\/u>/,(a,b)=>'<u>'+b.toUpperCase()+'</u>')}
+function memBody(k){const d=MNX[k],u=S.notes[k];let h='';
+  if(d&&d.r)h+=`<p>${d.r}</p>`;
+  if(d&&d.f)h+=d.f.map(([n,w,e,fr])=>`<div class="ph"><span class="em">${e}</span><span class="w">${esc(n)} → ${phW(w)}</span><span class="d">${esc(fr)}</span></div>`).join('')+`<details class="tab"><summary>Tabla del código fonético</summary><table><tr>${PHT.map(x=>`<td><b>${x[0]}</b></td>`).join('')}</tr><tr>${PHT.map(x=>`<td>${x[1]}</td>`).join('')}</tr></table></details>`;
+  if(u&&u.t)h+=`<div class="mem-u"><b>Tu regla</b><p>${esc(u.t).replace(/\n/g,'<br>')}</p></div>`;
+  if(!h)h='<p class="note">Aún no hay truco para esta tarjeta. Puedes añadir el tuyo.</p>';
+  return h+`<div class="row"><button class="btn small mem-ed">${u&&u.t?'Editar mi regla':'Añadir mi regla'}</button></div>`}
+function memH(c){const k=mkey(c),has=MNX[k]||(S.notes[k]&&S.notes[k].t);
+  return `<details class="mem" data-k="${esc(k)}"><summary>🧠 Truco para recordar${has?' <i class="dot"></i>':''}</summary><div class="mem-b">${memBody(k)}</div></details>`}
+document.addEventListener('click',e=>{const b=e.target.closest('.mem button');if(!b)return;const m=b.closest('.mem'),k=m.dataset.k,body=m.querySelector('.mem-b');e.stopPropagation();
+  if(b.classList.contains('mem-ed')){const u=S.notes[k];body.innerHTML=`<textarea placeholder="Escribe tu regla, rima o asociación para recordar esta tarjeta">${esc(u&&u.t||'')}</textarea><div class="row"><button class="btn small primary mem-ok">Guardar</button><button class="btn small mem-no">Cancelar</button>${u&&u.t?'<button class="btn small mem-del">Borrar</button>':''}</div>`;body.querySelector('textarea').focus();return}
+  if(b.classList.contains('mem-ok')||b.classList.contains('mem-del')){const t=b.classList.contains('mem-del')?'':body.querySelector('textarea').value.trim();S.notes[k]={t,at:Date.now()};save();toast(t?'Regla guardada':'Regla borrada');
+    $$('.mem').filter(x=>x.dataset.k===k).forEach(x=>{x.querySelector('.mem-b').innerHTML=memBody(k);const has=MNX[k]||t;x.querySelector('summary').innerHTML='🧠 Truco para recordar'+(has?' <i class="dot"></i>':'')});return}
+  if(b.classList.contains('mem-no'))body.innerHTML=memBody(k)});
 function esc(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
 function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),2200)}
@@ -1826,7 +1883,7 @@ function renderItem(){
   const c=it.card,t=TM[c.tema];
   const ctx=`<div class="ctx"><span class="tag ${it.rev?'rev':(it.k==='learn'?'new':'')}">${it.rev?'Repaso':(it.k==='learn'?'Nueva':'Pregunta')}</span><span>Tema ${c.tema} · ${esc(c.lt)}</span><span class="tag n${c.nv}">N${c.nv}</span></div>`;
   if(it.k==='learn'){
-    stage.innerHTML=ctx+`<div class="ficha pop"><h3>${esc(c.t)}</h3>${figH(c)}<div class="tx">${c.x}</div></div>`;
+    stage.innerHTML=ctx+`<div class="ficha pop"><h3>${esc(c.t)}</h3>${figH(c)}<div class="tx">${c.x}</div>${memH(c)}</div>`;
     panel.innerHTML=`<button class="btn primary block" id="go">Entendido, pregúntame</button><p class="hint keys">Pulsa Intro para seguir</p>`;
     $('#go').onclick=next;return;
   }
@@ -1855,7 +1912,7 @@ function answer(ok,btn){
   if(r.left<=0)finishCard(c.id);
   let fb;
   if(ok)fb=`<div class="fb ok">${pick(['¡Bien!','¡Correcto!','¡Eso es!','¡Perfecto!','¡Muy bien!'])}</div>`;
-  else{const right=Qi.q.o[Qi.q.c];fb=`<div class="fb bad">No es así. Correcta: ${esc(right)}</div><div class="ficha mini"><h3>${esc(c.t)}</h3>${figH(c)}<div class="tx">${c.x}</div></div>`}
+  else{const right=Qi.q.o[Qi.q.c];fb=`<div class="fb bad">No es así. Correcta: ${esc(right)}</div><div class="ficha mini"><h3>${esc(c.t)}</h3>${figH(c)}<div class="tx">${c.x}</div>${memH(c)}</div>`}
   const fbBox=document.createElement('div');fbBox.style.display='flex';fbBox.style.flexDirection='column';fbBox.style.gap='8px';fbBox.innerHTML=fb;
   if(!ok){$('#st-stage').appendChild(fbBox)}else{panel.insertBefore(fbBox,panel.firstChild)}
   const h=panel.querySelector('.hint');if(h)h.remove();
@@ -1970,7 +2027,7 @@ function renderTQ(){
   const locked=TR.mode==='now'&&it.a!==null;
   const cl=i=>locked?(i===it.corr?' good':(i===it.a?' wrong':' dim')):(i===it.a?' sel':'');
   $('#tr-panel').innerHTML=it.opts.map((o,i)=>`<button class="opt${cl(i)}" data-i="${i}"><span class="k">${'ABC'[i]}</span><span>${esc(o)}</span></button>`).join('')+
-    (locked&&it.a!==it.corr?`<div class="ficha mini"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div></div>`:'')+
+    (locked&&it.a!==it.corr?`<div class="ficha mini"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div>${memH(c)}</div>`:'')+
     `<div class="row">${TR.i>0?'<button class="btn small" id="tq-prev">‹ Anterior</button>':''}<button class="btn small" id="tq-blank" style="flex:1">${it.a===null?'Dejar en blanco':'Borrar respuesta'}</button>${TR.i<N-1?'<button class="btn small primary" id="tq-next" style="flex:1">Siguiente ›</button>':'<button class="btn small primary" id="tq-end" style="flex:1">Terminar y corregir</button>'}</div>`;
   $$('#tr-panel .opt').forEach(b=>b.onclick=()=>{if(locked)return;it.a=+b.dataset.i;if(TR.mode==='now'){renderTQ()}else{renderTQ();setTimeout(()=>{if(TR&&TR.i<N-1&&TR.items[TR.i]===it){TR.i++;renderTQ()}},220)}});
   const bl=$('#tq-blank');if(bl){bl.disabled=locked;bl.onclick=()=>{it.a=null;if(TR.i<N-1){TR.i++}renderTQ()}}
@@ -1992,7 +2049,7 @@ function endTest(){
   $('#tr-stage').innerHTML=`<div class="card"><h2>Resultado</h2><div class="row between"><div class="res-big ${cls}">${nota.toFixed(2).replace('.',',')}</div><span class="note" style="text-align:right">sobre 10<br>${mins} min</span></div>
    <div class="stats"><div class="stat"><b style="color:var(--ok)">${a}</b><span>aciertos</span></div><div class="stat"><b style="color:var(--bad)">${f}</b><span>fallos (−${(f/3).toFixed(2).replace('.',',')})</span></div><div class="stat"><b>${b}</b><span>en blanco</span></div></div>
    <p class="note">Puntuación neta: ${net.toFixed(2).replace('.',',')} de ${N}. Cada fallo resta un tercio de acierto; las preguntas en blanco no cuentan.${f?' Las tarjetas falladas que ya habías estudiado vuelven hoy a tus repasos.':''}</p></div>
-   ${wrong.length?`<div class="card"><h2>Repasa ${wrong.length===1?'esta':'estas '+wrong.length}</h2>${wrong.map(it=>`<div class="rv"><span class="note">Tema ${it.card.tema}</span><span class="q">${esc(it.q.p)}</span><span class="a">✓ ${esc(it.q.o[it.q.c])}</span><span class="y${it.a===null?' blank':''}">${it.a===null?'En blanco':'✗ '+esc(it.opts[it.a])}</span><details><summary>Ver la tarjeta</summary><div class="ficha mini" style="margin-top:8px"><h3>${esc(it.card.t)}</h3><div class="tx">${it.card.x}</div></div></details></div>`).join('')}</div>`:'<div class="fb ok">¡Pleno! Ninguna incorrecta.</div>'}`;
+   ${wrong.length?`<div class="card"><h2>Repasa ${wrong.length===1?'esta':'estas '+wrong.length}</h2>${wrong.map(it=>`<div class="rv"><span class="note">Tema ${it.card.tema}</span><span class="q">${esc(it.q.p)}</span><span class="a">✓ ${esc(it.q.o[it.q.c])}</span><span class="y${it.a===null?' blank':''}">${it.a===null?'En blanco':'✗ '+esc(it.opts[it.a])}</span><details><summary>Ver la tarjeta</summary><div class="ficha mini" style="margin-top:8px"><h3>${esc(it.card.t)}</h3><div class="tx">${it.card.x}</div>${memH(it.card)}</div></details></div>`).join('')}</div>`:'<div class="fb ok">¡Pleno! Ninguna incorrecta.</div>'}`;
   $('#tr-panel').innerHTML=`<div class="row"><button class="btn block" id="tq-again">Otro test igual</button><button class="btn primary block" id="tq-out">Volver</button></div>`;
   $('#tq-out').onclick=closeTest;$('#tq-again').onclick=()=>{const s=TR.sim;closeTest();startTest(s)};
   $('.view#test-run .stage').scrollTop=0;
@@ -2007,7 +2064,7 @@ function renderTemario(){
     el.innerHTML=`<header class="full"><button class="back" id="tm-back">‹ Temario</button><h1>Tema ${t.id}. ${esc(t.n)}</h1><p class="sub">${esc(t.s)}</p></header>
     <div class="card full"><div class="row between"><b>${s.n-s.cnt[0]} de ${s.n} tarjetas vistas · ${s.q} preguntas</b><button class="btn small primary" id="tm-go">Estudiar este tema</button></div><div class="bar mk">${[4,3,2,1].map(m=>`<i style="width:${100*s.cnt[m]/s.n}%;background:var(--m${m})"></i>`).join('')}</div></div>
     <div class="card full" style="gap:0">${t.L.map((l,li)=>{const cc=CARDS.filter(c=>c.tema===t.id&&c.li===li);const sv=cc.filter(c=>cs(c.id)).length;
-      return `<details class="lesson"${li===0?' open':''}><summary><span class="tag n${l.nv}">N${l.nv}</span>${esc(l.t)}<span class="ct">${sv}/${cc.length}</span></summary><div class="cards">${cc.map(c=>{const m=mastery(c.id);return `<div class="ficha mini" style="border-left-color:var(--m${m||0})"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div><span class="note">${['Sin ver todavía','Recién vista','Empezada','Bien','Dominada'][m]}</span></div>`}).join('')}</div></details>`}).join('')}</div>`;
+      return `<details class="lesson"${li===0?' open':''}><summary><span class="tag n${l.nv}">N${l.nv}</span>${esc(l.t)}<span class="ct">${sv}/${cc.length}</span></summary><div class="cards">${cc.map(c=>{const m=mastery(c.id);return `<div class="ficha mini" style="border-left-color:var(--m${m||0})"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div>${memH(c)}<span class="note">${['Sin ver todavía','Recién vista','Empezada','Bien','Dominada'][m]}</span></div>`}).join('')}</div></details>`}).join('')}</div>`;
     $('#tm-back').onclick=()=>{TMV=null;renderTemario()};
     $('#tm-go').onclick=()=>{S.set.cur=t.id;S.set.blk=t.b===1?'com':'esp';S.set.cb=S.set.cb||{};S.set.cb[S.set.blk]=t.id;save();TMV=null;showView('home');renderHome();toast('Tema '+t.id+' será lo siguiente que estudies')};
     el.scrollTop=0;return}
@@ -2103,6 +2160,7 @@ function mergeS(a,b){const o=deep(DEF,a);b=deep(DEF,b);
   const seen=new Set(o.tests.map(t=>t.at));b.tests.forEach(t=>{if(!seen.has(t.at))o.tests.push(t)});o.tests.sort((p,q)=>(p.at||0)-(q.at||0));
   if(b.daily.d>o.daily.d)o.daily=b.daily;else if(b.daily.d===o.daily.d){o.daily.nw=Math.max(o.daily.nw,b.daily.nw);o.daily.extra=Math.max(o.daily.extra,b.daily.extra)}
   if((b.streak.last||0)>(o.streak.last||0)||(b.streak.last===o.streak.last&&b.streak.n>o.streak.n))o.streak=b.streak;
+  for(const k in b.notes){const x=o.notes[k],y=b.notes[k];if(!x||(y.at||0)>(x.at||0))o.notes[k]=y}
   if((b.at||0)>(o.at||0))o.set=b.set;o.at=Math.max(o.at||0,b.at||0);return o}
 function sbUI(m){const u=SB.u;$('#sb-in').hidden=!!u;$('#sb-sync').hidden=!u;$('#sb-out').hidden=!u;
   $('#sb-msg').textContent=m||(u?'Sesión iniciada como '+(u.email||'usuario')+'. Tu progreso se sincroniza automáticamente.':'Inicia sesión con Google para guardar tu progreso en la nube y tenerlo igual en el móvil y el PC.')}
