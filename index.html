@@ -218,7 +218,7 @@ body.studying #tabs{display:none}
       </header>
       <div class="card">
         <h2>Hoy</h2>
-        <div class="seg" id="h-blk"><button data-v="esp">Específico</button><button data-v="com">Común</button><button data-v="rnd">Aleatorio</button></div>
+        <div class="seg" id="h-blk"><button data-v="esp">Específico</button><button data-v="com">Común</button><button data-v="rnd">Combinado</button></div>
         <div class="stats">
           <div class="stat"><b id="s-due">0</b><span>repasos</span></div>
           <div class="stat"><b id="s-new">0</b><span>nuevas</span></div>
@@ -2937,25 +2937,35 @@ function plain(h){return h.replace(/<br\s*\/?>/g,' ').replace(/<[^>]+>/g,'').rep
 // ---------- planificación de Hoy ----------
 function dueCards(){const d=today();return CARDS.filter(c=>{const s=cs(c.id);return s&&s.due<=d}).sort((a,b)=>cs(a.id).due-cs(b.id).due)}
 function unseenOf(tid){return CARDS.filter(c=>c.tema===tid&&!cs(c.id))}
-function nextNew(n){
-  const out=[];
+function nextFrom(b,n){
+  const out=[];if(n<=0)return out;
   if(S.set.mode==='mix'){
-    const P=blkPool(),lists=P.map(unseenOf).filter(l=>l.length);
-    let i=Math.max(0,P.filter(id=>unseenOf(id).length).indexOf(blkCur()));
+    const P=blkPool(b),lists=P.map(unseenOf).filter(l=>l.length);
+    let i=Math.max(0,P.filter(id=>unseenOf(id).length).indexOf(blkCur(b)));
     // bloques de 3 tarjetas por tema para no fragmentar demasiado
     while(out.length<n&&lists.some(l=>l.length)){const l=lists[i%lists.length];out.push(...l.splice(0,Math.min(3,n-out.length)));i++}
     return out;
   }
-  const pool=blkPool(),cur=blkCur();const order=[cur,...pool.filter(id=>id!==cur)];
+  const pool=blkPool(b),cur=blkCur(b);const order=[cur,...pool.filter(id=>id!==cur)];
   for(const id of order){for(const c of unseenOf(id)){if(out.length>=n)return out;out.push(c)}}
   return out;
 }
-function blkPool(){const b=S.set.blk;return ROUTE.filter(id=>b==='rnd'||TM[id].b===(b==='com'?1:2))}
-function blkCur(){const b=S.set.blk||'esp';S.set.cb=S.set.cb||{};const pool=blkPool();let c=S.set.cb[b];
+// "rnd" = Combinado: mitad del tema común en curso y mitad del específico (el primero alterna cada día)
+function nextNew(n){
+  const b=S.set.blk||'esp';
+  if(b!=='rnd')return nextFrom(b,n);
+  const first=today()%2?'com':'esp',second=first==='com'?'esp':'com';
+  const A=nextFrom(first,Math.ceil(n/2)),B=nextFrom(second,n-A.length);
+  let out=[...A,...B];
+  if(out.length<n){const have=new Set(out.map(c=>c.id));out=out.concat(nextFrom(first,n).filter(c=>!have.has(c.id)).slice(0,n-out.length))}
+  return out;
+}
+function blkPool(b){b=b||S.set.blk;return ROUTE.filter(id=>b==='rnd'||TM[id].b===(b==='com'?1:2))}
+function blkCur(b){b=b||S.set.blk||'esp';S.set.cb=S.set.cb||{};const pool=blkPool(b);let c=S.set.cb[b];
   if(c&&pool.includes(c)&&unseenOf(c).length)return c;
   const open=pool.filter(id=>unseenOf(id).length);if(!open.length)return c||pool[0];
   const started=open.filter(id=>CARDS.some(k=>k.tema===id&&cs(k.id)));
-  c=b==='rnd'?open[Math.floor(Math.random()*open.length)]:(started[0]||open[0]);
+  c=started[0]||open[0];
   S.set.cb[b]=c;S.set.cur=c;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}return c}
 function newLeft(){return Math.max(0,S.set.npd+S.daily.extra-S.daily.nw)}
 
@@ -3084,7 +3094,7 @@ function renderHome(){
   const nx=nextNew(Math.max(1,nl))[0];
   let msg;
   if(!due&&!nl)msg=S.daily.nw||S.streak.last===today()?'<b>Hoy ya está.</b> Mañana tendrás repasos nuevos. Si quieres más, añade tarjetas o haz un test.':'<b>No hay nada pendiente.</b>';
-  else msg=`Hoy: <b>${due} repaso${due===1?'':'s'}</b> y <b>${nl} tarjeta${nl===1?'':'s'} nueva${nl===1?'':'s'}</b>${nx&&nl?` del tema ${nx.tema} (${esc(TM[nx.tema].n)}), ${esc(nx.lt.toLowerCase())}`:''}. Unos ${Math.max(2,Math.round((due*0.4+nl*1.3)))} minutos.`;
+  else msg=`Hoy: <b>${due} repaso${due===1?'':'s'}</b> y <b>${nl} tarjeta${nl===1?'':'s'} nueva${nl===1?'':'s'}</b>${nx&&nl?(S.set.blk==='rnd'?` mitad del tema ${[...new Set(nextNew(nl).map(c=>c.tema))].join(' y del ')}`:` del tema ${nx.tema} (${esc(TM[nx.tema].n)}), ${esc(nx.lt.toLowerCase())}`):''}. Unos ${Math.max(2,Math.round((due*0.4+nl*1.3)))} minutos.`;
   $('#today-b').innerHTML=msg;
   $('#b-study').disabled=!due&&!nl;
   $('#b-study').textContent=due||nl?'Estudiar ahora':'Todo hecho por hoy';
