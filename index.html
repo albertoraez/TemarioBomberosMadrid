@@ -111,6 +111,13 @@ h3{font-size:16px;margin:0}
 .mem{margin-top:10px;border-top:1px dashed var(--line,#ddd);padding-top:8px;font-size:14px}
 .mem>summary{cursor:pointer;font-weight:600;color:var(--muted,#666);list-style:none;display:flex;align-items:center;gap:6px;min-height:32px}
 .mem>summary::-webkit-details-marker{display:none}.mem>summary::after{content:'▾';margin-left:auto;transition:transform .15s}.mem[open]>summary::after{transform:rotate(180deg)}
+.mem>summary{justify-content:flex-end}.mem>summary::after{font-size:18px;margin-left:6px}
+#vw{position:fixed;inset:0;z-index:50;background:var(--bg);display:none;flex-direction:column;max-width:600px;margin:0 auto;padding-top:env(safe-area-inset-top,0)}#vw.on{display:flex}
+#vw .panel-in.nav{display:flex;flex-direction:row;gap:10px}#vw .nav .btn{flex:1;font-size:22px}
+.ficha.tap{cursor:pointer}.ficha.tap .tx{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+#sr-q{width:100%;font:inherit;font-size:17px;padding:12px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:inherit}
+.hit{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;color:inherit;font:inherit;cursor:pointer}.hit b{color:var(--accent)}.hit .note{display:block}.hit mark{background:var(--warn-soft);color:inherit;border-radius:3px}
+.gl h2{margin:10px 0 4px}.gl .g{display:flex;flex-direction:column;gap:2px}.gl .g button{text-align:left;background:none;border:0;color:inherit;font:inherit;padding:6px 2px;border-bottom:1px solid var(--line);cursor:pointer}.gl .g button span{color:var(--muted);font-size:12.5px;margin-left:6px}
 .mem .dot{width:7px;height:7px;border-radius:50%;background:var(--accent,#c8102e);display:inline-block}
 .mem-b{display:flex;flex-direction:column;gap:8px;padding:4px 0 2px}.mem-b p{margin:0}
 .ph{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;align-items:center;background:var(--surface2,rgba(127,127,127,.08));border-radius:10px;padding:8px 10px}
@@ -291,6 +298,14 @@ body.studying #tabs{display:none}
     <div class="scroll" id="tm-list"></div>
   </section>
 
+  <section class="view" id="v-search">
+    <div class="scroll" id="sr-box"><header><h1>Buscar</h1><p class="sub">Busca cualquier palabra en las tarjetas. Sin texto, verás el glosario de todas.</p></header>
+      <input id="sr-q" type="search" placeholder="Ej.: lecho de frenado, 22 días, fading…" autocomplete="off">
+      <div id="sr-res" style="display:flex;flex-direction:column;gap:8px"></div></div>
+  </section>
+  <div id="vw"><div class="topbar"><button class="x" id="vw-x">‹ Atrás</button><span class="bar"></span><span class="left" id="vw-n"></span></div>
+    <div class="stage"><div class="stage-in" id="vw-st"></div></div>
+    <div class="panel"><div class="panel-in nav"><button class="btn" id="vw-p" aria-label="Anterior">←</button><button class="btn" id="vw-nx" aria-label="Siguiente">→</button></div></div></div>
   <section class="view" id="v-set">
     <div class="scroll">
       <header><h1>Ajustes</h1></header>
@@ -332,6 +347,7 @@ body.studying #tabs{display:none}
     <button class="on" data-tab="home"><svg viewBox="0 0 24 24"><path d="M12 3c1.5 3.5 5.5 5.5 5.5 11a5.5 5.5 0 0 1-11 0c0-3 1.5-4.5 2-6 .5 2 1 3.5 2.5 3.5 0-3.5 0-6 1-8.5z"/></svg>Hoy</button>
     <button data-tab="test"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Test</button>
     <button data-tab="temario"><svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5M8 7h7"/></svg>Temario</button>
+    <button data-tab="search"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg>Buscar</button>
     <button data-tab="set"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>Ajustes</button>
   </nav>
 </div>
@@ -3461,11 +3477,11 @@ function memBody(k){const d=MNX[k],u=S.notes[k];let h='';
   if(!h)h='<p class="note">Aún no hay truco para esta tarjeta. Puedes añadir el tuyo.</p>';
   return h+`<div class="row"><button class="btn small mem-ed">${u&&u.t?'Editar mi regla':'Añadir mi regla'}</button></div>`}
 function memH(c){const k=mkey(c),has=MNX[k]||(S.notes[k]&&S.notes[k].t);
-  return `<details class="mem" data-k="${esc(k)}"><summary>🧠 Truco para recordar${has?' <i class="dot"></i>':''}</summary><div class="mem-b">${memBody(k)}</div></details>`}
+  return `<details class="mem" data-k="${esc(k)}"><summary aria-label="Truco para recordar">${has?'<i class="dot"></i>':''}</summary><div class="mem-b">${memBody(k)}</div></details>`}
 document.addEventListener('click',e=>{const b=e.target.closest('.mem button');if(!b)return;const m=b.closest('.mem'),k=m.dataset.k,body=m.querySelector('.mem-b');e.stopPropagation();
   if(b.classList.contains('mem-ed')){const u=S.notes[k];body.innerHTML=`<textarea placeholder="Escribe tu regla, rima o asociación para recordar esta tarjeta">${esc(u&&u.t||'')}</textarea><div class="row"><button class="btn small primary mem-ok">Guardar</button><button class="btn small mem-no">Cancelar</button>${u&&u.t?'<button class="btn small mem-del">Borrar</button>':''}</div>`;body.querySelector('textarea').focus();return}
   if(b.classList.contains('mem-ok')||b.classList.contains('mem-del')){const t=b.classList.contains('mem-del')?'':body.querySelector('textarea').value.trim();S.notes[k]={t,at:Date.now()};save();toast(t?'Regla guardada':'Regla borrada');
-    $$('.mem').filter(x=>x.dataset.k===k).forEach(x=>{x.querySelector('.mem-b').innerHTML=memBody(k);const has=MNX[k]||t;x.querySelector('summary').innerHTML='🧠 Truco para recordar'+(has?' <i class="dot"></i>':'')});return}
+    $$('.mem').filter(x=>x.dataset.k===k).forEach(x=>{x.querySelector('.mem-b').innerHTML=memBody(k);const has=MNX[k]||t;x.querySelector('summary').innerHTML=has?'<i class="dot"></i>':''});return}
   if(b.classList.contains('mem-no'))body.innerHTML=memBody(k)});
 function esc(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
 function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -3738,8 +3754,9 @@ function renderTemario(){
     el.innerHTML=`<header class="full"><button class="back" id="tm-back">‹ Temario</button><h1>Tema ${t.id}. ${esc(t.n)}</h1><p class="sub">${esc(t.s)}</p></header>
     <div class="card full"><div class="row between"><b>${s.n-s.cnt[0]} de ${s.n} tarjetas vistas · ${s.q} preguntas</b><button class="btn small primary" id="tm-go">Estudiar este tema</button></div><div class="bar mk">${[4,3,2,1].map(m=>`<i style="width:${100*s.cnt[m]/s.n}%;background:var(--m${m})"></i>`).join('')}</div></div>
     <div class="card full" style="gap:0">${t.L.map((l,li)=>{const cc=CARDS.filter(c=>c.tema===t.id&&c.li===li);const sv=cc.filter(c=>cs(c.id)).length;
-      return `<details class="lesson"${li===0?' open':''}><summary><span class="tag n${l.nv}">N${l.nv}</span>${esc(l.t)}<span class="ct">${sv}/${cc.length}</span></summary><div class="cards">${cc.map(c=>{const m=mastery(c.id);return `<div class="ficha mini" style="border-left-color:var(--m${m||0})"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div>${memH(c)}<span class="note">${['Sin ver todavía','Recién vista','Empezada','Bien','Dominada'][m]}</span></div>`}).join('')}</div></details>`}).join('')}</div>`;
+      return `<details class="lesson"${li===0?' open':''}><summary><span class="tag n${l.nv}">N${l.nv}</span>${esc(l.t)}<span class="ct">${sv}/${cc.length}</span></summary><div class="cards">${cc.map(c=>{const m=mastery(c.id);return `<div class="ficha mini tap" data-c="${c.id}" style="border-left-color:var(--m${m||0})"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div><span class="note">${['Sin ver todavía','Recién vista','Empezada','Bien','Dominada'][m]}</span></div>`}).join('')}</div></details>`}).join('')}</div>`;
     $('#tm-back').onclick=()=>{TMV=null;renderTemario()};
+    {const ids=CARDS.filter(c=>c.tema===t.id).map(c=>c.id);$$('#tm-list .ficha.tap').forEach(f=>f.onclick=()=>openViewer(ids,ids.indexOf(f.dataset.c)))}
     $('#tm-go').onclick=()=>{S.set.cur=t.id;S.set.blk=t.b===1?'com':'esp';S.set.cb=S.set.cb||{};S.set.cb[S.set.blk]=t.id;save();TMV=null;showView('home');renderHome();toast('Tema '+t.id+' será lo siguiente que estudies')};
     el.scrollTop=0;return}
   const row=t=>{const has=TM[t.id];if(!has)return `<div class="zone off"><span class="num">${t.id}</span><span class="nm">${esc(t.n)}</span><span class="ct">pendiente</span></div>`;const s=temaStats(t.id);
@@ -3750,6 +3767,32 @@ function renderTemario(){
   $$('#tm-list .zone[data-t]').forEach(b=>b.onclick=()=>{TMV=+b.dataset.t;renderTemario()});
 }
 
+// ---------- visor de tarjetas ----------
+let VW=null;const CBI={};CARDS.forEach(c=>CBI[c.id]=c);
+function openViewer(ids,i){VW={ids,i:Math.max(0,i)};$('#vw').classList.add('on');drawViewer()}
+function drawViewer(){const c=CBI[VW.ids[VW.i]];
+  $('#vw-st').innerHTML=`<div class="ctx"><span>Tema ${c.tema} · ${esc(c.lt)}</span><span class="tag n${c.nv}">N${c.nv}</span></div><div class="ficha"><h3>${esc(c.t)}</h3>${figH(c)}<div class="tx">${c.x}</div>${memH(c)}</div>`;
+  $('#vw-n').textContent=(VW.i+1)+'/'+VW.ids.length;$('#vw-p').disabled=VW.i===0;$('#vw-nx').disabled=VW.i===VW.ids.length-1;$('#vw .stage').scrollTop=0}
+function closeViewer(){VW=null;$('#vw').classList.remove('on')}
+$('#vw-x').onclick=closeViewer;$('#vw-p').onclick=()=>{if(VW.i>0){VW.i--;drawViewer()}};$('#vw-nx').onclick=()=>{if(VW.i<VW.ids.length-1){VW.i++;drawViewer()}};
+document.addEventListener('keydown',e=>{if(!VW||e.target.tagName==='TEXTAREA')return;if(e.key==='ArrowLeft')$('#vw-p').click();else if(e.key==='ArrowRight')$('#vw-nx').click();else if(e.key==='Escape')closeViewer()});
+{let x0=null;$('#vw').addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});$('#vw').addEventListener('touchend',e=>{if(x0===null)return;const dx=e.changedTouches[0].clientX-x0;x0=null;if(Math.abs(dx)>70)(dx<0?$('#vw-nx'):$('#vw-p')).click()})}
+// ---------- buscar / glosario ----------
+const nrm=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+CARDS.forEach(c=>{c._p=plain(c.x);c._n=nrm(c.t+' '+c._p)});
+function renderSearch(){const q=$('#sr-q');q.oninput=()=>{clearTimeout(q.h);q.h=setTimeout(doSearch,150)};doSearch()}
+function doSearch(){const raw=$('#sr-q').value.trim(),box=$('#sr-res');
+  if(raw.length<2){const g={};[...CARDS].sort((a,b)=>a.t.localeCompare(b.t,'es')).forEach(c=>{const L=nrm(c.t).replace(/^(art[s]?\.?|arts\.?)\s*/,'')[0].toUpperCase();(g[/[A-Z]/.test(L)?L:'#']=g[/[A-Z]/.test(L)?L:'#']||[]).push(c)});
+    const keys=Object.keys(g).sort((a,b)=>a==='#'?1:b==='#'?-1:a.localeCompare(b));const ids=keys.flatMap(k=>g[k].map(c=>c.id));
+    box.innerHTML=`<div class="gl"><p class="note">Glosario: ${CARDS.length} tarjetas por orden alfabético (los artículos, al final en «#»).</p>${keys.map(k=>`<h2>${k}</h2><div class="g">${g[k].map(c=>`<button data-c="${c.id}">${esc(c.t)}<span>T${c.tema}</span></button>`).join('')}</div>`).join('')}</div>`;
+    $$('#sr-res .gl button').forEach(b=>b.onclick=()=>openViewer(ids,ids.indexOf(b.dataset.c)));return}
+  const ws=nrm(raw).split(/\s+/).filter(Boolean);
+  const hits=CARDS.map(c=>{if(!ws.every(w=>c._n.includes(w)))return null;const tn=nrm(c.t);return {c,s:ws.reduce((a,w)=>a+(tn.includes(w)?10:1),0)}}).filter(Boolean).sort((a,b)=>b.s-a.s||a.c.tema-b.c.tema);
+  const ids=hits.map(h=>h.c.id);
+  const snip=c=>{const p=c._p,n=nrm(p);let i=n.indexOf(ws[0]);if(i<0)i=0;const a=Math.max(0,i-60);let t=(a?'…':'')+p.slice(a,a+180)+(a+180<p.length?'…':'');t=esc(t);
+    ws.forEach(w=>{const re=new RegExp('('+[...w].map(ch=>ch.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).map(ch=>({a:'[aáà]',e:'[eéè]',i:'[iíï]',o:'[oóò]',u:'[uúü]',n:'[nñ]'}[ch]||ch)).join('')+')','gi');t=t.replace(re,'<mark>$1</mark>')});return t};
+  box.innerHTML=hits.length?`<p class="note">${hits.length} resultado${hits.length>1?'s':''}</p>`+hits.slice(0,80).map(h=>`<button class="hit" data-c="${h.c.id}"><b>${esc(h.c.t)}</b><span class="note">Tema ${h.c.tema} · ${esc(TM[h.c.tema].n)}</span>${snip(h.c)}</button>`).join(''):'<p class="note">No hay tarjetas con ese texto.</p>';
+  $$('#sr-res .hit').forEach(b=>b.onclick=()=>openViewer(ids,ids.indexOf(b.dataset.c)))}
 // ---------- ajustes ----------
 function renderSet(){
   $$('#set-mode button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.set.mode));
@@ -3762,10 +3805,10 @@ function applyTheme(){const r=document.documentElement;if(S.set.theme==='auto')r
 
 // ---------- navegación ----------
 function showView(v){$$('.view').forEach(x=>{if(x.id!=='test-run')x.classList.toggle('on',x.id==='v-'+v)});
-  const tab={home:'home',study:'home',test:'test',temario:'temario',set:'set'}[v];$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab))}
+  const tab={home:'home',study:'home',test:'test',temario:'temario',search:'search',set:'set'}[v];$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab))}
 $$('#tabs button').forEach(b=>b.onclick=()=>{
-  if(SES){exitStudy()}if(TR&&!TR.done&&b.dataset.tab!=='test'){if(!confirmLeave())return;closeTest()}
-  const v=b.dataset.tab;showView(v);if(v==='home')renderHome();if(v==='test'&&!TR)renderTestSetup();if(v==='temario'){renderTemario()}if(v==='set')renderSet()});
+  closeViewer();if(SES){exitStudy()}if(TR&&!TR.done&&b.dataset.tab!=='test'){if(!confirmLeave())return;closeTest()}
+  const v=b.dataset.tab;showView(v);if(v==='home')renderHome();if(v==='test'&&!TR)renderTestSetup();if(v==='temario'){renderTemario()}if(v==='search')renderSearch();if(v==='set')renderSet()});
 function confirmLeave(){return true}
 $('#b-study').onclick=()=>startStudy();
 $('#b-more').onclick=()=>{S.daily.extra+=5;save();renderHome();startStudy()};
