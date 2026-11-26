@@ -271,6 +271,9 @@ body.studying #tabs{display:none}
         <h2>Opciones</h2>
         <p class="lbl">Preguntas</p>
         <div class="seg" id="tt-src"><button data-v="all" class="on">Todas</button><button data-v="seen">Ya estudiadas</button><button data-v="fail">Las que más fallo</button></div>
+        <p class="lbl">Dificultad</p>
+        <div class="seg" id="tt-dif"><button data-v="all" class="on">Todas</button><button data-v="f">Fáciles</button><button data-v="n">Medias</button><button data-v="d">Difíciles</button></div>
+        <p class="note" id="tt-cnt"></p>
         <div class="npd-row"><span>Número de preguntas</span><div class="stepper"><button data-tn="-5" aria-label="Menos">−</button><b id="tt-n">20</b><button data-tn="5" aria-label="Más">+</button></div></div>
         <p class="lbl">Corrección</p>
         <div class="seg" id="tt-mode"><button data-v="end" class="on">Al final, como en el examen</button><button data-v="now">Al momento</button></div>
@@ -340,6 +343,7 @@ body.studying #tabs{display:none}
         <p class="note">1. Lees una tarjeta corta con los datos clave en resaltado. 2. Te pregunto por ella al momento. 3. Cada tres tarjetas mezclo preguntas de las tres, con otra forma de preguntarlo. 4. Si fallas, vuelve a salir en la misma sesión hasta que la aciertes. 5. Lo que aciertas vuelve en repasos: al día siguiente, a los 3 días, a la semana, a las 2 semanas, al mes… Cada fallo acorta el intervalo.</p>
         <p class="note">Los fallos del modo test también hacen que esa tarjeta vuelva hoy a tus repasos.</p>
       </div>
+      <p class="note" id="set-ver" style="text-align:center;opacity:.7"></p>
     </div>
   </section>
 
@@ -7055,7 +7059,9 @@ function routeRow(id){const t=TM[id],s=temaStats(id);const cur=S.set.mode==='tem
 function curTema(){const n=nextNew(1)[0];return n?n.tema:S.set.cur}
 
 // ---------- modo test ----------
-const TT={sel:new Set(T.map(t=>t.id)),src:'all',n:20,mode:'end',time:false};
+const APP_VER='v22 · 26 nov 2026';
+$('#set-ver').textContent=`Versión ${APP_VER} · ${CARDS.length} tarjetas · ${QS.length} preguntas`;
+const TT={sel:new Set(T.map(t=>t.id)),src:'all',dif:'all',n:20,mode:'end',time:false};
 function renderTestSetup(){
   const chip=t=>`<button class="chip${TT.sel.has(t.id)?' on':''}" data-t="${t.id}"><b>${t.id}</b>${esc(t.n)}</button>`;
   $('#tt-b1').innerHTML=T.filter(t=>t.b===1).map(chip).join('')||'<span class="note">Sin temas todavía</span>';
@@ -7063,6 +7069,9 @@ function renderTestSetup(){
   $$('#tt-b1 .chip,#tt-b2 .chip').forEach(b=>b.onclick=()=>{const id=+b.dataset.t;TT.sel.has(id)?TT.sel.delete(id):TT.sel.add(id);renderTestSetup()});
   $$('#tt-src button').forEach(b=>b.classList.toggle('on',b.dataset.v===TT.src));
   $$('#tt-mode button').forEach(b=>b.classList.toggle('on',b.dataset.v===TT.mode));
+  $$('#tt-dif button').forEach(b=>b.classList.toggle('on',b.dataset.v===TT.dif));
+  {const pl=testPool(),dn={all:'de cualquier dificultad',f:'fáciles',n:'de dificultad media',d:'difíciles'}[TT.dif],sn={all:'',seen:' de tarjetas ya estudiadas',fail:' que has fallado'}[TT.src];
+   $('#tt-cnt').innerHTML=`<b>${pl.length}</b> preguntas ${dn}${sn} en ${TT.sel.size} tema${TT.sel.size==1?'':'s'}.`}
   $('#tt-time').classList.toggle('on',TT.time);
   const pool=testPool();const av=pool.length;
   $('#tt-av').textContent=av?`${av} preguntas disponibles con esta selección.`:(TT.src==='seen'?'Aún no has estudiado tarjetas de estos temas en Hoy.':TT.src==='fail'?'Todavía no tienes fallos registrados en estos temas.':'Elige al menos un tema.');
@@ -7073,6 +7082,7 @@ function renderTestSetup(){
 }
 function testPool(){
   let p=QS.filter(q=>TT.sel.has(q.card.tema));
+  if(TT.dif!=='all')p=p.filter(q=>q.d===TT.dif);
   if(TT.src==='seen')p=p.filter(q=>cs(q.card.id));
   if(TT.src==='fail'){p=p.filter(q=>(S.qs[q.qid]||{}).ko>0).sort((a,b)=>fr(b)-fr(a))}
   return p}
@@ -7202,6 +7212,7 @@ $('#cele-x').onclick=()=>{$('#cele').hidden=true};
 $('#tt-all').onclick=()=>{T.forEach(t=>TT.sel.add(t.id));renderTestSetup()};
 $('#tt-none').onclick=()=>{TT.sel.clear();renderTestSetup()};
 $$('#tt-src button').forEach(b=>b.onclick=()=>{TT.src=b.dataset.v;renderTestSetup()});
+$$('#tt-dif button').forEach(b=>b.onclick=()=>{TT.dif=b.dataset.v;renderTestSetup()});
 $$('#tt-mode button').forEach(b=>b.onclick=()=>{TT.mode=b.dataset.v;renderTestSetup()});
 $('#tt-time').onclick=()=>{TT.time=!TT.time;renderTestSetup()};
 $$('[data-tn]').forEach(b=>b.onclick=()=>{const av=testPool().length;TT.n=Math.max(5,Math.min(90,Math.min(av||90,TT.n+ +b.dataset.tn)));if(+b.dataset.tn>0&&TT.n>av)TT.n=av;renderTestSetup()});
