@@ -206,6 +206,13 @@ body.studying #tabs{display:none}
 }
 @media (prefers-reduced-motion: no-preference){ .opt,.btn{transition:background-color .12s,border-color .12s} }
 @media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+#v-prac.view{display:none;flex-direction:column}#v-prac.view.on{display:flex}
+.prac-g{display:grid;grid-template-columns:1fr 1fr;gap:8px}.prac-g .btn{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:3px;padding:12px}.prac-g .btn span{font-size:12.5px;font-weight:500;color:var(--muted)}
+.fc-a{display:flex;flex-direction:column;gap:4px;background:var(--ok-soft);border-radius:10px;padding:12px 14px}.fc-a b{font-size:19px;color:var(--ok)}
+.pj-t{font-family:var(--f-display);font-size:22px;color:var(--accent);line-height:1.1}
+.pj{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pj>div{display:flex;flex-direction:column;gap:6px}
+.opt.pj-b{min-height:50px;font-size:14.5px;padding:8px 10px;justify-content:center;text-align:center}.opt.pj-b.done{opacity:.5}.opt.pj-b.sel{border-color:var(--accent);background:var(--accent-soft)}
+.tb{width:100%;border-collapse:collapse;font-size:14.5px}.tb th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:4px 6px;border-bottom:1px solid var(--line)}.tb td{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}.tb tr:last-child td{border-bottom:0}
 </style>
 </head>
 <body>
@@ -213,7 +220,7 @@ body.studying #tabs{display:none}
   <svg class="cele-ok" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-17"/></svg>
   <h2 id="cele-h">¡Día completado!</h2><p id="cele-sub"></p>
   <div class="cele-stats"><div><b id="cele-a">0</b><span>aciertos</span></div><div><b id="cele-new">0</b><span>tarjetas nuevas</span></div><div><b id="cele-st">0</b><span>días seguidos 🔥</span></div></div>
-  <button class="btn primary block" id="cele-x">¡Genial!</button></div></div>
+  <button class="btn primary block" id="cele-x">¡Genial!</button><button class="btn block" id="cele-more" hidden>Otro bloque</button></div></div>
 <div id="toast" role="status"></div>
 <div id="app">
 
@@ -238,6 +245,11 @@ body.studying #tabs{display:none}
         <button class="btn block small" id="b-free" hidden>Repaso extra de lo ya visto</button>
       </div>
       <div class="card">
+        <h2>Practicar</h2>
+        <p class="note">Para ratos libres. No sustituye al bloque de Hoy, pero registra tus aciertos y fallos.</p>
+        <div class="prac-g"><button class="btn" id="p-reto"><b>⏱️ Reto de 2 minutos</b><span id="p-reto-n"></span></button><button class="btn" id="p-pj"><b>🧩 Parejas</b><span>Une cada dato con su valor</span></button><button class="btn" id="p-fail"><b>🎯 Mis 10 más falladas</b><span id="p-fail-n"></span></button><button class="btn" id="p-tab"><b>📋 Tablas resumen</b><span id="p-tab-n"></span></button></div>
+      </div>
+      <div class="card">
         <h2>Progreso</h2>
         <div class="row between"><b id="p-txt" style="font-variant-numeric:tabular-nums"></b><span class="note" id="p-eta"></span></div>
         <div class="bar mk" id="p-bar"></div>
@@ -256,6 +268,12 @@ body.studying #tabs{display:none}
     <div class="topbar"><button class="x" id="st-exit">Salir</button><div class="bar" id="st-bar"><i style="width:0%"></i></div><span class="left" id="st-left"></span></div>
     <div class="stage"><div class="stage-in" id="st-stage"></div></div>
     <div class="panel"><div class="panel-in" id="st-panel"></div></div>
+  </section>
+
+  <section class="view" id="v-prac">
+    <div class="topbar"><button class="x" id="pr-exit">Salir</button><div class="bar" id="pr-bar"><i style="width:0%"></i></div><span class="timer" id="pr-timer"></span><span class="left" id="pr-left"></span></div>
+    <div class="stage"><div class="stage-in" id="pr-stage"></div></div>
+    <div class="panel"><div class="panel-in" id="pr-panel"></div></div>
   </section>
 
   <section class="view" id="v-test">
@@ -314,7 +332,13 @@ body.studying #tabs{display:none}
       <header><h1>Ajustes</h1></header>
       <div class="card">
         <h2>Estudio</h2>
-        <div class="npd-row"><span>Tarjetas nuevas al día</span><div class="stepper"><button data-npd="-1" aria-label="Menos">−</button><b id="npd2">8</b><button data-npd="1" aria-label="Más">+</button></div></div>
+        <p class="lbl">Duración de cada bloque</p>
+        <div class="seg" id="set-min"><button data-v="10">10 min</button><button data-v="20">20 min</button><button data-v="30">30 min</button><button data-v="60">60 min</button></div>
+        <p class="note">Es orientativo: reparto ese tiempo entre repasos y tarjetas nuevas. Al acabar un bloque puedes encadenar otro.</p>
+        <div class="npd-row"><span>Máximo de tarjetas nuevas al día</span><div class="stepper"><button data-npd="-1" aria-label="Menos">−</button><b id="npd2">8</b><button data-npd="1" aria-label="Más">+</button></div></div>
+        <p class="lbl">Cómo repasar</p>
+        <div class="seg" id="set-rf"><button data-v="fc">Tarjeta rápida</button><button data-v="mix">Mezcla</button><button data-v="mc">Test</button></div>
+        <p class="note" id="set-rf-n"></p>
         <p class="lbl">Cómo avanzar</p>
         <div class="seg" id="set-mode"><button data-v="tema">Tema a tema</button><button data-v="mix">Alternar temas</button></div>
         <p class="note" id="set-mode-n"></p>
@@ -340,7 +364,7 @@ body.studying #tabs{display:none}
       </div>
       <div class="card">
         <h2>Cómo funciona Hoy</h2>
-        <p class="note">1. Lees una tarjeta corta con los datos clave en resaltado. 2. Te pregunto por ella al momento. 3. Cada tres tarjetas mezclo preguntas de las tres, con otra forma de preguntarlo. 4. Si fallas, vuelve a salir en la misma sesión hasta que la aciertes. 5. Lo que aciertas vuelve en repasos: al día siguiente, a los 3 días, a la semana, a las 2 semanas, al mes… Cada fallo acorta el intervalo.</p>
+        <p class="note">1. Cada sesión es un bloque de tiempo (20 min por defecto) con los repasos que te tocan y unas pocas tarjetas nuevas; si hay muchos repasos, entran menos nuevas. 2. Lees la tarjeta nueva y te pregunto al momento; cada tres tarjetas mezclo preguntas de las tres. 3. En los repasos alterno la tarjeta rápida (piensas la respuesta, la destapas y dices si la sabías) con preguntas tipo test. 4. Si fallas, vuelve a salir en la misma sesión con otra pregunta distinta, para que memorices el dato y no la frase. 5. Lo que aciertas vuelve cada vez más tarde: al día siguiente, a los 3 días, a la semana, a las 2 semanas, al mes… Al principio salen las 1-2 preguntas principales de cada tarjeta; las demás aparecen en repasos posteriores y en el modo test.</p>
         <p class="note">Los fallos del modo test también hacen que esa tarjeta vuelva hoy a tus repasos.</p>
       </div>
       <p class="note" id="set-ver" style="text-align:center;opacity:.7"></p>
@@ -6755,6 +6779,113 @@ add(21,2,'Ampliación: conducción todoterreno',[
 ['Si entra agua por la admisión en un vadeo y el motor se para…',['No se intenta arrancar','Se arranca enseguida','Se acelera'],0]]}]);
 })();
 
+// Tablas resumen de datos que se confunden. tm = tema, t = título, h = cabecera [concepto, valor], r = filas.
+var TB=[
+{tm:4,t:'Permisos por enfermedad grave y fallecimiento',h:['Caso','Días hábiles'],r:[
+['Enfermedad grave, 1.er grado o cónyuge','5'],['Enfermedad grave, 2.º grado','4'],
+['Fallecimiento 1.er grado, misma localidad','3'],['Fallecimiento 1.er grado, otra localidad','5'],
+['Fallecimiento 2.º grado, misma localidad','2'],['Fallecimiento 2.º grado, otra localidad','4'],
+['Traslado de domicilio','1']]},
+{tm:5,t:'Prescripción de faltas y sanciones',h:['Qué','Prescribe en'],r:[
+['Falta leve','6 meses'],['Falta grave','2 años'],['Falta muy grave','3 años'],
+['Sanción leve','1 año'],['Sanción grave','2 años']]},
+{tm:9,t:'Colores del humo',h:['Color','Indica'],r:[
+['Negro','Gran carga térmica y poco oxígeno'],['Amarillo','Azufre'],['Amarillo verdoso','Cloro'],
+['Violeta','Yodo'],['Azul','Hidrocarburos']]},
+{tm:9,t:'Gases del incendio: rangos de inflamabilidad',h:['Gas','Rango'],r:[
+['Monóxido de carbono (CO)','12,5 % a 74 %'],['Ácido cianhídrico (HCN)','5 % a 40 %'],
+['Sulfuro de hidrógeno (H₂S)','4,5 % a 45 %'],['GLP','2 % a 9 %']]},
+{tm:9,t:'Gasolina, gasoil y butano',h:['Dato','Valor'],r:[
+['Punto de inflamación de la gasolina','−39 ºC'],['Punto de inflamación del gasoil','60 ºC'],
+['Autoinflamación del gasoil','330 ºC'],['Autoinflamación del butano','287 ºC']]},
+{tm:9,t:'Grados de incendio por superficie',h:['Grado','Superficie'],r:[
+['Grado I','Hasta 4 m²'],['Grado II','4 a 10 m²'],['Grado III','10 a 100 m²']]},
+{tm:9,t:'El agua como extintor',h:['Dato','Valor'],r:[
+['Calor latente de vaporización','540 cal/g'],['Calor latente de fusión','80 cal/g'],['Temperatura crítica','374 ºC']]},
+{tm:9,t:'Espumas',h:['Dato','Valor'],r:[
+['Baja expansión','Menos de 20'],['Media expansión','20 a 200'],['Alta expansión','Más de 200'],
+['Espumógeno en baja y media','3-6 %'],['Espumógeno en media y alta','1-3 %'],
+['Presión en punta de lanza','3,5 a 10 bar'],['Temperatura del agua','7-27 ºC']]},
+{tm:10,t:'Densidades relativas',h:['Sustancia','Densidad'],r:[
+['Mercurio','13,6'],['Hierro','7,8'],['Hielo','0,85'],['CO₂ respecto al aire','1,52']]},
+{tm:12,t:'Técnicas de ataque: caudal y cono',h:['Técnica','Parámetros'],r:[
+['Ataque directo','100-250 lpm, cono 0º a 15º'],['Ataque indirecto','100-500 lpm, cono 15º a 30º'],
+['Enfriamiento de gases','50-250 lpm, cono 30º, pulsos 1-5 s'],['Ataque defensivo','50-100 lpm'],['Ablandado','100-250 lpm']]},
+{tm:13,t:'Tiempo de retardo del combustible forestal',h:['Retardo','Diámetro'],r:[
+['1 hora','Menos de 6 mm'],['10 horas','6 mm a 2,5 cm'],['100 horas','2,5 a 7,5 cm'],['1.000 horas','7,5 a 20 cm']]},
+{tm:13,t:'Modelos de Rothermel',h:['Grupo','Modelos'],r:[
+['Pastos','1 a 3'],['Matorral','4 a 7'],['Hojarasca bajo arbolado','8 a 10'],['Ramaje y restos','11 a 13']]},
+{tm:13,t:'Incendios forestales por superficie y humo',h:['Dato','Valor'],r:[
+['Conato','Menos de 1 ha'],['Gran incendio forestal','500 ha o más'],['1 hectárea','10.000 m²'],
+['Humo blanco','Pastizal, poca intensidad'],['Humo gris-negro','Matorral o arbolado, alta intensidad']]},
+{tm:15,t:'El cuerpo humano y la corriente',h:['Dato','Valor'],r:[
+['Umbral de no soltar','10 mA'],['Umbral de seguridad','30 mA'],
+['Resistencia en seco','1.600 Ω'],['Resistencia en húmedo','800 Ω'],['Resistencia sumergido','200 Ω']]},
+{tm:15,t:'Tensiones de seguridad en alterna',h:['Local','Tensión'],r:[
+['Seco','50 V'],['Húmedo','25 V'],['Mojado','12 V']]},
+{tm:15,t:'Distancias de seguridad eléctrica',h:['Caso','Distancia'],r:[
+['Trabajos en tensión hasta 1 kV','0,5 m'],['Trabajos en tensión hasta 66 kV','1,4 m'],
+['Grúas, menos de 66.000 V','3 m'],['Grúas, más de 66.000 V','5 m'],['Subterráneas con útiles mecánicos','1 m']]},
+{tm:16,t:'Colores de las señales ADR',h:['Color','Peligro'],r:[
+['Rojo','Inflamable'],['Naranja','Explosivo'],['Verde','Gas no inflamable'],['Azul','Reactivo al agua'],['Amarillo','Oxidante']]},
+{tm:16,t:'Números ONU frecuentes',h:['Materia','Nº ONU'],r:[
+['Gasolina','1203'],['Acetona','1090'],['Ácido sulfúrico','1830'],['Ácido clorhídrico','1789']]},
+{tm:16,t:'Primera cifra del número de peligro (NIP)',h:['Cifra','Peligro'],r:[
+['2','Gas'],['3','Inflamable (33: muy inflamable)'],['5','Comburente'],['6','Tóxico'],['8','Corrosivo']]},
+{tm:16,t:'Letras del código de cisterna',h:['Letra','Materia'],r:[
+['L','Líquidos o sólidos fundidos'],['S','Sólidos pulverulentos o granulados'],['C','Gases comprimidos'],
+['P','Gases licuados o disueltos'],['R','Gases licuados refrigerados']]},
+{tm:16,t:'NFPA 704 y HAZCHEM',h:['Código','Significado'],r:[
+['NFPA azul','Salud'],['NFPA rojo','Inflamabilidad'],['NFPA amarillo','Reactividad'],['NFPA W','No usar agua'],
+['HAZCHEM 1','Chorro'],['HAZCHEM 2','Niebla'],['HAZCHEM 3','Espuma']]},
+{tm:17,t:'Filtros químicos',h:['Filtro','Protege de'],r:[
+['A (marrón)','Orgánicos, ebullición > 65 ºC'],['AX (marrón)','Orgánicos, ebullición < 65 ºC'],
+['B (gris)','Inorgánicos (cloro, H₂S, HCN)'],['E (amarillo)','SO₂ y cloruro de hidrógeno'],['K (verde)','Amoniaco']]},
+{tm:17,t:'Autonomía de una botella de 1.500 l',h:['Esfuerzo','Autonomía'],r:[
+['Reposo (15 l/min)','100 min'],['Medio (50 l/min)','30 min'],['Alto (90 l/min)','Unos 16 min']]},
+{tm:20,t:'Escala de Glasgow (máximos)',h:['Respuesta','Puntos'],r:[
+['Ocular','4'],['Verbal','5'],['Motora','6'],['Coma profundo (total)','3']]},
+{tm:20,t:'Planes de extracción',h:['Plan','Duración'],r:[
+['Plan A','Unos 20 min'],['Plan B','Unos 10 min'],['Plan Emergencia','Unos 3 min']]},
+{tm:24,t:'Índice de velocidad del neumático',h:['Letra','Velocidad máx.'],r:[
+['K','110 km/h'],['L','120 km/h'],['M','130 km/h'],['N','140 km/h']]},
+{tm:25,t:'Colores de las fichas de vehículos',h:['Color','Vehículos'],r:[
+['Rojo','Fuego'],['Azul','Agua'],['Verde','Salvamento'],['Amarillo','Grúa'],['Morado','Especiales'],['Gris','Ligeros y autobuses']]},
+{tm:25,t:'Cestas y cisternas',h:['Vehículo','Dato'],r:[
+['Cesta escala Metz 27 m','450 kg'],['Cesta escala 55 m','290 kg'],['Cesta brazo BR70','500 kg (410 con lanza)'],
+['Cisterna BUL','1.500 l'],['Cisterna BRP','4.500 l'],['Nodriza pequeña / mediana / grande','5.000 / 6.500 / 12.000 l']]},
+{tm:27,t:'Color de la eslinga y carga máxima',h:['Color','Carga'],r:[
+['Violeta','1.000 kg'],['Verde','2.000 kg'],['Amarillo','3.000 kg'],['Gris','4.000 kg'],
+['Rojo','5.000 kg'],['Marrón','6.000 kg'],['Azul','8.000 kg'],['Naranja','10.000 kg']]},
+{tm:27,t:'Materiales de eslingas textiles',h:['Material','Etiqueta · funde a'],r:[
+['Poliéster','Azul · 260 ºC'],['Poliamida','Verde · 255 ºC'],['Polipropileno','Marrón · 160 ºC']]},
+{tm:29,t:'Multas de tráfico',h:['Infracción','Multa'],r:[
+['Leve','Hasta 100 €'],['Grave','200 €'],['Muy grave','500 €'],['Alcohol, drogas o negarse a las pruebas','1.000 €']]},
+{tm:29,t:'Puntos del permiso',h:['Caso','Puntos'],r:[
+['Saldo inicial','12'],['Antigüedad de hasta 3 años','8'],['Máximo que se pierde en un día','8']]},
+{tm:29,t:'Privación del permiso en el Código Penal',h:['Artículo','Privación'],r:[
+['Art. 380 (temeraria)','Más de 1 y hasta 6 años'],['Art. 381','6 a 10 años'],['Art. 383 (negarse a las pruebas)','Más de 1 y hasta 4 años']]},
+{tm:30,t:'Velocidad en vías urbanas',h:['Vía','Límite'],r:[
+['Plataforma única de calzada y acera','20 km/h'],['Un carril por sentido','30 km/h'],
+['Dos o más carriles por sentido','50 km/h'],['Mercancías peligrosas (2 o más carriles)','40 km/h']]},
+{tm:30,t:'Vigencia de los permisos',h:['Permiso','Vigencia'],r:[
+['Grupo 2, hasta 65 años','5 años'],['Grupo 2, desde 65 años','3 años'],
+['Resto, hasta 65 años','10 años'],['Resto, desde 65 años','5 años']]},
+{tm:31,t:'RCP: adulto y niño',h:['Dato','Valor'],r:[
+['Relación en adultos','30:2'],['Relación en niños','15:2'],['Frecuencia de compresiones','110-120/min'],
+['Profundidad en adultos','Unos 5 cm sin pasar de 6'],['Profundidad en niños','Un tercio del tórax'],['Volumen de cada ventilación','500-600 ml']]},
+{tm:32,t:'Regla de los nueves',h:['Zona','%'],r:[
+['Cada brazo','9'],['Cada pierna','18'],['Tronco anterior','18'],['Genitales','1']]},
+{tm:33,t:'Constantes vitales',h:['Dato','Valor'],r:[
+['Tensión arterial normal','120/80'],['Hipotensión','TAS < 90'],['Crisis hipertensiva','TAS > 180 o TAD > 120'],
+['Taquicardia','> 100 lpm'],['Bradicardia','< 60 lpm'],['Hipoxemia','SatO₂ < 90 %']]},
+{tm:35,t:'Accesibilidad para bomberos (SI 5)',h:['Dato','Valor'],r:[
+['Anchura de viales','3,5 m'],['Gálibo','4,5 m'],['Capacidad portante','20 kN/m²'],['Anchura del espacio de maniobra','5 m'],
+['Hueco en fachada','0,80 × 1,20 m'],['Distancia entre huecos','25 m']]},
+{tm:35,t:'Ascensor de emergencia',h:['Dato','Valor'],r:[
+['Carga mínima','630 kg'],['Recorrido completo','Menos de 60 s'],['Cabina','1,10 × 1,40 m']]}
+];
+
 // Trucos para recordar. Clave: "tema|título de la tarjeta".
 // r = regla (html). f = código fonético: [número, palabra (mayúsculas = consonantes que cuentan), dibujo, frase]
 var MN={
@@ -6812,6 +6943,25 @@ var MN={
 "29|Art. 80. Multas":{r:"<b>Leve 100 · grave 200 · muy grave 500.</b> Alcohol, drogas o negarse a la prueba: 1.000. Inhibidor de radares: 6.000. Obras y empresas (n-t): 3.000-20.000. Recargo por graduación: 30 %."}
 };
 
+// Trucos adicionales para listas y datos que se confunden (no sustituyen a los existentes).
+(function(){var A={
+"5|Art. 97: prescripción":{r:"<b>Cuenta atrás 3-2-1.</b> Faltas: muy graves 3 años, graves 2, leves solo medio año (6 meses). Sanciones: igual, pero la leve sube a 1 año: 3-2-1."},
+"5|Art. 76: grupos de clasificación":{r:"Cuanto más avanza la letra, menos título: <b>A</b> Grado universitario · <b>B</b> Técnico Superior · <b>C1</b> Bachiller o Técnico · <b>C2</b> ESO."},
+"9|Los cuatro mecanismos":{r:"Uno por cada lado del tetraedro: <b>quitarle la comida</b> (desalimentación → combustible), <b>taparle la boca</b> (sofocación → comburente), <b>echarle agua fría</b> (enfriamiento → calor) y <b>romper la cadena</b> (inhibición → reacción en cadena)."},
+"9|Color del humo":{r:"Piensa en el laboratorio: el <b>azufre</b> es amarillo, el <b>cloro</b> es un gas amarillo verdoso, los vapores de <b>yodo</b> son violetas y el gas de la cocina (<b>hidrocarburos</b>) da llama azul. Negro = mucho combustible y poco aire."},
+"12|Ataque directo: parámetros":{r:"El cono se va abriendo: <b>directo 0-15º</b> (casi chorro), <b>indirecto 15-30º</b>, <b>enfriamiento de gases 30º</b> con pulsos muy cortos (1-5 s)."},
+"15|Las cinco reglas de oro":{r:"<b>Abre, Cierra con llave, Comprueba, Toca tierra y Señala.</b> Primero cortas, luego impides que se reconecte, compruebas, pones a tierra y, por último, señalizas la zona."},
+"16|Colores de las señales ADR":{r:"<b>Rojo</b> como el fuego (inflamable) · <b>naranja</b> como el fogonazo (explosivo) · <b>verde</b> como el aire limpio (gas no inflamable) · <b>azul</b> como el agua (reactivo al agua) · <b>amarillo</b> como el sol que aviva (oxidante)."},
+"16|NFPA 704 y HAZCHEM":{r:"NFPA: <b>azul</b> salud (las batas de hospital), <b>rojo</b> fuego, <b>amarillo</b> reacción, <b>blanco</b> especiales (W = no usar agua). HAZCHEM 1-2-3 va de más agua a menos: <b>chorro, niebla, espuma</b>."},
+"17|Filtros químicos: colores":{r:"<b>A</b> marrón (orgánicos, como la tierra; AX si hierven por debajo de 65 ºC) · <b>B</b> gris (inorgánicos) · <b>E</b> amarillo como el azufre del SO₂ · <b>K</b> verde (amoniaco)."},
+"20|Plan A, Plan B y Emergencia":{r:"<b>A de Amplio</b> (unos 20 min) · <b>B de Breve</b> (unos 10 min) · <b>E de Exprés</b> (unos 3 min)."},
+"25|Cómo se clasifican":{r:"<b>Rojo fuego, azul agua, verde salvamento</b> (como la cruz verde de socorro), <b>amarillo grúa</b> (como las máquinas de obra), <b>morado</b> especiales y <b>gris</b> lo de diario: ligeros y autobuses."},
+"27|Color de la etiqueta según el material":{r:"<b>Poliéster azul, poliamida verde, polipropileno marrón.</b> Los dos primeros casi empatan al fundir (260 y 255 ºC); el polipropileno se derrite mucho antes (160 ºC)."},
+"31|La cadena de supervivencia":{r:"<b>Llama, aprieta, descarga, hospital:</b> 1 reconocer y pedir ayuda · 2 RCP precoz · 3 desfibrilación precoz · 4 soporte vital avanzado."},
+"31|Seguridad: conducta PAS":{r:"<b>Primero tú, luego el 112, luego la víctima:</b> Proteger · Avisar · Socorrer."},
+"31|Las 4 H":{r:"<b>Falta aire, falta sangre, falla el potasio, falla la temperatura:</b> hipoxia, hipovolemia, hipo/hiperpotasemia e hipo/hipertermia."}
+};for(var k in A)if(!MN[k])MN[k]=A[k]})();
+
 </script>
 <script>
 "use strict";
@@ -6838,7 +6988,7 @@ const ROUTE=T.map(t=>t.id).sort((a,b)=>a-b);
 // ---------- estado ----------
 const KEY='tbm-v1';
 const CL={doc:null,busy:false,dirty:false,t:0};
-const DEF={at:0,cards:{},qs:{},daily:{d:0,nw:0,extra:0},streak:{last:0,n:0},notes:{},set:{npd:8,cur:ROUTE[0],mode:'tema',theme:'auto',vf:1,blk:'esp',cb:{}},tests:[]};
+const DEF={at:0,cards:{},qs:{},daily:{d:0,nw:0,extra:0},streak:{last:0,n:0},notes:{},set:{npd:8,cur:ROUTE[0],mode:'tema',theme:'auto',vf:1,blk:'esp',cb:{},min:20,rf:'mix'},tests:[],prac:{reto:0,pj:{}}};
 let S=load();
 function load(){try{const j=JSON.parse(localStorage.getItem(KEY));if(j&&j.cards)return deep(DEF,j)}catch(e){}return JSON.parse(JSON.stringify(DEF))}
 function deep(d,j){const o=JSON.parse(JSON.stringify(d));for(const k in j){o[k]=(j[k]&&typeof j[k]==='object'&&!Array.isArray(j[k])&&d[k]&&typeof d[k]==='object'&&!Array.isArray(d[k]))?Object.assign(o[k],j[k]):j[k]}return o}
@@ -6906,6 +7056,12 @@ function blkCur(b){b=b||S.set.blk||'esp';S.set.cb=S.set.cb||{};const pool=blkPoo
   c=started[0]||open[0];
   S.set.cb[b]=c;S.set.cur=c;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}return c}
 function newLeft(){return Math.max(0,S.set.npd+S.daily.extra-S.daily.nw)}
+// Bloque de sesión: un tiempo orientativo (S.set.min) repartido entre repasos y nuevas
+const T_REV=.35,T_NEW=1.5;
+function blockPlan(){rollDay();const B=S.set.min||20,due=dueCards();
+  const maxRev=Math.max(5,Math.floor(B*.65/T_REV)),nr=Math.min(due.length,maxRev);
+  const nl=Math.min(newLeft(),CARDS.filter(c=>!cs(c.id)).length,Math.max(0,Math.floor((B-nr*T_REV)/T_NEW)));
+  return {due,nr,nl,B}}
 
 // ---------- preguntas ----------
 function mkQ(card,qi,form){const q=card.q[qi%card.q.length];
@@ -6918,28 +7074,33 @@ function mkQ(card,qi,form){const q=card.q[qi%card.q.length];
   if(form==='vf'){const w=q.o.map((_,i)=>i).filter(i=>i!==q.c);it.truth=Math.random()<.5;it.prop=it.truth?q.o[q.c]:q.o[w[Math.floor(Math.random()*w.length)]]}
   return it}
 function pickForm(){return S.set.vf&&Math.random()<.3?'vf':'mc'}
+function revForm(){const rf=S.set.rf||'mix';if(rf==='fc')return 'fc';if(rf==='mc')return pickForm();return Math.random()<.5?'fc':pickForm()}
 
 // ---------- sesión de estudio ----------
 let SES=null;
 function buildSession(opts={}){
   rollDay();
-  let news=opts.free?[]:nextNew(newLeft());
-  let revs=opts.free?shuf(CARDS.filter(c=>cs(c.id))).slice(0,12):dueCards().slice(0,60);
+  if(opts.items){const Q=opts.items.map(q=>({k:'q',card:q.card,qi:q.qi,form:'mc',rev:1})),st={};
+    Q.forEach(it=>{(st[it.card.id]=st[it.card.id]||{nw:0,fail:0,left:0}).left++});
+    SES={Q,i:0,st,ok:0,ko:0,nw:0,total:Q.length,free:true,ans:null};return SES}
+  const P=blockPlan();
+  let news=opts.free?[]:nextNew(P.nl);
+  let revs=opts.free?shuf(CARDS.filter(c=>cs(c.id))).slice(0,Math.round(P.B/T_REV*.6)):P.due.slice(0,P.nr);
   const Q=[];const rv=shuf(revs);
   for(let g=0;g<news.length;g+=3){
     const grp=news.slice(g,g+3);
     grp.forEach(c=>{Q.push({k:'learn',card:c});Q.push({k:'q',card:c,qi:0,form:'mc'})});
     const mix=shuf(grp).map(c=>({k:'q',card:c,qi:c.q.length>1?1:0,form:c.q.length>1?(S.set.vf&&Math.random()<.25?'vf':'mc'):(S.set.vf?'vf':'mc')}));
     Q.push(...mix);
-    rv.splice(0,3).forEach(c=>Q.push({k:'q',card:c,qi:revQi(c),form:pickForm(),rev:1}));
+    rv.splice(0,3).forEach(c=>Q.push({k:'q',card:c,qi:revQi(c),form:revForm(),rev:1}));
   }
-  rv.forEach(c=>Q.push({k:'q',card:c,qi:revQi(c),form:pickForm(),rev:1}));
+  rv.forEach(c=>Q.push({k:'q',card:c,qi:revQi(c),form:revForm(),rev:1}));
   const st={};news.forEach(c=>st[c.id]={nw:1,fail:0,left:0});revs.forEach(c=>st[c.id]={nw:0,fail:0,left:0});
   Q.forEach(it=>{if(it.k==='q')st[it.card.id].left++});
   SES={Q,i:0,st,ok:0,ko:0,nw:news.length,total:Q.length,free:!!opts.free,ans:null};
   return SES;
 }
-function revQi(c){const s=cs(c.id);return s?(s.qi||0)%c.q.length:0}
+function revQi(c){const s=cs(c.id);if(!s)return 0;const n=(s.st||0)<2?Math.min(2,c.q.length):c.q.length;return (s.qi||0)%n}
 function startStudy(opts){
   const s=buildSession(opts);
   if(!s.Q.length){toast(opts&&opts.free?'Aún no has visto ninguna tarjeta':'No hay nada pendiente hoy');return}
@@ -6965,7 +7126,12 @@ function renderItem(){
     $('#go').onclick=next;return;
   }
   const Qi=mkQ(c,it.qi,it.form);it.Qi=Qi;
-  if(it.form==='vf'){
+  if(it.form==='fc'){
+    stage.innerHTML=ctx+`<p class="note">Piensa la respuesta y luego destápala.</p><div class="qq">${esc(Qi.q.p)}</div><div class="fc-a" hidden><span class="lbl">Respuesta</span><b>${esc(Qi.q.o[Qi.q.c])}</b></div>`;
+    panel.innerHTML=`<button class="btn primary block" id="fc-show">Mostrar respuesta</button><p class="hint keys">Espacio para destapar</p>`;
+    $('#fc-show').onclick=()=>{$('#st-stage .fc-a').hidden=false;panel.innerHTML=`<div class="vf"><button class="opt" data-v="0"><span class="k">N</span>No lo sabía</button><button class="opt" data-v="1"><span class="k">S</span>Lo sabía</button></div><p class="hint keys">Teclas N / S</p>`;
+      $$('#st-panel .opt').forEach(b=>b.onclick=()=>answer(b.dataset.v==='1',b))};
+  }else if(it.form==='vf'){
     stage.innerHTML=ctx+`<p class="note">¿Es correcta esta respuesta?</p><div class="qq">${esc(Qi.q.p)}</div><div class="prop">${esc(Qi.prop)}</div>`;
     panel.innerHTML=`<div class="vf"><button class="opt" data-v="1"><span class="k">V</span>Verdadero</button><button class="opt" data-v="0"><span class="k">F</span>Falso</button></div><p class="hint keys">Teclas V / F</p>`;
     $$('#st-panel .opt').forEach(b=>b.onclick=()=>answer(b.dataset.v==='1'===Qi.truth,b));
@@ -6978,7 +7144,8 @@ function renderItem(){
 function answer(ok,btn){
   if(SES.ans!==null)return;const it=SES.Q[SES.i],Qi=it.Qi,c=it.card,r=SES.st[c.id];SES.ans=ok;
   const panel=$('#st-panel');
-  if(it.form==='vf'){$$('#st-panel .opt').forEach(b=>{const v=b.dataset.v==='1';if(v===Qi.truth)b.classList.add('good');else if(b===btn)b.classList.add('wrong');else b.classList.add('dim')})}
+  if(it.form==='fc'){$$('#st-panel .opt').forEach(b=>b.classList.add(b===btn?(ok?'good':'wrong'):'dim'))}
+  else if(it.form==='vf'){$$('#st-panel .opt').forEach(b=>{const v=b.dataset.v==='1';if(v===Qi.truth)b.classList.add('good');else if(b===btn)b.classList.add('wrong');else b.classList.add('dim')})}
   else{$$('#st-panel .opt').forEach(b=>{const i=+b.dataset.i;if(i===Qi.corr)b.classList.add('good');else if(b===btn)b.classList.add('wrong');else b.classList.add('dim')})}
   r.left--;
   const qs=S.qs[Qi.q.qid]||(S.qs[Qi.q.qid]={ok:0,ko:0});
@@ -6989,7 +7156,7 @@ function answer(ok,btn){
   if(r.left<=0)finishCard(c.id);
   let fb;
   if(ok)fb=`<div class="fb ok">${pick(['¡Bien!','¡Correcto!','¡Eso es!','¡Perfecto!','¡Muy bien!'])}</div>`;
-  else{const right=Qi.q.o[Qi.q.c];fb=`<div class="fb bad">No es así. Correcta: ${esc(right)}</div><div class="ficha mini"><h3>${esc(c.t)}</h3>${figH(c)}<div class="tx">${c.x}</div>${memH(c)}</div>`}
+  else{const right=Qi.q.o[Qi.q.c];fb=`<div class="fb bad">${it.form==='fc'?'Sin problema: vuelve a salir en un momento con otra pregunta.':'No es así. Correcta: '+esc(right)}</div><div class="ficha mini"><h3>${esc(c.t)}</h3>${figH(c)}<div class="tx">${c.x}</div>${memH(c)}</div>`}
   const fbBox=document.createElement('div');fbBox.style.display='flex';fbBox.style.flexDirection='column';fbBox.style.gap='8px';fbBox.innerHTML=fb;
   if(!ok){$('#st-stage').appendChild(fbBox)}else{panel.insertBefore(fbBox,panel.firstChild)}
   const h=panel.querySelector('.hint');if(h)h.remove();
@@ -7007,6 +7174,7 @@ function endStudy(){
   $('#cele-h').textContent=SES.free?'¡Repaso hecho!':(dueCards().length||newLeft()?'¡Sesión completada!':'¡Día completado!');
   $('#cele-sub').textContent=tot?`${Math.round(100*SES.ok/tot)} % de respuestas correctas.`:'';
   $('#cele-a').textContent=SES.ok;$('#cele-new').textContent=SES.nw;$('#cele-st').textContent=S.streak.n;
+  {const m=$('#cele-more'),P=blockPlan();m.hidden=SES.free;m.textContent=`Otro bloque de ${P.B} min`+(P.nr?` (${P.nr} repasos${P.nl?' y '+P.nl+' nuevas':''})`:'');}
   $('#cele').hidden=false;confetti();SES=null;renderHome();
 }
 function exitStudy(){
@@ -7028,18 +7196,21 @@ function confetti(){const cv=$('#cele-c'),x=cv.getContext('2d');const W=cv.width
 function renderHome(){
   $$('#h-blk button').forEach(b=>{b.classList.toggle('on',b.dataset.v===(S.set.blk||'esp'));b.onclick=()=>{S.set.blk=b.dataset.v;save();renderHome()}});
   rollDay();
-  const due=dueCards().length,nl=Math.min(newLeft(),CARDS.filter(c=>!cs(c.id)).length);
+  const P=blockPlan(),due=P.due.length,nl=Math.min(newLeft(),CARDS.filter(c=>!cs(c.id)).length);
   $('#s-due').textContent=due;$('#s-new').textContent=nl;
   const st=(S.streak.last>=today()-1)?S.streak.n:0;$('#s-streak').textContent=st;
   $('#npd').textContent=$('#npd2').textContent=S.set.npd;
   const nx=nextNew(Math.max(1,nl))[0];
   let msg;
   if(!due&&!nl)msg=S.daily.nw||S.streak.last===today()?'<b>Hoy ya está.</b> Mañana tendrás repasos nuevos. Si quieres más, añade tarjetas o haz un test.':'<b>No hay nada pendiente.</b>';
-  else msg=`Hoy: <b>${due} repaso${due===1?'':'s'}</b> y <b>${nl} tarjeta${nl===1?'':'s'} nueva${nl===1?'':'s'}</b>${nx&&nl?(S.set.blk==='rnd'?` mitad del tema ${[...new Set(nextNew(nl).map(c=>c.tema))].join(' y del ')}`:` del tema ${nx.tema} (${esc(TM[nx.tema].n)}), ${esc(nx.lt.toLowerCase())}`):''}. Unos ${Math.max(2,Math.round((due*0.4+nl*1.3)))} minutos.`;
+  else msg=`Bloque de ${P.B} min: <b>${P.nr} repaso${P.nr===1?'':'s'}</b> y <b>${P.nl} tarjeta${P.nl===1?'':'s'} nueva${P.nl===1?'':'s'}</b>${nx&&P.nl?(S.set.blk==='rnd'?` mitad del tema ${[...new Set(nextNew(nl).map(c=>c.tema))].join(' y del ')}`:` del tema ${nx.tema} (${esc(TM[nx.tema].n)}), ${esc(nx.lt.toLowerCase())}`):''}.${due>P.nr?` Quedan ${due-P.nr} repasos más para otro bloque.`:''}${nl>P.nl?` Puedes ver hasta ${nl} nuevas hoy.`:''}`;
   $('#today-b').innerHTML=msg;
   $('#b-study').disabled=!due&&!nl;
   $('#b-study').textContent=due||nl?'Estudiar ahora':'Todo hecho por hoy';
-  $('#b-more').hidden=!!(due||nl)||!CARDS.some(c=>!cs(c.id));
+  $('#b-more').hidden=!!(due||nl)||!CARDS.some(c=>!cs(c.id));$('#b-more').textContent=`Otro bloque de ${P.B} min con tarjetas nuevas`;
+  $('#p-reto-n').textContent=S.prac.reto?`Récord: ${S.prac.reto} aciertos`:'Preguntas rápidas contra reloj';
+  {const nf=Object.values(S.qs).filter(x=>x.ko>0).length;$('#p-fail-n').textContent=nf?`${nf} pregunta${nf===1?'':'s'} con fallos`:'Aún sin fallos'}
+  $('#p-tab-n').textContent=`${TBX.length} tablas de datos`;
   $('#b-free').hidden=!!(due||nl)||!Object.keys(S.cards).length;
   // progreso
   const cnt=[0,0,0,0,0];CARDS.forEach(c=>cnt[mastery(c.id)]++);const N=CARDS.length;
@@ -7055,11 +7226,12 @@ function renderHome(){
 }
 function temaStats(id){const cs_=CARDS.filter(c=>c.tema===id);const cnt=[0,0,0,0,0];cs_.forEach(c=>cnt[mastery(c.id)]++);return{n:cs_.length,cnt,q:cs_.reduce((a,c)=>a+c.q.length,0)}}
 function routeRow(id){const t=TM[id],s=temaStats(id);const cur=S.set.mode==='tema'&&id===curTema();
-  return `<button class="zone${cur?' cur':''}" data-t="${id}"><span class="num">${id}</span><span class="nm">${esc(t.n)}</span><span class="ct">${s.n-s.cnt[0]}/${s.n}</span><div class="bar mk">${[4,3,2,1].map(m=>`<i style="width:${100*s.cnt[m]/s.n}%;background:var(--m${m})"></i>`).join('')}</div></button>`}
+  const pct=Math.round(100*(s.cnt[1]+2*s.cnt[2]+3*s.cnt[3]+4*s.cnt[4])/(4*s.n));
+  return `<button class="zone${cur?' cur':''}" data-t="${id}"><span class="num">${id}</span><span class="nm">${esc(t.n)}</span><span class="ct">${s.n-s.cnt[0]}/${s.n} · ${pct} %</span><div class="bar mk">${[4,3,2,1].map(m=>`<i style="width:${100*s.cnt[m]/s.n}%;background:var(--m${m})"></i>`).join('')}</div></button>`}
 function curTema(){const n=nextNew(1)[0];return n?n.tema:S.set.cur}
 
 // ---------- modo test ----------
-const APP_VER='v24 · 26 nov 2026';
+const APP_VER='v25 · 27 nov 2026';
 $('#set-ver').textContent=`Versión ${APP_VER} · ${CARDS.length} tarjetas · ${QS.length} preguntas`;
 const TT={sel:new Set(T.map(t=>t.id)),src:'all',dif:'all',n:20,mode:'end',time:false};
 function renderTestSetup(){
@@ -7145,19 +7317,22 @@ function renderTemario(){
   const el=$('#tm-list');
   if(TMV){const t=TM[TMV],s=temaStats(TMV);
     el.innerHTML=`<header class="full"><button class="back" id="tm-back">‹ Temario</button><h1>Tema ${t.id}. ${esc(t.n)}</h1><p class="sub">${esc(t.s)}</p></header>
-    <div class="card full"><div class="row between"><b>${s.n-s.cnt[0]} de ${s.n} tarjetas vistas · ${s.q} preguntas</b><button class="btn small primary" id="tm-go">Estudiar este tema</button></div><div class="bar mk">${[4,3,2,1].map(m=>`<i style="width:${100*s.cnt[m]/s.n}%;background:var(--m${m})"></i>`).join('')}</div></div>
+    <div class="card full"><div class="row between"><b>${s.n-s.cnt[0]} de ${s.n} tarjetas vistas · ${s.q} preguntas</b><button class="btn small primary" id="tm-go">Estudiar este tema</button></div>${TBX.some(x=>x.tm===t.id)?`<button class="btn small" id="tm-tab">📋 Tablas resumen de este tema (${TBX.filter(x=>x.tm===t.id).length})</button>`:''}<div class="bar mk">${[4,3,2,1].map(m=>`<i style="width:${100*s.cnt[m]/s.n}%;background:var(--m${m})"></i>`).join('')}</div></div>
     <div class="card full" style="gap:0">${t.L.map((l,li)=>{const cc=CARDS.filter(c=>c.tema===t.id&&c.li===li);const sv=cc.filter(c=>cs(c.id)).length;
       return `<details class="lesson"${li===0?' open':''}><summary><span class="tag n${l.nv}">N${l.nv}</span>${esc(l.t)}<span class="ct">${sv}/${cc.length}</span></summary><div class="cards">${cc.map(c=>{const m=mastery(c.id);return `<div class="ficha mini tap" data-c="${c.id}" style="border-left-color:var(--m${m||0})"><h3>${esc(c.t)}</h3><div class="tx">${c.x}</div><span class="note">${['Sin ver todavía','Recién vista','Empezada','Bien','Dominada'][m]}</span></div>`}).join('')}</div></details>`}).join('')}</div>`;
     $('#tm-back').onclick=()=>{TMV=null;renderTemario()};
+    {const b=$('#tm-tab');if(b)b.onclick=()=>showTablas(t.id,'temario')}
     {const ids=CARDS.filter(c=>c.tema===t.id).map(c=>c.id);$$('#tm-list .ficha.tap').forEach(f=>f.onclick=()=>openViewer(ids,ids.indexOf(f.dataset.c)))}
     $('#tm-go').onclick=()=>{S.set.cur=t.id;S.set.blk=t.b===1?'com':'esp';S.set.cb=S.set.cb||{};S.set.cb[S.set.blk]=t.id;save();TMV=null;showView('home');renderHome();toast('Tema '+t.id+' será lo siguiente que estudies')};
     el.scrollTop=0;return}
   const row=t=>{const has=TM[t.id];if(!has)return `<div class="zone off"><span class="num">${t.id}</span><span class="nm">${esc(t.n)}</span><span class="ct">pendiente</span></div>`;const s=temaStats(t.id);
     return `<button class="zone" data-t="${t.id}"><span class="num">${t.id}</span><span class="nm">${esc(t.n)}</span><span class="ct">${s.n} tarjetas</span><div class="bar mk">${[4,3,2,1].map(m=>`<i style="width:${100*s.cnt[m]/s.n}%;background:var(--m${m})"></i>`).join('')}</div></button>`};
   el.innerHTML=`<header><h1>Temario</h1><p class="sub">35 temas según las bases (BOAM 9.919). Toca un tema para leer sus tarjetas como apuntes.</p></header>
+   <button class="btn block" id="tm-tabs">📋 Tablas resumen (${TBX.length}) · datos que se confunden</button>
    <div class="card" style="gap:0"><h2 style="margin-bottom:6px">Bloque I · Comunes</h2><p class="note" style="margin-bottom:6px">Como máximo el 20 % de las preguntas del examen.</p>${TEMARIO.filter(t=>t.b===1).map(row).join('')}</div>
    <div class="card" style="gap:0"><h2 style="margin-bottom:6px">Bloque II · Específicos</h2><p class="note" style="margin-bottom:6px">Al menos el 80 % de las preguntas. Al menos una pregunta por cada epígrafe.</p>${TEMARIO.filter(t=>t.b===2).map(row).join('')}</div>`;
   $$('#tm-list .zone[data-t]').forEach(b=>b.onclick=()=>{TMV=+b.dataset.t;renderTemario()});
+  $('#tm-tabs').onclick=()=>showTablas(null,'temario');
 }
 
 // ---------- visor de tarjetas ----------
@@ -7186,29 +7361,91 @@ function doSearch(){const raw=$('#sr-q').value.trim(),box=$('#sr-res');
     ws.forEach(w=>{const re=new RegExp('('+[...w].map(ch=>ch.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).map(ch=>({a:'[aáà]',e:'[eéè]',i:'[iíï]',o:'[oóò]',u:'[uúü]',n:'[nñ]'}[ch]||ch)).join('')+')','gi');t=t.replace(re,'<mark>$1</mark>')});return t};
   box.innerHTML=hits.length?`<p class="note">${hits.length} resultado${hits.length>1?'s':''}</p>`+hits.slice(0,80).map(h=>`<button class="hit" data-c="${h.c.id}"><b>${esc(h.c.t)}</b><span class="note">Tema ${h.c.tema} · ${esc(TM[h.c.tema].n)}</span>${snip(h.c)}</button>`).join(''):'<p class="note">No hay tarjetas con ese texto.</p>';
   $$('#sr-res .hit').forEach(b=>b.onclick=()=>openViewer(ids,ids.indexOf(b.dataset.c)))}
+// ---------- practicar: reto, parejas, más falladas y tablas ----------
+const TBX=typeof TB!=='undefined'?TB:[];
+let PR=null,PRBACK='home';
+function openPrac(back){if(back)PRBACK=back;if(PR&&PR.tk)clearInterval(PR.tk);document.body.classList.add('studying');showView('prac');$('#pr-timer').classList.remove('low');$('#v-prac .stage').scrollTop=0}
+function closePrac(){if(PR&&PR.tk)clearInterval(PR.tk);PR=null;document.body.classList.remove('studying');const b=PRBACK;PRBACK='home';showView(b);if(b==='temario')renderTemario();else renderHome()}
+function prTop(frac,left,timer){$('#pr-bar i').style.width=(100*Math.min(1,frac))+'%';$('#pr-left').textContent=left||'';$('#pr-timer').textContent=timer||''}
+function fmt(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function qsRec(q,ok){const r=S.qs[q.qid]||(S.qs[q.qid]={ok:0,ko:0});ok?r.ok++:r.ko++}
+// Reto de 2 minutos
+function retoPool(){let p=QS.filter(q=>cs(q.card.id));if(p.length<20){const t=curTema();p=QS.filter(q=>cs(q.card.id)||q.card.tema===t)}return p}
+function startReto(){const prev=PR;openPrac(prev&&prev.back);PR={k:'reto',back:PRBACK,pool:shuf(retoPool()),i:0,ok:0,ko:0,t0:Date.now(),lim:120};PR.tk=setInterval(retoTick,250);retoTick();retoQ()}
+function retoTick(){if(!PR||PR.k!=='reto'||PR.done)return;const left=PR.lim-(Date.now()-PR.t0)/1000;prTop(1-left/PR.lim,PR.ok+' ✓',fmt(left));$('#pr-timer').classList.toggle('low',left<20);if(left<=0)retoEnd()}
+function retoQ(){if(PR.i>=PR.pool.length)PR.pool=PR.pool.concat(shuf(PR.pool));const q=PR.pool[PR.i],it=mkQ(q.card,q.qi,'mc');PR.lock=false;
+  $('#pr-stage').innerHTML=`<div class="ctx"><span class="tag">Reto</span><span>Tema ${q.card.tema} · ${esc(TM[q.card.tema].n)}</span></div><div class="qq">${esc(it.q.p)}</div>`;
+  $('#pr-panel').innerHTML=it.opts.map((o,i)=>`<button class="opt" data-i="${i}"><span class="k">${'ABC'[i]}</span><span>${esc(o)}</span></button>`).join('');
+  $$('#pr-panel .opt').forEach(b=>b.onclick=()=>{if(PR.lock||PR.done)return;PR.lock=true;const ok=+b.dataset.i===it.corr;qsRec(it.q,ok);ok?PR.ok++:PR.ko++;
+    $$('#pr-panel .opt').forEach(x=>x.classList.add(+x.dataset.i===it.corr?'good':(x===b?'wrong':'dim')));PR.i++;
+    const me=PR;setTimeout(()=>{if(PR===me&&!PR.done)retoQ()},ok?350:1300)})}
+function retoEnd(){PR.done=true;clearInterval(PR.tk);const best=S.prac.reto||0,nb=PR.ok>best;if(nb)S.prac.reto=PR.ok;save();prTop(1,'','0:00');
+  $('#pr-stage').innerHTML=`<div class="card"><h2>${nb?'¡Nuevo récord!':'¡Tiempo!'}</h2><div class="stats"><div class="stat"><b style="color:var(--ok)">${PR.ok}</b><span>aciertos</span></div><div class="stat"><b style="color:var(--bad)">${PR.ko}</b><span>fallos</span></div><div class="stat"><b>${Math.max(best,PR.ok)}</b><span>récord</span></div></div><p class="note">Las preguntas salen de las tarjetas que ya has estudiado. Las que falles aparecerán en «Mis 10 más falladas».</p></div>`;
+  $('#pr-panel').innerHTML=`<div class="row"><button class="btn block" id="pr-out">Volver</button><button class="btn primary block" id="pr-again">Otra vez</button></div>`;
+  $('#pr-again').onclick=startReto;$('#pr-out').onclick=closePrac}
+// Parejas
+function tbAvail(){const seen=new Set(CARDS.filter(c=>cs(c.id)).map(c=>c.tema));const a=TBX.filter(t=>seen.has(t.tm));return a.length?a:TBX}
+function startPj(ti){const tb=ti!=null?TBX[ti]:pick(tbAvail());if(!tb)return;openPrac();
+  const rows=shuf(tb.r).slice(0,5);PR={k:'pj',tb,ti:TBX.indexOf(tb),rows,L:shuf(rows.map((_,i)=>i)),R:shuf(rows.map((_,i)=>i)),sel:null,done:new Set(),err:0,t0:Date.now()};
+  PR.tk=setInterval(pjTick,500);pjTick();pjDraw()}
+function pjTick(){if(PR&&PR.k==='pj'&&!PR.end)prTop(PR.done.size/2/PR.rows.length,(PR.done.size/2)+'/'+PR.rows.length,fmt((Date.now()-PR.t0)/1000))}
+function pjDraw(){const P=PR,b=(s,i,txt)=>`<button class="opt pj-b${P.done.has(s+i)?' good done':''}${P.sel&&P.sel.s===s&&P.sel.i===i?' sel':''}" data-s="${s}" data-i="${i}">${esc(txt)}</button>`;
+  $('#pr-stage').innerHTML=`<div class="ctx"><span class="tag">Parejas</span><span>Tema ${P.tb.tm} · ${esc(TM[P.tb.tm]?TM[P.tb.tm].n:'')}</span></div><h3 class="pj-t">${esc(P.tb.t)}</h3><p class="note">Toca un elemento de cada columna para unirlos.</p>
+   <div class="pj"><div><p class="lbl">${esc(P.tb.h[0])}</p>${P.L.map(i=>b('L',i,P.rows[i][0])).join('')}</div><div><p class="lbl">${esc(P.tb.h[1])}</p>${P.R.map(i=>b('R',i,P.rows[i][1])).join('')}</div></div>`;
+  $('#pr-panel').innerHTML=`<p class="note" style="text-align:center">${P.err} fallo${P.err===1?'':'s'}</p>`;
+  $$('#pr-stage .pj-b').forEach(x=>x.onclick=()=>pjTap(x.dataset.s,+x.dataset.i))}
+function pjTap(s,i){const P=PR;if(P.end||P.done.has(s+i))return;
+  if(!P.sel||P.sel.s===s){P.sel={s,i};pjDraw();return}
+  const li=s==='L'?i:P.sel.i,ri=s==='R'?i:P.sel.i;P.sel=null;
+  if(P.rows[li][1]===P.rows[ri][1]){P.done.add('L'+li);P.done.add('R'+ri);pjDraw();pjTick();if(P.done.size===2*P.rows.length)pjEnd()}
+  else{P.err++;pjDraw();[['L',li],['R',ri]].forEach(([a,j])=>{const el=$(`#pr-stage .pj-b[data-s="${a}"][data-i="${j}"]`);if(el)el.classList.add('wrong','shake')})}}
+function pjEnd(){const P=PR;P.end=true;clearInterval(P.tk);const sec=Math.round((Date.now()-P.t0)/1000),k=P.tb.t,old=S.prac.pj[k],nb=P.err===0&&(!old||sec<old);if(nb)S.prac.pj[k]=sec;save();prTop(1,'',fmt(sec));
+  $('#pr-stage').innerHTML=`<div class="card"><h2>${P.err?'¡Hecho!':(nb?'¡Pleno y récord!':'¡Pleno!')}</h2><div class="stats"><div class="stat"><b>${fmt(sec)}</b><span>tiempo</span></div><div class="stat"><b style="color:var(--bad)">${P.err}</b><span>fallos</span></div><div class="stat"><b>${S.prac.pj[k]?fmt(S.prac.pj[k]):'—'}</b><span>récord sin fallos</span></div></div></div><div class="card"><b>${esc(P.tb.t)}</b>${tbHtml(P.tb)}</div>`;
+  $('#pr-panel').innerHTML=`<div class="row"><button class="btn block" id="pr-same">Repetir</button><button class="btn primary block" id="pr-again">Otra tabla</button></div><button class="btn block small" id="pr-out">Volver</button>`;
+  $('#pr-same').onclick=()=>startPj(P.ti);$('#pr-again').onclick=()=>startPj();$('#pr-out').onclick=closePrac}
+// Tablas resumen
+function tbHtml(t){return `<table class="tb"><thead><tr><th>${esc(t.h[0])}</th><th>${esc(t.h[1])}</th></tr></thead><tbody>${t.r.map(r=>`<tr><td>${esc(r[0])}</td><td><b>${esc(r[1])}</b></td></tr>`).join('')}</tbody></table>`}
+function showTablas(tm,back){openPrac(back);PR={k:'tab'};prTop(0,'','');const list=TBX.map((t,i)=>({t,i})).filter(x=>tm==null||x.t.tm===tm);
+  $('#pr-stage').innerHTML=`<h2 class="pj-t">Tablas resumen${tm!=null?' · Tema '+tm:''}</h2><p class="note">Datos que se suelen confundir, puestos juntos para compararlos. Con cualquiera puedes jugar a las parejas.</p>`+
+    list.map(({t,i})=>`<div class="card"><div class="row between"><b>${esc(t.t)}</b><span class="note">Tema ${t.tm}</span></div>${tbHtml(t)}<button class="btn small" data-pj="${i}">🧩 Jugar a parejas</button></div>`).join('');
+  $('#pr-panel').innerHTML=`<button class="btn primary block" id="pr-out">Volver</button>`;$('#pr-out').onclick=closePrac;
+  $$('#pr-stage [data-pj]').forEach(b=>b.onclick=()=>startPj(+b.dataset.pj))}
+// Mis 10 más falladas
+function topFails(){return QS.filter(q=>(S.qs[q.qid]||{}).ko>0).sort((a,b)=>fr(b)-fr(a)||S.qs[b.qid].ko-S.qs[a.qid].ko).slice(0,10)}
+function showFails(){openPrac('home');PR={k:'fail'};prTop(0,'','');const L=topFails();
+  $('#pr-stage').innerHTML=`<h2 class="pj-t">Tus ${L.length>1?L.length+' ':''}más falladas</h2>`+(L.length?`<p class="note">Ordenadas por porcentaje de fallo.</p><div class="card" style="gap:0">`+L.map(q=>{const r=S.qs[q.qid];return `<div class="rv"><span class="note">Tema ${q.card.tema} · ${r.ok} acierto${r.ok===1?'':'s'} y ${r.ko} fallo${r.ko===1?'':'s'}</span><span class="q">${esc(q.p)}</span><span class="a">✓ ${esc(q.o[q.c])}</span></div>`}).join('')+'</div>':'<p class="note">Todavía no has fallado ninguna pregunta.</p>');
+  $('#pr-panel').innerHTML=L.length?`<div class="row"><button class="btn block" id="pr-out">Volver</button><button class="btn primary block" id="pr-go">Repasar estas ${L.length}</button></div>`:`<button class="btn primary block" id="pr-out">Volver</button>`;
+  $('#pr-out').onclick=closePrac;const g=$('#pr-go');if(g)g.onclick=()=>{PR=null;startStudy({items:L})}}
+$('#pr-exit').onclick=closePrac;
+$('#p-reto').onclick=()=>{PRBACK='home';startReto()};$('#p-pj').onclick=()=>{PRBACK='home';startPj()};$('#p-fail').onclick=showFails;$('#p-tab').onclick=()=>showTablas(null,'home');
 // ---------- ajustes ----------
 function renderSet(){
   $$('#set-mode button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.set.mode));
   $('#set-mode-n').textContent=S.set.mode==='tema'?'Sigues un tema, en el orden del temario, hasta terminarlo; luego pasa a otro del bloque que elijas en Hoy.':'Vas alternando bloques de 3 tarjetas de los temas del bloque que elijas en Hoy, cada uno en su orden.';
   $$('#set-theme button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.set.theme));
   $$('#set-vf button').forEach(b=>b.classList.toggle('on',+b.dataset.v===+S.set.vf));
+  $$('#set-min button').forEach(b=>b.classList.toggle('on',+b.dataset.v===+(S.set.min||20)));
+  $$('#set-rf button').forEach(b=>b.classList.toggle('on',b.dataset.v===(S.set.rf||'mix')));
+  $('#set-rf-n').textContent={fc:'Ves la pregunta, piensas la respuesta, la destapas y marcas si la sabías. Es lo más rápido y lo que mejor fija la memoria.',mix:'Mitad tarjeta rápida y mitad preguntas tipo test.',mc:'Todos los repasos con opciones, como en el examen.'}[S.set.rf||'mix'];
   $('#npd').textContent=$('#npd2').textContent=S.set.npd;
 }
 function applyTheme(){const r=document.documentElement;if(S.set.theme==='auto')r.removeAttribute('data-theme');else r.setAttribute('data-theme',S.set.theme)}
 
 // ---------- navegación ----------
 function showView(v){$$('.view').forEach(x=>{if(x.id!=='test-run')x.classList.toggle('on',x.id==='v-'+v)});
-  const tab={home:'home',study:'home',test:'test',temario:'temario',search:'search',set:'set'}[v];$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab))}
+  const tab={home:'home',study:'home',prac:'home',test:'test',temario:'temario',search:'search',set:'set'}[v];$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab))}
 $$('#tabs button').forEach(b=>b.onclick=()=>{
-  closeViewer();if(SES){exitStudy()}if(TR&&!TR.done&&b.dataset.tab!=='test'){if(!confirmLeave())return;closeTest()}
+  closeViewer();if(SES){exitStudy()}if(PR){if(PR.tk)clearInterval(PR.tk);PR=null;document.body.classList.remove('studying')}if(TR&&!TR.done&&b.dataset.tab!=='test'){if(!confirmLeave())return;closeTest()}
   const v=b.dataset.tab;showView(v);if(v==='home')renderHome();if(v==='test'&&!TR)renderTestSetup();if(v==='temario'){renderTemario()}if(v==='search')renderSearch();if(v==='set')renderSet()});
 function confirmLeave(){return true}
 $('#b-study').onclick=()=>startStudy();
-$('#b-more').onclick=()=>{S.daily.extra+=5;save();renderHome();startStudy()};
+$('#b-more').onclick=()=>moreBlock();
 $('#b-free').onclick=()=>startStudy({free:true});
 $('#st-exit').onclick=exitStudy;
 $$('[data-npd]').forEach(b=>b.onclick=()=>{S.set.npd=Math.max(1,Math.min(30,S.set.npd+ +b.dataset.npd));save();renderHome();renderSet()});
 $('#cele-x').onclick=()=>{$('#cele').hidden=true};
+$('#cele-more').onclick=()=>{$('#cele').hidden=true;moreBlock()};
+function moreBlock(){const P=blockPlan();if(!P.nr&&!P.nl){if(CARDS.some(c=>!cs(c.id))){S.daily.extra+=Math.max(3,Math.round(P.B/T_NEW));save()}else{startStudy({free:true});return}}startStudy()}
 $('#tt-all').onclick=()=>{T.forEach(t=>TT.sel.add(t.id));renderTestSetup()};
 $('#tt-none').onclick=()=>{TT.sel.clear();renderTestSetup()};
 $$('#tt-src button').forEach(b=>b.onclick=()=>{TT.src=b.dataset.v;renderTestSetup()});
@@ -7222,6 +7459,8 @@ $('#tr-exit').onclick=()=>{if(TR&&!TR.done){const x=$('#tr-exit');if(!x.dataset.
 $$('#set-mode button').forEach(b=>b.onclick=()=>{S.set.mode=b.dataset.v;save();renderSet()});
 $$('#set-theme button').forEach(b=>b.onclick=()=>{S.set.theme=b.dataset.v;save();applyTheme();renderSet()});
 $$('#set-vf button').forEach(b=>b.onclick=()=>{S.set.vf=+b.dataset.v;save();renderSet()});
+$$('#set-min button').forEach(b=>b.onclick=()=>{S.set.min=+b.dataset.v;save();renderSet()});
+$$('#set-rf button').forEach(b=>b.onclick=()=>{S.set.rf=b.dataset.v;save();renderSet()});
 $('#set-exp').onclick=async()=>{const box=$('#set-box');box.hidden=false;box.value=btoa(unescape(encodeURIComponent(JSON.stringify(S))));box.select();try{await navigator.clipboard.writeText(box.value);toast('Copia copiada al portapapeles')}catch(e){toast('Selecciona el texto y cópialo')}};
 $('#set-imp').onclick=()=>{const box=$('#set-box');box.hidden=false;box.value='';box.focus();$('#set-imp-ok').hidden=false};
 $('#set-imp-ok').onclick=()=>{try{const j=JSON.parse(decodeURIComponent(escape(atob($('#set-box').value.trim()))));if(!j.cards)throw 0;S=deep(DEF,j);save();applyTheme();toast('Progreso restaurado');$('#set-imp-ok').hidden=true;$('#set-box').hidden=true;renderSet()}catch(e){toast('Esa copia no es válida')}};
@@ -7233,8 +7472,10 @@ document.addEventListener('keydown',e=>{
   if(SES&&$('#v-study').classList.contains('on')){
     if((k==='enter'||k===' ')&&$('#go')){$('#go').click();e.preventDefault();return}
     const it=SES.Q[SES.i];if(!it||it.k!=='q'||SES.ans!==null)return;
+    if(it.form==='fc'){if((k===' '||k==='enter')&&$('#fc-show')){$('#fc-show').click();e.preventDefault()}else if(k==='n'||k==='s'){const o=$(`#st-panel .opt[data-v="${k==='s'?1:0}"]`);o&&o.click()}return}
     if(it.form==='vf'){if(k==='v')$('#st-panel .opt[data-v="1"]').click();if(k==='f')$('#st-panel .opt[data-v="0"]').click()}
     else{const i={'1':0,'2':1,'3':2,a:0,b:1,c:2}[k];if(i!==undefined)$$('#st-panel .opt')[i].click()}
+  }else if(PR&&PR.k==='reto'&&!PR.done&&$('#v-prac').classList.contains('on')){const i={'1':0,'2':1,'3':2,a:0,b:1,c:2}[k];if(i!==undefined&&$$('#pr-panel .opt')[i])$$('#pr-panel .opt')[i].click()
   }else if(TR&&!TR.done){const i={'1':0,'2':1,'3':2,a:0,b:1,c:2}[k];if(i!==undefined)$$('#tr-panel .opt')[i]&&$$('#tr-panel .opt')[i].click();
     if(k==='enter'&&TR.mode==='now'&&TR.items[TR.i].a!==null){($('#tq-next')||$('#tq-end')).click();e.preventDefault()}
     if(k==='arrowright'&&$('#tq-next'))$('#tq-next').click();if(k==='arrowleft'&&$('#tq-prev'))$('#tq-prev').click()}
