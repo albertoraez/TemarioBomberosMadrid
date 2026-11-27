@@ -208,7 +208,7 @@ body.studying #tabs{display:none}
 @media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
 #v-prac.view{display:none;flex-direction:column}#v-prac.view.on{display:flex}
 .prac-g{display:grid;grid-template-columns:1fr 1fr;gap:8px}.prac-g .btn{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:3px;padding:12px}.prac-g .btn span{font-size:12.5px;font-weight:500;color:var(--muted)}
-.fc-a{display:flex;flex-direction:column;gap:4px;background:var(--ok-soft);border-radius:10px;padding:12px 14px}.fc-a b{font-size:19px;color:var(--ok)}
+.fc-a[hidden]{display:none}.fc-a{display:flex;flex-direction:column;gap:4px;background:var(--ok-soft);border-radius:10px;padding:12px 14px}.fc-a b{font-size:19px;color:var(--ok)}
 .pj-t{font-family:var(--f-display);font-size:22px;color:var(--accent);line-height:1.1}
 .pj{display:grid;grid-template-columns:1fr 1fr;gap:8px}.pj>div{display:flex;flex-direction:column;gap:6px}
 .opt.pj-b{min-height:50px;font-size:14.5px;padding:8px 10px;justify-content:center;text-align:center}.opt.pj-b.done{opacity:.5}.opt.pj-b.sel{border-color:var(--accent);background:var(--accent-soft)}
@@ -7231,7 +7231,7 @@ function routeRow(id){const t=TM[id],s=temaStats(id);const cur=S.set.mode==='tem
 function curTema(){const n=nextNew(1)[0];return n?n.tema:S.set.cur}
 
 // ---------- modo test ----------
-const APP_VER='v25 · 27 nov 2026';
+const APP_VER='v26 · 27 nov 2026';
 $('#set-ver').textContent=`Versión ${APP_VER} · ${CARDS.length} tarjetas · ${QS.length} preguntas`;
 const TT={sel:new Set(T.map(t=>t.id)),src:'all',dif:'all',n:20,mode:'end',time:false};
 function renderTestSetup(){
