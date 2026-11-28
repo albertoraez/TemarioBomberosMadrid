@@ -4407,7 +4407,7 @@ QA(9,0,0,'f',[
 QA(9,0,0,'n',[
 ["El fuego según UNE 23026 se caracteriza por emisión de…","Calor, humo y llamas","Luz y sonido","Calor y presión","Humo y gases solamente"]]);
 QA(9,0,1,'n',[
-["La definición de incendio como combustión no deseada y no controlada es…","ISO 13943","UNE 23026","UNE EN 2","UNE EN 1568"]]);
+["¿Qué norma define el incendio como una combustión que se propaga incontroladamente en el tiempo y en el espacio?","ISO 13943","UNE 23026","UNE EN 2","UNE EN 1568"]]);
 QA(9,0,2,'f',[
 ["¿Cuál es la composición aproximada del aire?","21 % de oxígeno y 79 % de nitrógeno","50 % oxígeno","30 % oxígeno","10 % oxígeno"]]);
 QA(9,0,3,'n',[
@@ -7232,7 +7232,7 @@ function routeRow(id){const t=TM[id],s=temaStats(id);const cur=S.set.mode==='tem
 function curTema(){const n=nextNew(1)[0];return n?n.tema:S.set.cur}
 
 // ---------- modo test ----------
-const APP_VER='v29 · 28 nov 2026';
+const APP_VER='v30 · 28 nov 2026';
 $('#set-ver').textContent=`Versión ${APP_VER} · ${CARDS.length} tarjetas · ${QS.length} preguntas`;
 const TT={sel:new Set(T.map(t=>t.id)),src:'all',dif:'all',n:20,mode:'end',time:false};
 function renderTestSetup(){
