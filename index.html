@@ -4441,7 +4441,7 @@ QA(9,2,1,'n',[
 ["Si se corta la corriente, el fuego pasa normalmente a clase…","A","B","C","D"]]);
 QA(9,2,2,'n',[
 ["Los combustibles sólidos arden por los gases que desprenden en…","La pirólisis","La hidrólisis","La electrólisis","La sublimación"],
-["Los fuegos de clase A que forman brasa se llaman…","Profundos","Superficiales","Latentes","Directos"]]);
+["¿Cómo se denominan los fuegos de clase A que penetran en el material y forman brasa?","Profundos","Superficiales","Latentes","Directos"]]);
 QA(9,2,3,'n',[
 ["El agua está prohibida en fuegos de metales porque…","Muchos metales desplazan el hidrógeno del agua y provocan explosiones","Enfría poco","Conduce electricidad","Es cara"]]);
 QA(9,3,0,'n',[
@@ -7232,7 +7232,7 @@ function routeRow(id){const t=TM[id],s=temaStats(id);const cur=S.set.mode==='tem
 function curTema(){const n=nextNew(1)[0];return n?n.tema:S.set.cur}
 
 // ---------- modo test ----------
-const APP_VER='v27 · 28 nov 2026';
+const APP_VER='v28 · 28 nov 2026';
 $('#set-ver').textContent=`Versión ${APP_VER} · ${CARDS.length} tarjetas · ${QS.length} preguntas`;
 const TT={sel:new Set(T.map(t=>t.id)),src:'all',dif:'all',n:20,mode:'end',time:false};
 function renderTestSetup(){
