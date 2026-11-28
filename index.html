@@ -4411,7 +4411,7 @@ QA(9,0,1,'n',[
 QA(9,0,2,'f',[
 ["¿Cuál es la composición aproximada del aire?","21 % de oxígeno y 79 % de nitrógeno","50 % oxígeno","30 % oxígeno","10 % oxígeno"]]);
 QA(9,0,3,'n',[
-["¿Qué tipo de reacción forma sustancias nuevas?","La química","La física","La de cambio de estado","La de disolución"],
+["¿Qué tipo de reacción cambia la composición de la materia y forma sustancias nuevas, como 2C + O₂ → 2CO₂?","La química","La física","La de cambio de estado","La de disolución"],
 ["¿Qué tipo de reacción es el paso de hielo a vapor?","Física","Química","Nuclear","Redox"]]);
 QA(9,0,4,'n',[
 ["En una reacción redox, ¿qué hace el oxidante?","Capta electrones y se reduce","Cede electrones y se oxida","Cede electrones y se reduce","Capta electrones y se oxida"],
@@ -7232,7 +7232,7 @@ function routeRow(id){const t=TM[id],s=temaStats(id);const cur=S.set.mode==='tem
 function curTema(){const n=nextNew(1)[0];return n?n.tema:S.set.cur}
 
 // ---------- modo test ----------
-const APP_VER='v28 · 28 nov 2026';
+const APP_VER='v29 · 28 nov 2026';
 $('#set-ver').textContent=`Versión ${APP_VER} · ${CARDS.length} tarjetas · ${QS.length} preguntas`;
 const TT={sel:new Set(T.map(t=>t.id)),src:'all',dif:'all',n:20,mode:'end',time:false};
 function renderTestSetup(){
